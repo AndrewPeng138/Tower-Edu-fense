@@ -8,7 +8,7 @@ public class WelcomeScreenView {
         JFrame frame = new JFrame("Welcome Screen");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Use the utility method to set the size
+
         setScreenSize(frame);
 
         // Create a JPanel with a background image
@@ -16,7 +16,6 @@ public class WelcomeScreenView {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // Load and draw WelcomeScreen.png as the background
                 ImageIcon backgroundImage = new ImageIcon("src/WelcomeScreen.png");
                 g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
@@ -43,7 +42,7 @@ public class WelcomeScreenView {
         frame.setVisible(true);
     }
 
-    // Utility method to set the screen size
+
     public static void setScreenSize(JFrame frame) {
         frame.setSize(1400, 900); // Set fixed size
         frame.setLocationRelativeTo(null);  // Center the window on the screen
