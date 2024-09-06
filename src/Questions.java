@@ -16,7 +16,7 @@ public abstract class Questions {
     }
 
     // Method to load questions from a file
-    private void loadQuestionsFromFile(String filename) {
+    protected void loadQuestionsFromFile(String filename) {
         try {
             File file = new File(filename);
             Scanner scanner = new Scanner(file);
