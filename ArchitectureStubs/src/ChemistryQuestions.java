@@ -3,6 +3,11 @@ import java.util.Map;
 
 public class ChemistryQuestions extends Questions {
 
+    // Constructor that specifies the filename of the chemistry questions
+    public ChemistryQuestions(String filename) {
+        super(filename); // Specify the text file name containing chemistry questions
+    }
+
     /**
      * Stores a question and its corresponding answer in the questionMap.
      * @param question The text of the question.
@@ -28,7 +33,6 @@ public class ChemistryQuestions extends Questions {
      * @param answer The text of the answer for which the corresponding question is needed.
      * @return The question that corresponds to the given answer, or null if no matching question is found.
      */
-
     public String getQuestion(String answer) {
         for (Map.Entry<String, String> entry : questionMap.entrySet()) {
             if (entry.getValue().equals(answer)) {
@@ -43,7 +47,6 @@ public class ChemistryQuestions extends Questions {
      * @param question The text of the question.
      * @param answer The new text of the answer.
      */
-
     public void setAnswer(String question, String answer) {
         questionMap.put(question, answer);  // Update or set the answer for the given question
     }
