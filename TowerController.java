@@ -27,6 +27,7 @@ public class TowerController {
      */
     public boolean isSelected(TowerModel tower){
         // TODO: need to get more information on how GUI will react to get action of once button is pushed
-        return JButton.isPressed();
+        //return JButton.isPressed();
+        return true;
     }
 }
