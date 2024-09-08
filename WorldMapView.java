@@ -7,7 +7,7 @@ public class WorldMapView extends JPanel {
 
     public WorldMapView() {
         // Load the background image
-        backgroundImage = new ImageIcon("src/Images/MapScreen.png").getImage();
+        backgroundImage = new ImageIcon("Images/MapScreen.png").getImage();
 
         JFrame frame = new JFrame("World Map");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,15 +17,15 @@ public class WorldMapView extends JPanel {
         buttons = new JButton[3];
 
         // Button 1: Math
-        buttons[0] = createButton("src/Images/MathButton.png", 200, 100);
+        buttons[0] = createButton("Images/MathButton.png", 200, 100);
         buttons[0].setBounds(375, 300, 150, 100);  // Set position for Math button
 
         // Button 2: Geography
-        buttons[1] = createButton("src/Images/GeographyButton.png", 200, 100);
+        buttons[1] = createButton("Images/GeographyButton.png", 200, 100);
         buttons[1].setBounds(760, 380, 150, 100);  // Set position for Geography button
 
         // Button 3: Science
-        buttons[2] = createButton("src/Images/ScienceButton.png", 200, 100);
+        buttons[2] = createButton("Images/ScienceButton.png", 200, 100);
         buttons[2].setBounds(925, 620, 150, 100);  // Set position for Science button
 
         // Add the buttons and their actions

@@ -23,6 +23,6 @@ public class GameView extends JPanel {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new GameView("src/Images/EasyMap.png"));
+        SwingUtilities.invokeLater(() -> new GameView("Images/EasyMap.png"));
     }
 }
