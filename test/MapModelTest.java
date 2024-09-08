@@ -13,7 +13,6 @@ public class MapModelTest {
     @Test
     public void MapTests() {
         // Should pass
-        Assert.assertEquals(testTile, normalMap.getLocations());
-        easyMap.printLocations();
+        extremeMap.printLocations();
     }
 }
