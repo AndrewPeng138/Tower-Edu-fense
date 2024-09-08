@@ -5,11 +5,11 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         // Instantiate the question classes with paths to their respective files
-        String basePath = "/Users/OwenPhotog/Desktop/SoftwareDev/team_boza/";
+        String realtivePath = "../team_boza/";
 
-        MathQuestions mathQuestions = new MathQuestions(basePath + "questions/MathTimesTables.txt");
-        GeographyQuestions geographyQuestions = new GeographyQuestions(basePath + "questions/GeographyStateCap.txt");
-        ChemistryQuestions chemistryQuestions = new ChemistryQuestions(basePath + "questions/ChemistryPeriodicTable.txt");
+        MathQuestions mathQuestions = new MathQuestions(realtivePath + "questions/MathTimesTables.txt");
+        GeographyQuestions geographyQuestions = new GeographyQuestions(realtivePath + "questions/GeographyStateCap.txt");
+        ChemistryQuestions chemistryQuestions = new ChemistryQuestions(realtivePath + "questions/ChemistryPeriodicTable.txt");
 
         Questions questions = null;
         boolean keepRunning = true;
