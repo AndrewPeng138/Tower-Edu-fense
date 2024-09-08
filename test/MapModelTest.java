@@ -12,7 +12,13 @@ public class MapModelTest {
     Tile[][] testTile = new Tile[17][17];
     @Test
     public void MapTests() {
-        // Should pass
+        System.out.println("EASY MAP...");
+        easyMap.printLocations();
+        System.out.println("NORMAL MAP...");
+        normalMap.printLocations();
+        System.out.println("HARD MAP...");
+        hardMap.printLocations();
+        System.out.println("EXTREME MAP...");
         extremeMap.printLocations();
     }
 }
