@@ -16,6 +16,7 @@ public class MapModel {
     public MapModel(String mapType) {
         // Instantiates a new Tile Factory to manufacture our necessary tiles
         TileFactory theFactory = new TileFactory();
+<<<<<<< HEAD
         // Fills the entire grid with borders initially
         for (int i = 0; i < locations.length; i++) {
             for (int j = 0; j < locations.length; j++) {
@@ -25,6 +26,19 @@ public class MapModel {
         }
         // EASY MAP
         if (mapType.equals("easy")) {
+=======
+
+        // EASY MAP
+        if (mapType.equals("easy")) {
+
+            // Fills the entire grid with borders initially
+            for (int i = 0; i < locations.length; i++) {
+                for (int j = 0; j < locations.length; j++) {
+                    BorderTile borderTile = (BorderTile) theFactory.createTile("border");
+                    locations[i][j] = borderTile;
+                }
+            }
+>>>>>>> Question
             // Sets entrance
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
             entranceTile.setEntrance(true);
@@ -37,7 +51,10 @@ public class MapModel {
             // Stock tiles to be placed anywhere
             EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy");
             LandTile landTile = (LandTile) theFactory.createTile("land");
+<<<<<<< HEAD
 
+=======
+>>>>>>> Question
             // First row of map (Mostly land)
             for (int x = 1; x < 14; x++) {
                 locations[1][x] = landTile;
@@ -134,6 +151,7 @@ public class MapModel {
 
         // NORMAL MAP
         if (mapType.equals("normal")) {
+<<<<<<< HEAD
             // Sets entrance
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
             entranceTile.setEntrance(true);
@@ -290,10 +308,13 @@ public class MapModel {
             }
             locations[15][14] = enemyTile;
             locations[15][15] = waterTile;
+=======
+>>>>>>> Question
 
         } // End of Normal Map if statement
         // HARD MAP
         if (mapType.equals("hard")) {
+<<<<<<< HEAD
             // Sets entrance
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
             entranceTile.setEntrance(true);
@@ -513,6 +534,13 @@ public class MapModel {
             // Bottom right tiny island
             locations[14][12] = landTile;
             locations[14][13] = landTile;
+=======
+
+        } // End of Hard Map if statement
+        // EXTREME MAP
+        if (mapType.equals("extreme")) {
+
+>>>>>>> Question
         } // End of EXTREME Map if statement
 
     }
@@ -526,6 +554,7 @@ public class MapModel {
     }
 
     /**
+<<<<<<< HEAD
      * Returns the Tile at the specified location
      * @param index1 2d array locations[index1][]
      * @param index2 2d array locations[][index2]
@@ -537,6 +566,9 @@ public class MapModel {
 
     /**
      * Prints all locations in the map model for design and testing purposes
+=======
+     * Prints all locaions in the map model for design and testing purposes
+>>>>>>> Question
      */
     public void printLocations() {
         for (int i = 0; i < locations.length; i++) {
@@ -550,3 +582,7 @@ public class MapModel {
 
 
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> Question
