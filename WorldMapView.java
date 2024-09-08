@@ -7,7 +7,7 @@ public class WorldMapView extends JPanel {
 
     public WorldMapView() {
         // Load the background image
-        backgroundImage = new ImageIcon("src/MapScreen.png").getImage();
+        backgroundImage = new ImageIcon("src/Images/MapScreen.png").getImage();
 
         JFrame frame = new JFrame("World Map");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -15,19 +15,18 @@ public class WorldMapView extends JPanel {
         setLayout(null);
 
         buttons = new JButton[3];
-        String[] titles = {"Math", "Geography", "Chemistry"};
 
         // Button 1: Math
-        buttons[0] = new JButton(titles[0]);
-        buttons[0].setBounds(390, 300, 120, 50);  // x = 50, y = 50
+        buttons[0] = createButton("src/Images/MathButton.png", 200, 100);
+        buttons[0].setBounds(375, 300, 150, 100);  // Set position for Math button
 
         // Button 2: Geography
-        buttons[1] = new JButton(titles[1]);
-        buttons[1].setBounds(768, 400, 120, 50);  // x = 200, y = 300
+        buttons[1] = createButton("src/Images/GeographyButton.png", 200, 100);
+        buttons[1].setBounds(760, 380, 150, 100);  // Set position for Geography button
 
-        // Button 3: Chemistry
-        buttons[2] = new JButton(titles[2]);
-        buttons[2].setBounds(930, 620, 120, 50);  // x = 400, y = 500
+        // Button 3: Science
+        buttons[2] = createButton("src/Images/ScienceButton.png", 200, 100);
+        buttons[2].setBounds(925, 620, 150, 100);  // Set position for Science button
 
         // Add the buttons and their actions
         for (JButton button : buttons) {
@@ -40,6 +39,20 @@ public class WorldMapView extends JPanel {
 
         frame.add(this);
         frame.setVisible(true);
+    }
+
+    // Method to create buttons with resized images and no border
+    private JButton createButton(String imagePath, int width, int height) {
+        ImageIcon buttonIcon = new ImageIcon(imagePath);
+        Image scaledImage = buttonIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(scaledImage);
+
+        JButton button = new JButton(resizedIcon);
+        button.setOpaque(false);                   // Make the button background transparent
+        button.setContentAreaFilled(false);        // Disable the content area filling
+        button.setBorderPainted(false);            // Disable the button's border
+        button.setFocusPainted(false);             // Disable the focus border when clicked
+        return button;
     }
 
     @Override
