@@ -8,9 +8,9 @@ public class EnemyModel {
     /**
      * basic movement by enemy
      */
-    public void move(){
-        // TODO: this method needs to be more defined by the tile class or another way we need to find the next tile
-        this.position() = nextTile;
+    public void move(int nextX, int nextY) {
+        this.x = nextX;
+        this.y = nextY;
     }
     /**
      * Gets x coordinate of enemy
@@ -41,6 +41,16 @@ public class EnemyModel {
     public void setY(int value){
         this.y = value;
     }
+
+    /**
+     * Setting position of enemy
+     * @param enemyX x coordinate to be set
+     * @param enemyY y coordinate to be set
+     */
+    public void setPosition(int enemyX, int enemyY){
+        this.x = enemyX;
+        this.y = enemyY;
+    }
     /**
      * Sets health of enemy
      * @param value health value to be set
@@ -59,7 +69,15 @@ public class EnemyModel {
      * Sets health of enemy
      * @param value health value to be set
      */
-    public void setHealth(int value){
+    public void setDamage(int value){
         this.damage = value;
+    }
+
+    /**
+     * Decrease health taken from damage by certain amount
+     * @param value amount of health enemy lost
+     */
+    public void decreaseHealth(int value){
+        this.health -= value;
     }
 }

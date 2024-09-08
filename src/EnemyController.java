@@ -5,7 +5,7 @@ public class EnemyController {
      * @param value health value to be set
      */
     public void setHealth(EnemyModel enemy, int value){
-        enemy.health = value;
+        enemy.setHealth(value);
     }
     /**
      * Sets speed of enemy
@@ -13,15 +13,15 @@ public class EnemyController {
      * @param value speed value to be set
      */
     public void setSpeed(EnemyModel enemy, int value){
-        enemy.speed = value;
+        enemy.setSpeed(value);
     }
     /**
      * Sets health of enemy
      * @param enemy enemy to set damage of
      * @param value health value to be set
      */
-    public void setHealth(EnemyModel enemy, int value){
-        enemy.setHealth(value);
+    public void setDamage(EnemyModel enemy, int value){
+        enemy.setDamage(value);
     }
 
     /**
