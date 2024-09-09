@@ -10,7 +10,7 @@ public class DifficultyView extends JPanel {
 
     public DifficultyView() {
         // Load the background image
-        backgroundImage = new ImageIcon("../Images/MapScreen.png").getImage();
+        backgroundImage = new ImageIcon("Images/MapScreen.png").getImage();
         JFrame frame = new JFrame("Select Difficulty");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         WelcomeScreenView.setScreenSize(frame);
@@ -19,10 +19,10 @@ public class DifficultyView extends JPanel {
         // Buttons
         buttons = new JButton[4];
         String[] buttonImages = {
-                "../Images/EasyButton.png",
-                "../Images/MediumButton.png",
-                "../Images/HardButton.png",
-                "../Images/ExpertButton.png"
+                "Images/EasyButton.png",
+                "Images/MediumButton.png",
+                "Images/HardButton.png",
+                "Images/ExpertButton.png"
         };
 
         // Custom width and height for buttons
@@ -31,10 +31,10 @@ public class DifficultyView extends JPanel {
 
         // Button image paths
         String[] gameBackgrounds = {
-                "../Images/EasyMap.png",
-                "../Images/MediumMap.png",
-                "../Images/HardMap.png",
-                "../Images/ExpertMap.png"
+                "Images/EasyMap.png",
+                "Images/MediumMap.png",
+                "Images/HardMap.png",
+                "Images/ExpertMap.png"
         };
 
         for (int i = 0; i < buttons.length; i++) {
