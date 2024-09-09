@@ -16,7 +16,8 @@ public class WelcomeScreenView {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon backgroundImage = new ImageIcon("Images/MapScreen.png");
+                ImageIcon backgroundImage = new ImageIcon("../Images/MapScreen.png");
+                System.out.println("Working Directory = " + System.getProperty("user.dir"));
                 g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
@@ -25,7 +26,7 @@ public class WelcomeScreenView {
         panel.setLayout(null);
 
         // Play button info
-        ImageIcon playButtonIcon = new ImageIcon("Images/PlayButton.png");
+        ImageIcon playButtonIcon = new ImageIcon("../Images/PlayButton.png");
         Image playButtonImage = playButtonIcon.getImage().getScaledInstance(350, 250, Image.SCALE_SMOOTH);
         ImageIcon resizedPlayButtonIcon = new ImageIcon(playButtonImage);
 
