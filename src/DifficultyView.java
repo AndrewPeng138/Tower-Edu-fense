@@ -1,5 +1,3 @@
-
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,11 +5,12 @@ public class DifficultyView extends JPanel {
     private JButton[] buttons;
     private Image backgroundImage;
     private Image scaledBackgroundImage;
+    private JFrame frame;
 
     public DifficultyView() {
         // Load the background image
         backgroundImage = new ImageIcon("Images/MapScreen.png").getImage();
-        JFrame frame = new JFrame("Select Difficulty");
+        frame = new JFrame("Select Difficulty");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         WelcomeScreenView.setScreenSize(frame);
         setLayout(null);
@@ -78,6 +77,16 @@ public class DifficultyView extends JPanel {
         }
 
         g.drawImage(scaledBackgroundImage, 0, 0, this);
+    }
+
+    // Getter for the JFrame for testing
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    // Getter for the buttons for testing
+    public JButton[] getButtons() {
+        return buttons;
     }
 
     public static void main(String[] args) {
