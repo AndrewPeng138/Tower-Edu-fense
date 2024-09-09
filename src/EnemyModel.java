@@ -80,4 +80,11 @@ public class EnemyModel {
     public void decreaseHealth(int value){
         this.health -= value;
     }
+
+    /**
+     *
+     */
+    public int getDamage(){
+        return this.damage;
+    }
 }
