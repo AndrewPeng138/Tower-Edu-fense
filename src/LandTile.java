@@ -7,8 +7,6 @@ public class LandTile extends Tile {
     public String getType() {
         return type;
     }
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> Question
+

@@ -4,11 +4,8 @@
  */
 public abstract class Tile {
     public abstract String getType();
-=======
- * An individual square on the 15x15 game map.
- * This abstract class provides the basic framework for all types of tiles.
- */
-public abstract class Tile {
+
+public abstract class Tile2 {
     private boolean isExit = false;  // Default to not an exit
 
     /**
@@ -37,5 +34,5 @@ public abstract class Tile {
     public void setExit(boolean exit) {
         this.isExit = exit;
     }
->>>>>>> Question
-}
+
+}}

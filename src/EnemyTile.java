@@ -42,9 +42,4 @@ public class EnemyTile extends Tile {
     }
 
 
-
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> Question

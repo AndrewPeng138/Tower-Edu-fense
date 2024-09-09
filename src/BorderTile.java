@@ -7,8 +7,6 @@ public class BorderTile extends Tile {
     public String getType() {
         return type;
     }
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> Question
+
