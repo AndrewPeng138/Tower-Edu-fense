@@ -10,7 +10,7 @@ public class Cannon extends TowerModel{
      */
     @Override
     public void Fire(Wave enemyWave) {
-        ArrayList<Enemy>  waveList = enemyWave.getWave();
+        ArrayList<EnemyModel>  waveList = enemyWave.getWave();
         waveList.get(0).decreaseHealth(this.getDamage());
     }
 

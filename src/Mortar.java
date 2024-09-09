@@ -11,8 +11,8 @@ public class Mortar extends TowerModel{
      */
     @Override
     public void Fire(Wave enemyWave) {
-        ArrayList<Enemy> waveList = enemyWave.getWave();
-        for(Enemy e : waveList){
+        ArrayList<EnemyModel> waveList = enemyWave.getWave();
+        for(EnemyModel e : waveList){
             e.decreaseHealth(this.getDamage());
         }
     }
