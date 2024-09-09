@@ -15,19 +15,16 @@ public class Main {
             System.out.println("4: Exit");
             System.out.print("Enter your choice (1-4): ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
-                    // Launch Welcome Screen
                     SwingUtilities.invokeLater(() -> new WelcomeScreenView());
                     break;
                 case 2:
-                    // Run the quiz logic
-                    startQuiz();
+                    startQuiz(scanner);
                     break;
                 case 3:
-                    // Run the MapModelTest logic within Main
                     runMapModelTest();
                     break;
                 case 4:
@@ -42,22 +39,18 @@ public class Main {
         scanner.close();
     }
 
-    // Quiz logic remains the same, extracted to a separate method
-    public static void startQuiz() {
-        Scanner scanner = new Scanner(System.in);
 
-        // Instantiate the question classes with paths to their respective files
-        String realtivePath = "../team_boza/";
+    public static void startQuiz(Scanner scanner) {
+        String relativePath = "../team_boza/";
 
-        MathQuestions mathQuestions = new MathQuestions(realtivePath + "questions/MathTimesTables.txt");
-        GeographyQuestions geographyQuestions = new GeographyQuestions(realtivePath + "questions/GeographyStateCap.txt");
-        ChemistryQuestions chemistryQuestions = new ChemistryQuestions(realtivePath + "questions/ChemistryPeriodicTable.txt");
+        MathQuestions mathQuestions = new MathQuestions(relativePath + "questions/MathTimesTables.txt");
+        GeographyQuestions geographyQuestions = new GeographyQuestions(relativePath + "questions/GeographyStateCap.txt");
+        ChemistryQuestions chemistryQuestions = new ChemistryQuestions(relativePath + "questions/ChemistryPeriodicTable.txt");
 
         Questions questions = null;
         boolean keepRunning = true;
 
         while (keepRunning) {
-            // User choice for type of questions
             System.out.println("\nSelect the type of questions you want to answer:");
             System.out.println("1: Math");
             System.out.println("2: Geography");
@@ -105,8 +98,6 @@ public class Main {
                 }
             }
         }
-
-        scanner.close();
     }
 
     // Map model test logic moved into a separate method in Main
