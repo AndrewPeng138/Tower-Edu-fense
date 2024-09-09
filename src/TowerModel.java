@@ -11,6 +11,7 @@ public abstract class TowerModel {
      * Basic attack from tower onto enemies (different for each type of tower)
      */
     abstract public void Fire(Wave enemyWave);
+
     /**
      * Gets x coordinate of tower
      * @return x coordinate of tower
@@ -40,12 +41,6 @@ public abstract class TowerModel {
     public void setY(int value){
         this.y = value;
     }
-
-    /**
-     * Basic attack from tower onto enemies (different for each type of tower)
-     */
-    public abstract void Fire(Wave enemyWave);
-
     /**
      * Gets tower damage value
      * @return amount of damage tower deals

@@ -26,7 +26,7 @@ public class UserController {
      */
     public int getHealth(){
         // TODO: implement method
-        return this.Health;
+        return this.health;
     }
 
     /**
