@@ -7,4 +7,8 @@ public class WaterTile extends Tile {
     public String getType() {
         return type;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> Question
