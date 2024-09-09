@@ -1,17 +1,16 @@
-
-
 import javax.swing.*;
 import java.awt.*;
 
 public class WorldMapView extends JPanel {
     private JButton[] buttons;
     private Image backgroundImage;
+    private JFrame frame;
 
     public WorldMapView() {
         // Load the background image
         backgroundImage = new ImageIcon("Images/MapScreen.png").getImage();
 
-        JFrame frame = new JFrame("World Map");
+        frame = new JFrame("World Map");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         WelcomeScreenView.setScreenSize(frame);
         setLayout(null);
@@ -62,6 +61,16 @@ public class WorldMapView extends JPanel {
         super.paintComponent(g);
         // Draw the background image
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    }
+
+    // Getter for the JFrame for testing
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    // Getter for the buttons for testing
+    public JButton[] getButtons() {
+        return buttons;
     }
 
     public static void main(String[] args) {
