@@ -1,12 +1,12 @@
-
 import javax.swing.*;
 import java.awt.*;
 
 public class WelcomeScreenView {
+    private JFrame frame;
     private JButton button;
 
     public WelcomeScreenView() {
-        JFrame frame = new JFrame("Welcome Screen");
+        frame = new JFrame("Welcome Screen");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setScreenSize(frame);
@@ -21,7 +21,6 @@ public class WelcomeScreenView {
             }
         };
 
-        // Set the panel layout to null for absolute positioning
         panel.setLayout(null);
 
         // Play button info
@@ -31,18 +30,15 @@ public class WelcomeScreenView {
 
         button = new JButton(resizedPlayButtonIcon);
         button.setOpaque(false);
-        button.setContentAreaFilled(false); // Make the button background transparent
-        button.setBorderPainted(false);     // Remove button border
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> {
-            new WorldMapView();  // Navigate to WorldMapView
-            frame.dispose();     // Close current window
+            new WorldMapView();
+            frame.dispose();
         });
 
-        // Set the button's location and size (x, y, width, height)
         button.setBounds(500, 570, 350, 250);
-
-        // Add the button to the panel at the specified location
         panel.add(button);
 
         frame.add(panel);
@@ -50,12 +46,19 @@ public class WelcomeScreenView {
     }
 
     public static void setScreenSize(JFrame frame) {
-        frame.setSize(1400, 900); // Set fixed size
-        frame.setLocationRelativeTo(null);  // Center the window on the screen
+        frame.setSize(1400, 900);
+        frame.setLocationRelativeTo(null);
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public JButton getButton() {
+        return button;
     }
 
     public static void main(String[] args) {
         new WelcomeScreenView();
     }
 }
-
