@@ -2,6 +2,7 @@ import java.util.Scanner;
 import javax.swing.*;
 
 public class Main {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean keepRunning = true;
@@ -10,8 +11,9 @@ public class Main {
             System.out.println("\nMain Menu:");
             System.out.println("1: Launch Welcome Screen");
             System.out.println("2: Run Quiz");
-            System.out.println("3: Exit");
-            System.out.print("Enter your choice (1-3): ");
+            System.out.println("3: Run Map Model Test");
+            System.out.println("4: Exit");
+            System.out.print("Enter your choice (1-4): ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
@@ -25,6 +27,10 @@ public class Main {
                     startQuiz();
                     break;
                 case 3:
+                    // Run the MapModelTest logic within Main
+                    runMapModelTest();
+                    break;
+                case 4:
                     System.out.println("Exiting program.");
                     keepRunning = false;
                     break;
@@ -99,5 +105,26 @@ public class Main {
                 }
             }
         }
+
+        scanner.close();
+    }
+
+    // Map model test logic moved into a separate method in Main
+    public static void runMapModelTest() {
+        // Create MapModel objects
+        MapModel easyMap = new MapModel("easy");
+        MapModel normalMap = new MapModel("normal");
+        MapModel hardMap = new MapModel("hard");
+        MapModel extremeMap = new MapModel("extreme");
+
+        // Run the tests
+        System.out.println("EASY MAP...");
+        easyMap.printLocations();
+        System.out.println("NORMAL MAP...");
+        normalMap.printLocations();
+        System.out.println("HARD MAP...");
+        hardMap.printLocations();
+        System.out.println("EXTREME MAP...");
+        extremeMap.printLocations();
     }
 }

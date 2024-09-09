@@ -17,7 +17,6 @@ public class WelcomeScreenView {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 ImageIcon backgroundImage = new ImageIcon("Images/MapScreen.png");
-                System.out.println("Working Directory = " + System.getProperty("user.dir"));
                 g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
