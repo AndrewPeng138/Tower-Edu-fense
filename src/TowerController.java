@@ -3,18 +3,19 @@ public class TowerController {
      * Gets x coordinate of tower
      * @return x coordinate of tower
      */
-    public int getX(){
+    /*public int getX(){
         // TODO: implement method
-        return this.x;
-    }
+        // return this.x;
+    }*/
+
     /**
      * Gets y coordinate of tower
      * @return y coordinate of tower
      */
-    public int getY(){
+    /*public int getY(){
         // TODO: implement method
-        return this.y;
-    }
+        // return this.y;
+    }*/
 
     /**
      * Sets location of tower on game board
@@ -23,16 +24,16 @@ public class TowerController {
      */
     public void setLocation(int x, int y){
         // TODO: implement method
-        this.x = x;
-        this.y = y;
+        // this.x = x;
+        // this.y = y;
     }
 
     /**
      * Checks if tower is selected to be placed on game board
      * @return if button for tower is selected
      */
-    public boolean isSelected(){
+    /*public boolean isSelected(){
         // TODO: implement method
-        return jButton.isPressed();
-    }
+        // return jButton.isPressed();
+    }*/
 }

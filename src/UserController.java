@@ -6,9 +6,10 @@ public class UserController {
      * Gets currency of player
      * @return player currency
      */
-    public int getCurrency(){
+    public int getCurrency() {
         // TODO: implement method
         return this.currency;
+
     }
 
     /**
@@ -17,7 +18,7 @@ public class UserController {
      */
     public void setCurrency(int value){
         // TODO: implement method
-        this.currency = value;
+        // this.currency = value;
     }
 
     /**
@@ -26,7 +27,7 @@ public class UserController {
      */
     public int getHealth(){
         // TODO: implement method
-        return this.Health;
+        return this.health;
     }
 
     /**
@@ -35,7 +36,6 @@ public class UserController {
      */
     public void setHealth(int value){
         // TODO: implement method
-        this.health = value;
+        // this.health = value;
     }
-
 }

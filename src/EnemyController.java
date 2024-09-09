@@ -30,9 +30,9 @@ public class EnemyController {
      * @param enemy enemy to set health to 0
      * @param user user to decrease health
      */
-    public void reachEnd(EnemyModel enemy, UserModel user){
+    /*public void reachEnd(EnemyModel enemy, UserModel user){
         // TODO: need more refinement on the specific details of what is going to happen after a enemy reaches the end of the path
         enemy.setHealth(0);
         user.decreaseUserHealth(value);
-    }
+    }*/
 }
