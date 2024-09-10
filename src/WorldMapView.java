@@ -25,17 +25,35 @@ public class WorldMapView extends JPanel {
         buttons[1] = createButton("Images/GeographyButton.png", 200, 100);
         buttons[1].setBounds(760, 380, 150, 100);  // Set position for Geography button
 
-        // Button 3: Science
+        // Button 3: Chemistry (was Science earlier, adjust as per your naming)
         buttons[2] = createButton("Images/ScienceButton.png", 200, 100);
-        buttons[2].setBounds(925, 620, 150, 100);  // Set position for Science button
+        buttons[2].setBounds(925, 620, 150, 100);  // Set position for Chemistry button
 
         // Add the buttons and their actions
+        buttons[0].addActionListener(e -> {
+            // Load Math questions and pass them to DifficultyView
+            Questions mathQuestions = new MathQuestions("questions/MathTimesTables.txt");
+            new DifficultyView(mathQuestions);  // Pass the math questions to DifficultyView
+            frame.dispose();       // Close current window
+        });
+
+        buttons[1].addActionListener(e -> {
+            // Load Geography questions and pass them to DifficultyView
+            Questions geographyQuestions = new GeographyQuestions("questions/GeographyStateCap.txt");
+            new DifficultyView(geographyQuestions);  // Pass the geography questions to DifficultyView
+            frame.dispose();       // Close current window
+        });
+
+        buttons[2].addActionListener(e -> {
+            // Load Chemistry questions and pass them to DifficultyView
+            Questions chemistryQuestions = new ChemistryQuestions("questions/ChemistryPeriodicTable.txt");
+            new DifficultyView(chemistryQuestions);  // Pass the chemistry questions to DifficultyView
+            frame.dispose();       // Close current window
+        });
+
+        // Add each button to the panel
         for (JButton button : buttons) {
-            button.addActionListener(e -> {
-                new DifficultyView();  // Navigate to DifficultyView
-                frame.dispose();       // Close current window
-            });
-            add(button);  // Add each button to the panel
+            add(button);
         }
 
         frame.add(this);

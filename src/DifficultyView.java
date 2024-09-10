@@ -6,10 +6,12 @@ public class DifficultyView extends JPanel {
     private Image backgroundImage;
     private Image scaledBackgroundImage;
     private JFrame frame;
+    private Questions questions;
 
-    public DifficultyView() {
-        // Load the background image
+    public DifficultyView(Questions questions) {
+        this.questions = questions;  // Store the questions passed to DifficultyView
         backgroundImage = new ImageIcon("Images/MapScreen.png").getImage();
+
         frame = new JFrame("Select Difficulty");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         WelcomeScreenView.setScreenSize(frame);
@@ -58,8 +60,9 @@ public class DifficultyView extends JPanel {
         for (int i = 0; i < buttons.length; i++) {
             String backgroundPath = gameBackgrounds[i];
             buttons[i].addActionListener(e -> {
-                new GameView(backgroundPath);  // Pass the selected background to GameView
-                frame.dispose(); // Close current window
+                // When a difficulty is selected, pass the background and questions to GameView
+                new GameView(backgroundPath, questions);  // Pass the selected background and questions to GameView
+                frame.dispose();  // Close current window
             });
             add(buttons[i]);  // Add buttons to the panel
         }
@@ -77,19 +80,5 @@ public class DifficultyView extends JPanel {
         }
 
         g.drawImage(scaledBackgroundImage, 0, 0, this);
-    }
-
-    // Getter for the JFrame for testing
-    public JFrame getFrame() {
-        return frame;
-    }
-
-    // Getter for the buttons for testing
-    public JButton[] getButtons() {
-        return buttons;
-    }
-
-    public static void main(String[] args) {
-        new DifficultyView();
     }
 }
