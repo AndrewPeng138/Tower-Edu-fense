@@ -1,26 +1,30 @@
+/*
 public class EnemyController {
     /**
      * Sets health of enemy
      * @param enemy enemy to set health of
      * @param value health value to be set
      */
+    /*
     public void setHealth(EnemyModel enemy, int value){
         enemy.setHealth(value);
-    }
+    } */
     /**
      * Sets speed of enemy
      * @param enemy enemy to set speed of
      * @param value speed value to be set
      */
+   /*
     public void setSpeed(EnemyModel enemy, int value){
         enemy.setSpeed(value);
-    }
+    }*/
     /**
      * Sets health of enemy
      * @param enemy enemy to set damage of
      * @param value health value to be set
      */
-    public void setDamage(EnemyModel enemy, int value){
+    /**
+    public void setDamage(EnemyModel enemy, int value) {
         enemy.setDamage(value);
     }
 
@@ -33,6 +37,7 @@ public class EnemyController {
     /*public void reachEnd(EnemyModel enemy, UserModel user){
         // TODO: need more refinement on the specific details of what is going to happen after a enemy reaches the end of the path
         enemy.setHealth(0);
+<<<<<<< HEAD
         user.decreaseUserHealth(value);
     }*/
-}
+
