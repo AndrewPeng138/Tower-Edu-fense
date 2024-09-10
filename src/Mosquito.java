@@ -1,0 +1,6 @@
+public class Mosquito extends EnemyModel{
+    Mosquito(){
+        this.setHealth(20);
+        this.setDamage(10);
+    }
+}
