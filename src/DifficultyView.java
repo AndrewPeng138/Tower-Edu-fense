@@ -41,9 +41,9 @@ public class DifficultyView extends JPanel {
         // Map types corresponding to the difficulty levels
         String[] mapTypes = {
                 "easy",    // Easy map type
-                "medium",  // Medium map type
+                "normal",  // Medium map type
                 "hard",    // Hard map type
-                "expert"   // Expert map type
+                "extreme"   // Expert map type
         };
 
         // Loop through and create the buttons with action listeners
