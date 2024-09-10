@@ -105,10 +105,10 @@ public class MapModel {
                 locations[11][x] = landTile;
             }
             // Twelfth row of map (Mostly enemy)
-            for (int x = 1; x < 14; x++) {
-                locations[12][x] = landTile;
+            locations[12][1] = landTile;
+            for (int x = 2; x < 15; x++) {
+                locations[12][x] = enemyTile;
             }
-            locations[12][14] = enemyTile;
             locations[12][15] = landTile;
             // Thirteenth row of map (Mostly land)
             for (int x = 1; x < 14; x++) {
