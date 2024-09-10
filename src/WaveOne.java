@@ -4,12 +4,12 @@ public class WaveOne extends Wave{
      */
     WaveOne(){
         for(int i = 0; i<5; i++){
-            Mini miniEnemy = new Mini();
-            this.addEnemy(miniEnemy);
+            Roach roachEnemy = new Roach();
+            this.addEnemy(roachEnemy);
         }
         for(int i = 0; i<3; i++){
-            Giant giantEnemy = new Giant();
-            this.addEnemy(giantEnemy);
+            Beetle beetleEnemy = new Beetle();
+            this.addEnemy(beetleEnemy);
         }
     }
 }
