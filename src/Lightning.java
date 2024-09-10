@@ -1,17 +1,18 @@
 import java.util.ArrayList;
+
 /**
- * Special tower that can hit all enemies on the grid
- * 5 damage
- * Slow firing speed
- * 3000 cost
+ * Special tower that can do chain damage to two additional enemies
+ * 30 damage
+ * Faster firing speed
+ * 3500 cost
  */
-public class Mortar extends TowerModel{
-    Mortar(){
+public class Lightning extends TowerModel{
+    Lightning(){
         this.setDamage(2);
     }
 
     /**
-     * Basic attack of mortar tower
+     * Basic chain attack of lightning tower
      * @param enemyWave wave of enemies that the tower attacks
      */
     @Override

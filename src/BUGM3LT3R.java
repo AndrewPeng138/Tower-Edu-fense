@@ -1,17 +1,17 @@
 import java.util.ArrayList;
 
 /**
- * Default tower
- * 10 damage
+ * Extremely powerful tower
+ * 300 damage
  * Standard firing speed
- * 500 cost
+ * 10000 cost
  */
-public class Cannon extends TowerModel{
-    Cannon(){
+public class BUGM3LT3R extends TowerModel{
+    BUGM3LT3R(){
         this.setDamage(10);
     }
     /**
-     * Basic attack of cannon tower
+     * Basic attack of BUGM3LT3R
      * @param enemyWave wave of enemies that the tower attacks
      */
     @Override

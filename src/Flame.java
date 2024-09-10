@@ -1,17 +1,18 @@
 import java.util.ArrayList;
 
 /**
- * Default tower
+ * Special tower that can damage metal bugs as well
  * 10 damage
  * Standard firing speed
- * 500 cost
+ * 2000 cost
  */
-public class Cannon extends TowerModel{
-    Cannon(){
+public class Flame extends TowerModel{
+    Flame(){
         this.setDamage(10);
     }
     /**
-     * Basic attack of cannon tower
+     * Basic attack of flame tower
+     * Only tower that can damage metal roaches
      * @param enemyWave wave of enemies that the tower attacks
      */
     @Override

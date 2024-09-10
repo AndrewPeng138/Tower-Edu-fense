@@ -1,17 +1,17 @@
 import java.util.ArrayList;
 
 /**
- * Default tower
+ * Default tower except can be placed in water
  * 10 damage
  * Standard firing speed
- * 500 cost
+ * 1500 cost
  */
-public class Cannon extends TowerModel{
-    Cannon(){
+public class Boat extends TowerModel{
+    Boat(){
         this.setDamage(10);
     }
     /**
-     * Basic attack of cannon tower
+     * Basic attack of boat tower
      * @param enemyWave wave of enemies that the tower attacks
      */
     @Override
