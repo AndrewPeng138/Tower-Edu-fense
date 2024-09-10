@@ -5,29 +5,38 @@ import java.awt.event.ActionListener;
 
 public class GameView extends JPanel {
     private Image backgroundImage;
-    private Questions questions; // The questions passed to this view
-    private JFrame frame;
+    private Questions questions;
+    private MapModel mapModel;
+    private MapPanel mapPanel;
     private JLabel questionLabel;
-    private JTextField answerField;  // Text field for the user to input the answer
-    private JButton submitButton;    // Submit button to check the answer
-    private JButton nextButton;      // Next button to move to the next question
-    private JLabel feedbackLabel;    // Label to show feedback to the user
-    private String currentQuestion;  // Store the current question
-    private boolean isAnswerChecked; // Flag to track if the answer has been checked
+    private JTextField answerField;
+    private JButton submitButton;
+    private JButton nextButton;
+    private JLabel feedbackLabel;
+    private String currentQuestion;
+    private boolean isAnswerChecked;
 
-    public GameView(String backgroundImagePath, Questions questions) {
+    public GameView(String backgroundImagePath, Questions questions, String mapType) {
         this.questions = questions;
-        backgroundImage = new ImageIcon(backgroundImagePath).getImage();
+        this.mapModel = new MapModel(mapType);
+        this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
 
-        frame = new JFrame("Quiz Game");
+        // Set up the JFrame
+        JFrame  frame = new JFrame("Game View");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         WelcomeScreenView.setScreenSize(frame);
         setLayout(null);
 
-        // Initialize the UI components
+        // Create and set up the map panel
+        mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath);
+        mapPanel.setBounds(300, 0, 800, 750);
+        add(mapPanel);
+
+        // Initialize and set up UI components
         initializeUI();
 
         frame.add(this);
+        frame.setSize(1400, 900);  // Adjusted size to fit components
         frame.setVisible(true);
     }
 
@@ -37,48 +46,48 @@ public class GameView extends JPanel {
 
         // Display the question
         questionLabel = new JLabel("Question: " + currentQuestion);
-        questionLabel.setBounds(0, 100, 600, 50);  // Set position of the question label
-        questionLabel.setForeground(Color.WHITE);    // Set text color to white
+        questionLabel.setBounds(10, 100, 600, 50);
+        questionLabel.setForeground(Color.WHITE);
         add(questionLabel);
 
-        // Text field for the user to input their answer
+        // Text field for user input
         answerField = new JTextField();
-        answerField.setBounds(0, 200, 300, 30);   // Set position and size of the answer field
+        answerField.setBounds(10, 160, 300, 30);
         add(answerField);
 
-        // Submit button to check the answer
+        // Submit button
         submitButton = new JButton("Submit");
-        submitButton.setBounds(0, 250, 150, 30);
+        submitButton.setBounds(10, 200, 100, 30);
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                checkAnswer();  // Method to check if the answer is correct
+                checkAnswer();
             }
         });
         add(submitButton);
 
-        // Next button to move to the next question
+        // Next button
         nextButton = new JButton("Next");
-        nextButton.setBounds(150, 250, 150, 30);
-        nextButton.setEnabled(false); // Initially disabled
+        nextButton.setBounds(120, 200, 100, 30);
+        nextButton.setEnabled(false);
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                moveToNextQuestion();  // Method to move to the next question
+                moveToNextQuestion();
             }
         });
         add(nextButton);
 
-        // Feedback label to show whether the answer is correct or not
+        // Feedback label
         feedbackLabel = new JLabel("");
-        feedbackLabel.setBounds(0, 300, 600, 30);  // Position for feedback
+        feedbackLabel.setBounds(10, 240, 600, 30);
         feedbackLabel.setForeground(Color.WHITE);
         add(feedbackLabel);
     }
 
     private void checkAnswer() {
-        String userAnswer = answerField.getText().trim();  // Get the user's input and trim any extra spaces
-        String correctAnswer = questions.getAnswer(currentQuestion);  // Get the correct answer to the current question
+        String userAnswer = answerField.getText().trim();
+        String correctAnswer = questions.getAnswer(currentQuestion);
 
         if (userAnswer.equalsIgnoreCase(correctAnswer)) {
             feedbackLabel.setText("Correct!");
@@ -88,25 +97,24 @@ public class GameView extends JPanel {
 
         // Enable the "Next" button after checking the answer
         nextButton.setEnabled(true);
-        submitButton.setEnabled(false);  // Disable the submit button after checking
+        submitButton.setEnabled(false);
         isAnswerChecked = true;
     }
 
     private void moveToNextQuestion() {
-        // Get the next question
         currentQuestion = questions.getAnyQuestion();
 
         if (currentQuestion != null) {
-            questionLabel.setText("Question: " + currentQuestion); // Update the question label with the new question
-            answerField.setText(""); // Clear the answer field
-            feedbackLabel.setText(""); // Clear the feedback label
-            submitButton.setEnabled(true); // Enable the submit button
-            nextButton.setEnabled(false); // Disable the next button until the answer is checked
+            questionLabel.setText("Question: " + currentQuestion);
+            answerField.setText("");
+            feedbackLabel.setText("");
+            submitButton.setEnabled(true);
+            nextButton.setEnabled(false);
         } else {
             questionLabel.setText("No more questions available.");
-            answerField.setEnabled(false); // Disable the answer field if no more questions are available
-            submitButton.setEnabled(false); // Disable the submit button if no more questions are available
-            nextButton.setEnabled(false); // Disable the next button if no more questions are available
+            answerField.setEnabled(false);
+            submitButton.setEnabled(false);
+            nextButton.setEnabled(false);
         }
     }
 
@@ -114,9 +122,5 @@ public class GameView extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-    }
-
-    public static void main(String[] args) {
-        // For testing purposes, pass in a background and sample questions
     }
 }

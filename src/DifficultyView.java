@@ -30,14 +30,23 @@ public class DifficultyView extends JPanel {
         int buttonWidth = 250;
         int buttonHeight = 120;
 
-        // Button image paths
+        // Button image paths for the map backgrounds
         String[] gameBackgrounds = {
-                "Images/EasyMap.png",
-                "Images/MediumMap.png",
-                "Images/HardMap.png",
-                "Images/ExpertMap.png"
+                "Images/EasyMap.png",   // Easy map background
+                "Images/MediumMap.png", // Medium map background
+                "Images/HardMap.png",   // Hard map background
+                "Images/ExpertMap.png"  // Expert map background
         };
 
+        // Map types corresponding to the difficulty levels
+        String[] mapTypes = {
+                "easy",    // Easy map type
+                "medium",  // Medium map type
+                "hard",    // Hard map type
+                "expert"   // Expert map type
+        };
+
+        // Loop through and create the buttons with action listeners
         for (int i = 0; i < buttons.length; i++) {
             ImageIcon originalIcon = new ImageIcon(buttonImages[i]);
             Image scaledImage = originalIcon.getImage().getScaledInstance(buttonWidth, buttonHeight, Image.SCALE_SMOOTH);
@@ -48,25 +57,25 @@ public class DifficultyView extends JPanel {
             buttons[i].setBorderPainted(false);
             buttons[i].setFocusPainted(false);
             buttons[i].setOpaque(false);
-        }
 
-        // Set custom positions for each button
-        buttons[0].setBounds(575, 150, buttonWidth, buttonHeight);   // Easy Button
-        buttons[1].setBounds(575, 300, buttonWidth, buttonHeight);   // Medium Button
-        buttons[2].setBounds(575, 450, buttonWidth, buttonHeight);   // Hard Button
-        buttons[3].setBounds(575, 600, buttonWidth, buttonHeight);   // Expert Button
+            // Set the custom button positions
+            int buttonY = 150 + i * 150;  // Vertical position for each button
+            buttons[i].setBounds(575, buttonY, buttonWidth, buttonHeight);
 
-        // Add action listeners to each button to load the corresponding background
-        for (int i = 0; i < buttons.length; i++) {
-            String backgroundPath = gameBackgrounds[i];
+            // Add action listeners to each button to load the corresponding background and map type
+            String backgroundPath = gameBackgrounds[i];  // Background image path for this difficulty
+            String mapType = mapTypes[i];  // Map type corresponding to this difficulty
+
             buttons[i].addActionListener(e -> {
-                // When a difficulty is selected, pass the background and questions to GameView
-                new GameView(backgroundPath, questions);  // Pass the selected background and questions to GameView
+                // When a difficulty is selected, pass the background and map type to GameView
+                new GameView(backgroundPath, questions, mapType);  // Pass background, questions, and map type to GameView
                 frame.dispose();  // Close current window
             });
-            add(buttons[i]);  // Add buttons to the panel
+
+            add(buttons[i]);  // Add the button to the panel
         }
 
+        // Add the DifficultyView panel to the frame
         frame.add(this);
         frame.setVisible(true);
     }
