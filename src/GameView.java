@@ -1,7 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameView extends JPanel {
     private Image backgroundImage;
@@ -10,11 +11,13 @@ public class GameView extends JPanel {
     private MapPanel mapPanel;
     private JLabel questionLabel;
     private JTextField answerField;
-    private JButton submitButton;
-    private JButton nextButton;
     private JLabel feedbackLabel;
+    private JLabel countdownLabel;  // Countdown/cool-down timer display
+    private JLabel moneyLabel;  // Label to display the user's points/money
     private String currentQuestion;
-    private boolean isAnswerChecked;
+    private Timer coolDownTimer;
+    private int coolDownSeconds = 10;
+    private int points = 0;  // Variable to track points/money
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) {
         this.questions = questions;
@@ -22,7 +25,7 @@ public class GameView extends JPanel {
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
 
         // Set up the JFrame
-        JFrame  frame = new JFrame("Game View");
+        JFrame frame = new JFrame("Game View");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         WelcomeScreenView.setScreenSize(frame);
         setLayout(null);
@@ -55,34 +58,38 @@ public class GameView extends JPanel {
         answerField.setBounds(10, 160, 300, 30);
         add(answerField);
 
-        // Submit button
-        submitButton = new JButton("Submit");
-        submitButton.setBounds(10, 200, 100, 30);
-        submitButton.addActionListener(new ActionListener() {
+        // Set key listener for "Enter" key to submit the answer
+        answerField.addKeyListener(new KeyAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                checkAnswer();
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    checkAnswer();
+                }
             }
         });
-        add(submitButton);
-
-        // Next button
-        nextButton = new JButton("Next");
-        nextButton.setBounds(120, 200, 100, 30);
-        nextButton.setEnabled(false);
-        nextButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                moveToNextQuestion();
-            }
-        });
-        add(nextButton);
 
         // Feedback label
         feedbackLabel = new JLabel("");
         feedbackLabel.setBounds(10, 240, 600, 30);
         feedbackLabel.setForeground(Color.WHITE);
         add(feedbackLabel);
+
+        // Countdown label (for cool down)
+        countdownLabel = new JLabel("");
+        countdownLabel.setBounds(10, 280, 600, 30);
+        countdownLabel.setForeground(Color.RED);
+        add(countdownLabel);
+
+        // Money label to display points
+        JLabel moneyTextLabel = new JLabel("Money:");
+        moneyTextLabel.setBounds(1120, 100, 200, 30);  // Positioned on the right side
+        moneyTextLabel.setForeground(Color.WHITE);
+        add(moneyTextLabel);
+
+        moneyLabel = new JLabel("0");  // Initial money is 0
+        moneyLabel.setBounds(1200, 100, 200, 30);
+        moneyLabel.setForeground(Color.WHITE);
+        add(moneyLabel);
     }
 
     private void checkAnswer() {
@@ -91,14 +98,36 @@ public class GameView extends JPanel {
 
         if (userAnswer.equalsIgnoreCase(correctAnswer)) {
             feedbackLabel.setText("Correct!");
+            updatePoints(10);  // Award 10 points for correct answer
+            moveToNextQuestion();  // Automatically move to the next question if the answer is correct
         } else {
             feedbackLabel.setText("Incorrect. The correct answer is: " + correctAnswer);
+            startCoolDown();  // Start the 10-second cool down if the answer is incorrect
         }
+    }
 
-        // Enable the "Next" button after checking the answer
-        nextButton.setEnabled(true);
-        submitButton.setEnabled(false);
-        isAnswerChecked = true;
+    private void startCoolDown() {
+        coolDownSeconds = 10;
+        countdownLabel.setText("Wait for " + coolDownSeconds + " seconds...");
+
+        // Disable input during cool down if the answer is incorrect
+        answerField.setEnabled(false);
+
+        coolDownTimer = new Timer();
+        coolDownTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (coolDownSeconds > 0) {
+                    countdownLabel.setText("Wait for " + coolDownSeconds + " seconds...");
+                    coolDownSeconds--;
+                } else {
+                    // Re-enable input after the cool-down period
+                    countdownLabel.setText("");
+                    coolDownTimer.cancel();
+                    moveToNextQuestion();  // Automatically move to the next question after the cool down
+                }
+            }
+        }, 0, 1000);  // Execute every 1 second
     }
 
     private void moveToNextQuestion() {
@@ -106,16 +135,19 @@ public class GameView extends JPanel {
 
         if (currentQuestion != null) {
             questionLabel.setText("Question: " + currentQuestion);
-            answerField.setText("");
-            feedbackLabel.setText("");
-            submitButton.setEnabled(true);
-            nextButton.setEnabled(false);
+            answerField.setText("");  // Clear the input field for the next question
+            answerField.setEnabled(true);  // Ensure the answer field is enabled for the next question
+            answerField.requestFocus();  // Set focus to the answerField so user can type immediately
         } else {
             questionLabel.setText("No more questions available.");
             answerField.setEnabled(false);
-            submitButton.setEnabled(false);
-            nextButton.setEnabled(false);
         }
+    }
+
+    // Method to update the user's points and refresh the money label
+    private void updatePoints(int amount) {
+        points += amount;  // Add the specified amount to the current points
+        moneyLabel.setText(String.valueOf(points));  // Update the label with the new points
     }
 
     @Override
