@@ -98,7 +98,7 @@ public class GameView extends JPanel {
 
         if (userAnswer.equalsIgnoreCase(correctAnswer)) {
             feedbackLabel.setText("Correct!");
-            updatePoints(10);  // Award 10 points for correct answer
+            updatePoints(100);  // Award 10 points for correct answer
             moveToNextQuestion();  // Automatically move to the next question if the answer is correct
         } else {
             feedbackLabel.setText("Incorrect. The correct answer is: " + correctAnswer);

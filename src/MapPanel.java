@@ -32,8 +32,16 @@ public class MapPanel extends JPanel {
                         g.setColor(Color.GREEN);
                     } else if (tile instanceof EnemyTile) {
                         g.setColor(Color.RED);
-                    } else {
-                        g.setColor(Color.GRAY); // Default border tile
+
+                    }
+                    else if (tile instanceof WaterTile) {
+                        g.setColor(Color.BLUE);
+                    }
+                    else if (tile instanceof BorderTile) {
+                        g.setColor(Color.WHITE);
+                    }
+                    else {
+                        g.setColor(Color.GRAY); // Tiles that haven't been set
                     }
 
                     // Draw the tile as a smaller rectangle based on the adjusted tile size

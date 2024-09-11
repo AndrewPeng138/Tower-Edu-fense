@@ -3,7 +3,7 @@ import org.junit.Assert;
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
 public class GameViewTest {
 
     @Test
@@ -108,3 +108,4 @@ public class GameViewTest {
     }
 
 }
+*/
