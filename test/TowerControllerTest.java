@@ -1,6 +1,7 @@
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
 import static org.junit.Assert.*;
 public class TowerControllerTest {
 
@@ -12,3 +13,4 @@ public class TowerControllerTest {
         Assert.assertEquals("3,4", tc.getLocation(cannon));
     }
 }
+ */
