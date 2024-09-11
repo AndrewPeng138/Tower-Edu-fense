@@ -1,4 +1,4 @@
-public class EnemyModel {
+public abstract class EnemyModel {
     private int damage;
     private int health;
     private int speed;
@@ -96,4 +96,9 @@ public class EnemyModel {
     public int getHealth(){
         return this.health;
     }
+
+    /**
+     * Returns if the enemy is a metal roach
+     */
+    abstract public boolean isMetal();
 }

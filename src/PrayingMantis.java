@@ -4,4 +4,9 @@ public class PrayingMantis extends EnemyModel{
         this.setDamage(10);
         // Add functionality for immunity
     }
+
+    @Override
+    public boolean isMetal() {
+        return false;
+    }
 }

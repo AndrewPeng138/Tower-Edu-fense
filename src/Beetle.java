@@ -3,4 +3,9 @@ public class Beetle extends EnemyModel{
         this.setHealth(100);
         this.setDamage(10);
     }
+
+    @Override
+    public boolean isMetal() {
+        return false;
+    }
 }
