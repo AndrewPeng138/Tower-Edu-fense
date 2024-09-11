@@ -3,9 +3,9 @@ public class BorderTile extends Tile {
 
 
     public BorderTile() {
-        super("Images/TileSprites/possible border.jpg");
+        super("Images/TileSprites/new border.png");
     }
-    
+
 
     @Override
     public String getType() {
