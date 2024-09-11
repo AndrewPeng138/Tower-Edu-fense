@@ -63,7 +63,7 @@ public class GameView extends JPanel {
 
         // Text field for user input
         answerField = new JTextField();
-        answerField.setBounds(0, 160, 300, 30);
+        answerField.setBounds(10, 160, 300, 30);
         add(answerField);
 
         // Set key listener for "Enter" key to submit the answer

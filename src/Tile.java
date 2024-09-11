@@ -19,4 +19,7 @@ public abstract class Tile {
     public Image getTileImage() {
         return tileImage;
     }
+    private boolean isExit;  // Flag to indicate if the tile is an exit
+
+
 }
