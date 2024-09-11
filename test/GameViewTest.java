@@ -8,12 +8,16 @@ public class GameViewTest {
 
     @Test
     public void testGameViewInitialization() {
-        // Create an instance of GameView with a dummy image path
+        // Create dummy instances of Questions and a dummy image path
+        Questions questions = new Questions();
         String testBackgroundPath = "../Images/TestMap.png";
-        GameView gameView = new GameView(testBackgroundPath);
+        String mapType = "testMap";
 
-        // Access the JFrame using the getter
-        JFrame frame = gameView.getFrame();
+        // Create an instance of GameView
+        GameView gameView = new GameView(testBackgroundPath, questions, mapType);
+
+        // Access the JFrame using the parent component
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(gameView);
         Assert.assertNotNull("JFrame should not be null", frame);
         Assert.assertEquals("Frame title should be 'Game View'", "Game View", frame.getTitle());
         System.out.println("JFrame is successfully created with the title 'Game View'.");
@@ -26,16 +30,20 @@ public class GameViewTest {
 
     @Test
     public void testGameViewFrameSize() {
-        // Create an instance of GameView with a dummy image path
-        GameView gameView = new GameView("../Images/TestMap.png");
+        // Create dummy instances of Questions and a dummy image path
+        Questions questions = new Questions();
+        String testBackgroundPath = "../Images/TestMap.png";
+        String mapType = "testMap";
 
-        // Access the JFrame using the getter
-        JFrame frame = gameView.getFrame();
+        // Create an instance of GameView
+        GameView gameView = new GameView(testBackgroundPath, questions, mapType);
 
-        // Note: You may need to wait or ensure the frame is fully initialized before checking size
-        // For testing purposes, assume default sizes or set expected values
-        int expectedWidth = 1400; // Example width, adjust as needed
-        int expectedHeight = 875; // Example height, adjust as needed
+        // Access the JFrame using the parent component
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(gameView);
+
+        // Expected frame size (adjust as needed)
+        int expectedWidth = 1400;
+        int expectedHeight = 900;
 
         // Allow some time for the frame to be properly set up
         try {
@@ -48,5 +56,56 @@ public class GameViewTest {
         Assert.assertEquals("Frame height should match expected height", expectedHeight, frame.getHeight());
         System.out.println("JFrame is set to the correct screen size.");
     }
+
+    @Test
+    public void testQuestionDisplay() {
+        // Create dummy instances of Questions and a dummy image path
+        Questions questions = new Questions();
+        questions.addQuestion("What is the capital of France?", "Paris");
+        String testBackgroundPath = "../Images/TestMap.png";
+        String mapType = "testMap";
+
+        // Create an instance of GameView
+        GameView gameView = new GameView(testBackgroundPath, questions, mapType);
+
+        // Access the question label from the GameView
+        JLabel questionLabel = (JLabel) TestUtils.getChildNamed(gameView, "questionLabel");
+        Assert.assertNotNull("Question label should not be null", questionLabel);
+
+        // Verify that the question label displays the expected question
+        String displayedText = questionLabel.getText();
+        Assert.assertTrue("Displayed question should contain the question text", displayedText.contains("What is the capital of France?"));
+        System.out.println("The question is correctly displayed.");
+    }
+
+    @Test
+    public void testAnswerSubmission() {
+        // Create dummy instances of Questions and a dummy image path
+        Questions questions = new Questions();
+        questions.addQuestion("What is the capital of France?", "Paris");
+        String testBackgroundPath = "../Images/TestMap.png";
+        String mapType = "testMap";
+
+        // Create an instance of GameView
+        GameView gameView = new GameView(testBackgroundPath, questions, mapType);
+
+        // Access the text field and buttons
+        JTextField answerField = (JTextField) TestUtils.getChildNamed(gameView, "answerField");
+        JButton submitButton = (JButton) TestUtils.getChildNamed(gameView, "submitButton");
+        JLabel feedbackLabel = (JLabel) TestUtils.getChildNamed(gameView, "feedbackLabel");
+
+        Assert.assertNotNull("Answer field should not be null", answerField);
+        Assert.assertNotNull("Submit button should not be null", submitButton);
+        Assert.assertNotNull("Feedback label should not be null", feedbackLabel);
+
+        // Simulate answering the question
+        answerField.setText("Paris");
+        submitButton.doClick(); // Simulate button click
+
+        // Verify the feedback label shows correct feedback
+        Assert.assertEquals("Feedback should indicate correct answer", "Correct!", feedbackLabel.getText());
+        System.out.println("Answer submission and feedback work correctly.");
+    }
+
 }
 */
