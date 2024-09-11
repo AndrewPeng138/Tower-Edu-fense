@@ -15,10 +15,10 @@ public class MapPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Draw the background image scaled to the new, smaller size
+        // Draw the background image scaled to the panel size
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-        // Determine tile size based on the new panel dimensions
+        // Determine tile size based on the panel dimensions
         int tileWidth = getWidth() / locations[0].length;
         int tileHeight = getHeight() / locations.length;
 
@@ -27,25 +27,11 @@ public class MapPanel extends JPanel {
             for (int j = 0; j < locations[i].length; j++) {
                 Tile tile = locations[i][j];
                 if (tile != null) {
-                    // Set different colors for different tile types
-                    if (tile instanceof LandTile) {
-                        g.setColor(Color.GREEN);
-                    } else if (tile instanceof EnemyTile) {
-                        g.setColor(Color.RED);
+                    // Get the tile's image
+                    Image tileImage = tile.getTileImage();
 
-                    }
-                    else if (tile instanceof WaterTile) {
-                        g.setColor(Color.BLUE);
-                    }
-                    else if (tile instanceof BorderTile) {
-                        g.setColor(Color.WHITE);
-                    }
-                    else {
-                        g.setColor(Color.GRAY); // Tiles that haven't been set
-                    }
-
-                    // Draw the tile as a smaller rectangle based on the adjusted tile size
-                    g.fillRect(j * tileWidth, i * tileHeight, tileWidth, tileHeight);
+                    // Draw the tile image, scaling it to the tile size
+                    g.drawImage(tileImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this);
                 }
             }
         }

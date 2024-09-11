@@ -1,10 +1,12 @@
-/**
- * An enemy path tile that can also be an entrance or exit
- */
 public class EnemyTile extends Tile {
     private String type = "enemy";
     boolean isEntrance;
     boolean isExit;
+
+    public EnemyTile() {
+        super("Images/TileSprites/enemypath pixel art.png");
+    }
+
     @Override
     public String getType() {
         return type;
@@ -40,6 +42,5 @@ public class EnemyTile extends Tile {
     public boolean getExit() {
         return isExit;
     }
-
 
 }

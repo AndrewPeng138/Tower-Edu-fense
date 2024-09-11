@@ -32,10 +32,10 @@ public class DifficultyView extends JPanel {
 
         // Button image paths for the map backgrounds
         String[] gameBackgrounds = {
-                "Images/EasyMap.png",   // Easy map background
-                "Images/MediumMap.png", // Medium map background
-                "Images/HardMap.png",   // Hard map background
-                "Images/ExpertMap.png"  // Expert map background
+                "Images/GameViewBackground.png",   // Easy map background
+                "Images/GameViewBackground.png", // Medium map background
+                "Images/GameViewBackground.png",   // Hard map background
+                "Images/GameViewBackground.png"  // Expert map background
         };
 
         // Map types corresponding to the difficulty levels
