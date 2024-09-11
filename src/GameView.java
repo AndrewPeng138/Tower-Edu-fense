@@ -15,6 +15,7 @@ public class GameView extends JPanel {
     private JLabel countdownLabel;  // Countdown/cool-down timer display
     private JLabel moneyLabel;  // Label to display the user's points/money
     private String currentQuestion;
+
     private Timer coolDownTimer;
     private int coolDownSeconds = 10;
     private int points = 0;  // Variable to track points/money
@@ -48,14 +49,21 @@ public class GameView extends JPanel {
         currentQuestion = questions.getAnyQuestion();
 
         // Display the question
-        questionLabel = new JLabel("Question: " + currentQuestion);
+        JLabel questionTextLabel = new JLabel("Question:");
+        questionTextLabel.setBounds(10, 50, 600, 50);
+        questionTextLabel.setForeground(Color.WHITE);
+        questionTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Question"
+        add(questionTextLabel);
+
+        questionLabel = new JLabel(currentQuestion);
         questionLabel.setBounds(10, 100, 600, 50);
         questionLabel.setForeground(Color.WHITE);
+        questionLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the actual question
         add(questionLabel);
 
         // Text field for user input
         answerField = new JTextField();
-        answerField.setBounds(10, 160, 300, 30);
+        answerField.setBounds(0, 160, 300, 30);
         add(answerField);
 
         // Set key listener for "Enter" key to submit the answer
@@ -82,13 +90,15 @@ public class GameView extends JPanel {
 
         // Money label to display points
         JLabel moneyTextLabel = new JLabel("Money:");
-        moneyTextLabel.setBounds(1120, 100, 200, 30);  // Positioned on the right side
+        moneyTextLabel.setBounds(1120, 50, 200, 30);  // Positioned on the right side
         moneyTextLabel.setForeground(Color.WHITE);
+        moneyTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Money"
         add(moneyTextLabel);
 
         moneyLabel = new JLabel("0");  // Initial money is 0
-        moneyLabel.setBounds(1200, 100, 200, 30);
+        moneyLabel.setBounds(1220, 52, 200, 30);
         moneyLabel.setForeground(Color.WHITE);
+        moneyLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the amount of money
         add(moneyLabel);
     }
 
@@ -98,7 +108,7 @@ public class GameView extends JPanel {
 
         if (userAnswer.equalsIgnoreCase(correctAnswer)) {
             feedbackLabel.setText("Correct!");
-            updatePoints(100);  // Award 10 points for correct answer
+            updatePoints(100);  // Award 100 points for correct answer
             moveToNextQuestion();  // Automatically move to the next question if the answer is correct
         } else {
             feedbackLabel.setText("Incorrect. The correct answer is: " + correctAnswer);
@@ -134,7 +144,7 @@ public class GameView extends JPanel {
         currentQuestion = questions.getAnyQuestion();
 
         if (currentQuestion != null) {
-            questionLabel.setText("Question: " + currentQuestion);
+            questionLabel.setText(currentQuestion);
             answerField.setText("");  // Clear the input field for the next question
             answerField.setEnabled(true);  // Ensure the answer field is enabled for the next question
             answerField.requestFocus();  // Set focus to the answerField so user can type immediately
