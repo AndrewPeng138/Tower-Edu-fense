@@ -1,3 +1,6 @@
+/**
+ * A lower health enemy that appears more often
+ */
 public class Mosquito extends EnemyModel{
     Mosquito(){
         this.setHealth(20);

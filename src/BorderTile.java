@@ -3,6 +3,11 @@
  */
 public class BorderTile extends Tile {
     private String type = "border";
+
+    /**
+     * Standard getter
+     * @return type of tile
+     */
     @Override
     public String getType() {
         return type;
