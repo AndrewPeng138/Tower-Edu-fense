@@ -6,9 +6,13 @@ import java.awt.event.ActionListener;
 public class MapPanel extends JPanel {
     public Tile[][] locations;
     public Image backgroundImage;
+    public Tower[][] placedTowers; // Store the placed towers
+    private GameView gameView;
 
-    public MapPanel(Tile[][] locations, String backgroundImagePath) {
+    public MapPanel(Tile[][] locations, String backgroundImagePath, GameView gameView) {
         this.locations = locations;
+        this.gameView = gameView;
+        placedTowers = new Tower[locations.length][locations[0].length]; // Initialize the placedTowers array
 
         // Load the background map image
         backgroundImage = new ImageIcon(backgroundImagePath).getImage();
@@ -49,10 +53,8 @@ public class MapPanel extends JPanel {
     }
 
     private void handleTileClick(int row, int col) {
-        // Logic for what happens when a tile is clicked
-        System.out.println("Tile clicked at: [" + row + ", " + col + "]");
-
-        // functionality here to place a tower or perform another action
+        // Pass the clicked tile to the GameView to handle tower placement
+        gameView.placeTowerOnTile(row, col);
     }
 
     @Override
@@ -77,10 +79,19 @@ public class MapPanel extends JPanel {
                     // Draw the tile image, scaling it to the tile size
                     g.drawImage(tileImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this);
                 }
+
+                // Draw any placed tower on the tile
+                Tower tower = placedTowers[i][j];
+                if (tower != null) {
+                    Image towerImage = tower.getTowerImage(); // Get the tower's image
+                    g.drawImage(towerImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this); // Draw the tower
+                }
             }
         }
+    }
 
-        // Recreate and reposition buttons in case of resizing
-        createTileButtons();  // Recreate them with new sizes
+    public void placeTower(int row, int col, Tower tower) {
+        placedTowers[row][col] = tower;  // Place the tower in the specified tile
+        repaint();  // Redraw the map to include the new tower
     }
 }

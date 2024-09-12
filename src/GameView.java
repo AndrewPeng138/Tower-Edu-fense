@@ -26,11 +26,32 @@ public class GameView extends JPanel {
     // List to store enemies
     private List<EnemyModel> enemies;
 
+    // Tower costs
+    private final int DEFAULT_TOWER_COST = 500;
+    private final int BOAT_TOWER_COST = 1500;
+    private final int HEAVY_TOWER_COST = 3000;
+    private final int LIGHTNING_TOWER_COST = 4500;
+    private final int FLAME_TOWER_COST = 2000;
+    private final int BUGM3LT3R_TOWER_COST = 10000;
+
+    // Towers
+    private JButton defaultTowerButton;
+    private JButton boatTowerButton;
+    private JButton heavyTowerButton;
+    private JButton lightningTowerButton;
+    private JButton flameTowerButton;
+    private JButton bugm3lt3rButton;
+
+    private String selectedTower = null;  // To store the currently selected tower
+    private int selectedTowerCost = 0;
+
+    private String mapType;  // The type of map
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) {
         this.questions = questions;
         this.mapModel = new MapModel(mapType);
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
+        this.mapType = mapType;
 
         // Set up the JFrame
         JFrame frame = new JFrame("Game View");
@@ -39,7 +60,7 @@ public class GameView extends JPanel {
         setLayout(null);
 
         // Create and set up the map panel
-        mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath);
+        mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);  // Pass reference to GameView for tile clicks
         mapPanel.setBounds(300, 0, 800, 750);
         add(mapPanel);
 
@@ -112,7 +133,128 @@ public class GameView extends JPanel {
         moneyLabel.setForeground(Color.WHITE);
         moneyLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the amount of money
         add(moneyLabel);
+
+        // Create tower buttons
+        createTowerButtons();
+        updateTowerButtons();
     }
+
+    // Method to handle placing a tower on a tile
+    // Method to handle placing a tower on a tile
+    public void placeTowerOnTile(int row, int col) {
+        if (selectedTower != null && points >= selectedTowerCost) {
+            points -= selectedTowerCost;  // Deduct the cost
+            updateMoneyLabel();  // Update the money label
+
+            // Create a Tower object based on the selected tower
+            Tower tower = new Tower(selectedTower, getTowerImagePath(selectedTower));
+            mapPanel.placeTower(row  , col, tower);  // Place the tower on the map
+
+            selectedTower = null;  // Reset selected tower
+            updateTowerButtons();  // Update tower buttons
+        } else {
+            JOptionPane.showMessageDialog(null, "Not enough money to place " + selectedTower + "!");
+        }
+    }
+    // Method to get the image path of a tower based on its name
+    private String getTowerImagePath(String towerName) {
+        switch (towerName) {
+            case "Default Tower":
+                return "Images/TowerSprites/Default projectile.png";
+            case "Boat Tower":
+                return "Images/TowerSprites/Boat tower.png";
+            case "Heavy Tower":
+                return "Images/TowerSprites/Cannon tower.png";
+            case "Lightning Tower":
+                return "Images/TowerSprites/Lightning tower.png";
+            case "Flame Tower":
+                return "Images/TowerSprites/Flame tower.png";
+            case "BUGM3LT3R":
+                return "Images/TowerSprites/BUGM3LT3R.png";
+            default:
+                return null;  // No image
+        }
+    }
+
+    // Create tower buttons and place them under the money label
+    private void createTowerButtons() {
+        int baseY = 100;  // Base Y position under the money label
+        int buttonHeight = 50;
+
+        // Default Tower
+        defaultTowerButton = createTowerButton("Default Tower", DEFAULT_TOWER_COST, 1120, baseY);
+        add(defaultTowerButton);
+
+        // Boat Tower (Disabled on Easy map)
+        boatTowerButton = createTowerButton("Boat Tower", BOAT_TOWER_COST, 1120, baseY + buttonHeight);
+        if (mapType.equalsIgnoreCase("Easy")) {
+            boatTowerButton.setVisible(false);  // Hide if map type is "Easy"
+        }
+        add(boatTowerButton);
+
+        // Heavy Tower
+        heavyTowerButton = createTowerButton("Heavy Tower", HEAVY_TOWER_COST, 1120, baseY + 2 * buttonHeight);
+        add(heavyTowerButton);
+
+        // Lightning Tower
+        lightningTowerButton = createTowerButton("Lightning Tower", LIGHTNING_TOWER_COST, 1120, baseY + 3 * buttonHeight);
+        add(lightningTowerButton);
+
+        // Flame Tower
+        flameTowerButton = createTowerButton("Flame Tower", FLAME_TOWER_COST, 1120, baseY + 4 * buttonHeight);
+        add(flameTowerButton);
+
+        // BUGM3LT3R Tower
+        bugm3lt3rButton = createTowerButton("BUGM3LT3R", BUGM3LT3R_TOWER_COST, 1120, baseY + 5 * buttonHeight);
+        add(bugm3lt3rButton);
+    }
+
+    // Method to create a tower button with an action listener
+    private JButton createTowerButton(String name, int cost, int x, int y) {
+        JButton button = new JButton(name + " - $" + cost);
+        button.setBounds(x, y, 200, 50);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (points >= cost) {
+                    selectedTower = name;  // Set the selected tower
+                    selectedTowerCost = cost;  // Set the tower cost
+                    System.out.println(name + " selected");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Not enough money for " + name + "!");
+                }
+            }
+        });
+        return button;
+    }
+
+    // Update tower buttons, enabling/disabling them based on current points
+    private void updateTowerButtons() {
+        defaultTowerButton.setEnabled(points >= DEFAULT_TOWER_COST);
+        boatTowerButton.setEnabled(points >= BOAT_TOWER_COST && !mapType.equalsIgnoreCase("Easy"));  // Only enabled if not "Easy" map
+        heavyTowerButton.setEnabled(points >= HEAVY_TOWER_COST);
+        lightningTowerButton.setEnabled(points >= LIGHTNING_TOWER_COST);
+        flameTowerButton.setEnabled(points >= FLAME_TOWER_COST);
+        bugm3lt3rButton.setEnabled(points >= BUGM3LT3R_TOWER_COST);
+    }
+
+
+    // Method to update the money label
+    private void updateMoneyLabel() {
+        moneyLabel.setText(String.valueOf(points));
+    }
+
+
+    // Update tower buttons, enabling/disabling them based on current points
+
+
+    // Method to update the user's points and refresh the money label
+    private void updatePoints(int amount) {
+        points += amount;  // Add the specified amount to the current points
+        updateMoneyLabel();  // Update the label with the new points
+        updateTowerButtons();  // Update button states
+    }
+
 
     // Method to spawn enemies at the start of the game
     // Method to spawn enemies at the start of the game
@@ -226,9 +368,5 @@ public class GameView extends JPanel {
         }
     }
 
-    // Method to update the user's points and refresh the money label
-    private void updatePoints(int amount) {
-        points += amount;  // Add the specified amount to the current points
-        moneyLabel.setText(String.valueOf(points));  // Update the label with the new points
-    }
+
 }
