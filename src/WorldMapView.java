@@ -31,22 +31,22 @@ public class WorldMapView extends JPanel {
 
         // Add the buttons and their actions
         buttons[0].addActionListener(e -> {
-            // Load Math questions and pass them to DifficultyView
-            Questions mathQuestions = new MathQuestions("questions/MathTimesTables.txt");
+            // Load Math questions from the database and pass them to DifficultyView
+            Questions mathQuestions = new MathQuestions();  // No more file paths needed
             new DifficultyView(mathQuestions);  // Pass the math questions to DifficultyView
             frame.dispose();       // Close current window
         });
 
         buttons[1].addActionListener(e -> {
-            // Load Geography questions and pass them to DifficultyView
-            Questions geographyQuestions = new GeographyQuestions("questions/GeographyStateCap.txt");
+            // Load Geography questions from the database and pass them to DifficultyView
+            Questions geographyQuestions = new GeographyQuestions();  // No more file paths needed
             new DifficultyView(geographyQuestions);  // Pass the geography questions to DifficultyView
             frame.dispose();       // Close current window
         });
 
         buttons[2].addActionListener(e -> {
-            // Load Chemistry questions and pass them to DifficultyView
-            Questions chemistryQuestions = new ChemistryQuestions("questions/ChemistryPeriodicTable.txt");
+            // Load Chemistry questions from the database and pass them to DifficultyView
+            Questions chemistryQuestions = new ChemistryQuestions();  // No more file paths needed
             new DifficultyView(chemistryQuestions);  // Pass the chemistry questions to DifficultyView
             frame.dispose();       // Close current window
         });
