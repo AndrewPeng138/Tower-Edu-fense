@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MapPanel extends JPanel {
-    private Tile[][] locations;
-    private Image backgroundImage;
+    public Tile[][] locations;
+    public Image backgroundImage;
 
     public MapPanel(Tile[][] locations, String backgroundImagePath) {
         this.locations = locations;
