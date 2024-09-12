@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,8 +19,12 @@ public class GameView extends JPanel {
     private String currentQuestion;
 
     private Timer coolDownTimer;
+    private Timer gameLoopTimer;
     private int coolDownSeconds = 10;
     private int points = 0;  // Variable to track points/money
+
+    // List to store enemies
+    private List<EnemyModel> enemies;
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) {
         this.questions = questions;
@@ -38,6 +44,11 @@ public class GameView extends JPanel {
 
         // Initialize and set up UI components
         initializeUI();
+
+        // Initialize the enemy list and start the game loop
+        enemies = new ArrayList<>();
+        spawnEnemies();  // Initialize the enemy spawning
+        startGameLoop();  // Start the game update loop
 
         frame.add(this);
         frame.setSize(1400, 900);  // Adjusted size to fit components
@@ -102,6 +113,45 @@ public class GameView extends JPanel {
         add(moneyLabel);
     }
 
+    // Method to spawn enemies at the start of the game
+    private void spawnEnemies() {
+        // Add a Roach as a test enemy. Modify this to add more enemies and different types.
+        enemies.add(new Roach(0, 0));  // Add Roach at the starting position (0, 0)
+    }
+
+    // Start the game loop timer for continuous updates
+    private void startGameLoop() {
+        gameLoopTimer = new Timer();
+        gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                updateGame();  // Update game state
+                repaint();  // Redraw the panel with updated enemy positions
+            }
+        }, 0, 100);  // Run every 100ms (10 times per second)
+    }
+
+    private void updateGame() {
+        if (mapModel == null) {
+            System.err.println("MapModel is not initialized");
+            return;
+        }
+
+        // Move each enemy based on the tile map logic
+        for (EnemyModel enemy : enemies) {
+            if (enemy != null) {
+                enemy.moveToNextEnemyTile(mapModel);  // Move based on map tiles
+            }
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+
+    }
+
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim();
         String correctAnswer = questions.getAnswer(currentQuestion);
@@ -158,11 +208,5 @@ public class GameView extends JPanel {
     private void updatePoints(int amount) {
         points += amount;  // Add the specified amount to the current points
         moneyLabel.setText(String.valueOf(points));  // Update the label with the new points
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 }

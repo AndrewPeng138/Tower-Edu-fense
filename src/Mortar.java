@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+//import java.util.ArrayList;
 /**
  * Special tower that can hit all enemies on the grid
  * 5 damage
@@ -16,9 +16,9 @@ public class Mortar extends TowerModel{
      */
     @Override
     public void Fire(Wave enemyWave) {
-        ArrayList<EnemyModel> waveList = enemyWave.getWave();
-        for(EnemyModel e : waveList){
-            e.decreaseHealth(this.getDamage());
+       // ArrayList<EnemyModel> waveList = enemyWave.getWave();
+       // for(EnemyModel e : waveList){
+          //  e.decreaseHealth(this.getDamage());
         }
     }
-}
+//}

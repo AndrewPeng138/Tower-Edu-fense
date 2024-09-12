@@ -1,104 +1,57 @@
+import java.awt.*;
+
 public abstract class EnemyModel {
-    private int damage;
+    protected int currentRow;
+    protected int currentCol;
     private int health;
-    private int speed;
-    private int x;
-    private int y;
+    private int damage;
 
-    /**
-     * basic movement by enemy
-     */
-    public void move(int nextX, int nextY) {
-        this.x = nextX;
-        this.y = nextY;
-    }
-    /**
-     * Gets x coordinate of enemy
-     * @return x coordinate of enemy
-     */
-    public int getX(){
-        return this.x;
-    }
-    /**
-     * Gets y coordinate of enemy
-     * @return y coordinate of enemy
-     */
-    public int getY(){
-        return this.y;
+    // Method to be overridden by specific enemies if needed
+    public void moveToNextEnemyTile(Tile[][] mapTiles) {
+        // General movement logic here (like in the Roach example)
     }
 
-    /**
-     * Set the x coordinate of enemy
-     * @param value x coordinate to be set
-     */
-    public void setX(int value){
-        this.x = value;
-    }
-    /**
-     * Set the y coordinate of enemy
-     * @param value y coordinate to be set
-     */
-    public void setY(int value){
-        this.y = value;
+    public void moveTo(int newRow, int newCol) {
+        this.currentRow = newRow;
+        this.currentCol = newCol;
     }
 
-    /**
-     * Setting position of enemy
-     * @param enemyX x coordinate to be set
-     * @param enemyY y coordinate to be set
-     */
-    public void setPosition(int enemyX, int enemyY){
-        this.x = enemyX;
-        this.y = enemyY;
-    }
-    /**
-     * Sets health of enemy
-     * @param value health value to be set
-     */
-    public void setHealth(int value){
-        this.health = value;
-    }
-    /**
-     * Sets speed of enemy
-     * @param value speed value to be set
-     */
-    public void setSpeed(int value){
-        this.speed = value;
-    }
-    /**
-     * Sets health of enemy
-     * @param value health value to be set
-     */
-    public void setDamage(int value){
-        this.damage = value;
+    public void moveToNextEnemyTile(MapModel mapModel) {
+
+        // Check left, right, and down tiles
+        String leftTile = mapModel.getTileType(currentRow, currentCol - 1);
+        String rightTile = mapModel.getTileType(currentRow, currentCol + 1);
+        String downTile = mapModel.getTileType(currentRow + 1, currentCol);
+
+        // Move to an "enemy" tile if available
+        if (downTile.equals("enemy")) {
+            moveTo(currentRow + 1, currentCol);
+        } else if (leftTile.equals("enemy")) {
+            moveTo(currentRow, currentCol - 1);
+        } else if (rightTile.equals("enemy")) {
+            moveTo(currentRow, currentCol + 1);
+        }
     }
 
-    /**
-     * Decrease health taken from damage by certain amount
-     * @param value amount of health enemy lost
-     */
-    public void decreaseHealth(int value){
-        this.health -= value;
+    public void setHealth(int health) {
+        this.health = health;
     }
 
-    /**
-     * Gets the damage of enemy
-     * @return Damage that enemy deals
-     */
-    public int getDamage(){
-        return this.damage;
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
-    /**
-     * Gets the health of enemy
-     * @return Health of enemy
-     */
-    public int getHealth(){
-        return this.health;
+    // Add getters if needed
+    public int getHealth() {
+        return health;
     }
 
-    /**
-     * Returns if the enemy is a metal roach
-     */
-    abstract public boolean isMetal();
+    public int getDamage() {
+        return damage;
+    }
+
+    public abstract boolean isMetal();
+
+    protected void paintComponent(Graphics g) {
+    }
 }

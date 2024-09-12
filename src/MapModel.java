@@ -8,6 +8,7 @@ import javax.swing.border.Border;
 public class MapModel {
     // 2D array contain all the map tiles
     private Tile[][] locations = new Tile[17][17];
+    private String[][] mapData;
 
     /**
      * Constructor for new maps, keep in mind [y][x] coordinates
@@ -546,6 +547,18 @@ public class MapModel {
             }
             System.out.println();
         }
+    }
+
+    public String getTileType(int row, int col) {
+        if (row >= 0 && row < mapData.length && col >= 0 && col < mapData[0].length) {
+            return mapData[row][col];
+        } else {
+            return "border";  // Return border tile type if out of bounds
+        }
+    }
+
+    public Tile[][] getMapTiles() {
+        return locations;
     }
 
 
