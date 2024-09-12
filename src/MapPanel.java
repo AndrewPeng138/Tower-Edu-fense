@@ -1,14 +1,60 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MapPanel extends JPanel {
     public Tile[][] locations;
     public Image backgroundImage;
+    public Tower[][] placedTowers; // Store the placed towers
+    private GameView gameView;
 
-    public MapPanel(Tile[][] locations, String backgroundImagePath) {
+    public MapPanel(Tile[][] locations, String backgroundImagePath, GameView gameView) {
         this.locations = locations;
+        this.gameView = gameView;
+        placedTowers = new Tower[locations.length][locations[0].length]; // Initialize the placedTowers array
+
         // Load the background map image
         backgroundImage = new ImageIcon(backgroundImagePath).getImage();
+        setLayout(null);  // Use absolute positioning for placing buttons
+
+        // Create buttons for each tile
+        createTileButtons();
+    }
+
+    private void createTileButtons() {
+        // Determine tile size based on the initial panel size
+        int tileWidth = 800 / locations[0].length;  // Assume an initial width for simplicity
+        int tileHeight = 600 / locations.length;    // Assume an initial height for simplicity
+
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                // Create a new JButton for each tile
+                JButton tileButton = new JButton();
+                tileButton.setBounds(j * tileWidth, i * tileHeight, tileWidth, tileHeight);  // Position the button
+                tileButton.setOpaque(false);  // Make button background transparent
+                tileButton.setContentAreaFilled(false);  // Remove background fill
+                tileButton.setBorderPainted(false);  // Remove border
+                tileButton.setFocusPainted(false);  // Remove focus indicator
+
+                // Add action listener to handle click event
+                int row = i, col = j;
+                tileButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        handleTileClick(row, col);
+                    }
+                });
+
+                // Add the button to the panel
+                add(tileButton);
+            }
+        }
+    }
+
+    private void handleTileClick(int row, int col) {
+        // Pass the clicked tile to the GameView to handle tower placement
+        gameView.placeTowerOnTile(row, col);
     }
 
     @Override
@@ -33,7 +79,19 @@ public class MapPanel extends JPanel {
                     // Draw the tile image, scaling it to the tile size
                     g.drawImage(tileImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this);
                 }
+
+                // Draw any placed tower on the tile
+                Tower tower = placedTowers[i][j];
+                if (tower != null) {
+                    Image towerImage = tower.getTowerImage(); // Get the tower's image
+                    g.drawImage(towerImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this); // Draw the tower
+                }
             }
         }
+    }
+
+    public void placeTower(int row, int col, Tower tower) {
+        placedTowers[row][col] = tower;  // Place the tower in the specified tile
+        repaint();  // Redraw the map to include the new tower
     }
 }
