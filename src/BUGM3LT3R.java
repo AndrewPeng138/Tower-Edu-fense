@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class BUGM3LT3R extends TowerProperties implements TowerModelI{
     BUGM3LT3R(){
-        this.setDamage(10);
+        this.setDamage(300);
         this.setCost(10000);
     }
     /**
