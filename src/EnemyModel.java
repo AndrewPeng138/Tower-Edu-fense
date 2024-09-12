@@ -1,37 +1,22 @@
 import java.awt.*;
 
 public abstract class EnemyModel {
-    protected int currentRow;
-    protected int currentCol;
+    private int currentRow;
+    private int currentCol;
     private int health;
     private int damage;
 
-    // Method to be overridden by specific enemies if needed
-    public void moveToNextEnemyTile(Tile[][] mapTiles) {
-        // General movement logic here (like in the Roach example)
+    public int getCurrentRow() {
+        return currentRow;
     }
 
-    public void moveTo(int newRow, int newCol) {
-        this.currentRow = newRow;
-        this.currentCol = newCol;
+    public int getCurrentCol() {
+        return currentCol;
     }
 
-    public void moveToNextEnemyTile(MapModel mapModel) {
+    public void setCurrentRow(int value){this.currentRow = value;}
 
-        // Check left, right, and down tiles
-        String leftTile = mapModel.getTileType(currentRow, currentCol - 1);
-        String rightTile = mapModel.getTileType(currentRow, currentCol + 1);
-        String downTile = mapModel.getTileType(currentRow + 1, currentCol);
-
-        // Move to an "enemy" tile if available
-        if (downTile.equals("enemy")) {
-            moveTo(currentRow + 1, currentCol);
-        } else if (leftTile.equals("enemy")) {
-            moveTo(currentRow, currentCol - 1);
-        } else if (rightTile.equals("enemy")) {
-            moveTo(currentRow, currentCol + 1);
-        }
-    }
+    public void setCurrentCol(int value){this.currentCol = value;}
 
     public void setHealth(int health) {
         this.health = health;
@@ -41,7 +26,6 @@ public abstract class EnemyModel {
         this.damage = damage;
     }
 
-    // Add getters if needed
     public int getHealth() {
         return health;
     }
@@ -52,6 +36,59 @@ public abstract class EnemyModel {
 
     public abstract boolean isMetal();
 
-    protected void paintComponent(Graphics g) {
+    /**
+     * Move the enemy to a new tile if it's an enemy tile
+     * @param mapModel Map the enemy is moving on
+     */
+    public void moveToNextEnemyTile(MapModel mapModel) {
+        if (mapModel == null) {
+            throw new IllegalArgumentException("MapModel cannot be null");
+        }
+
+        // Get current position
+        int row = getCurrentRow();
+        int col = getCurrentCol();
+
+        // Check the tiles in order: down, left, right
+        if (isEnemyTile(mapModel, row + 1, col)) {
+            moveTo(row + 1, col); // Move down
+        } else if (isEnemyTile(mapModel, row, col - 1)) {
+            moveTo(row, col - 1); // Move left
+        } else if (isEnemyTile(mapModel, row, col + 1)) {
+            moveTo(row, col + 1); // Move right
+        }
     }
+
+    /**
+     * Utility method to check if a tile is an enemy tile
+     * @param mapModel Map that tile is on
+     * @param row row of tile
+     * @param col column of tile
+     * @return true if tile is an enemy tile, false if other tile type
+     */
+    private boolean isEnemyTile(MapModel mapModel, int row, int col) {
+        // Check if the position is within bounds
+        String tileType = mapModel.getTileType(row, col);
+        return "enemy".equals(tileType);  // Return true if the tile is an "enemy" tile
+    }
+
+    /**
+     * Method moving enemy to a new tile
+     * @param newRow row number of new tile
+     * @param newCol column number of new tile
+     */
+    public void moveTo(int newRow, int newCol) {
+        this.currentRow = newRow;
+        this.currentCol = newCol;
+    }
+
+    /**
+     * Abstract method drawing the enemy on the board
+     * @param g
+     * @param screenX
+     * @param screenY
+     * @param tileWidth
+     * @param tileHeight
+     */
+    public abstract void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight);
 }

@@ -17,12 +17,15 @@ public class MapModel {
     private Tile[][] locations = new Tile[17][17];
     private String[][] mapData;
     private Roach roach;
+    private int entranceRow;
+    private int entranceCol;
 
     /**
      * Constructor for new maps, keep in mind [y][x] coordinates
      * @param mapType easy, normal, hard, or extreme map
      */
     public MapModel(String mapType) {
+
         this.mapData = new String[17][17];
         // Instantiates a new Tile Factory to manufacture our necessary tiles
         TileFactory theFactory = new TileFactory();
@@ -44,6 +47,8 @@ public class MapModel {
             entranceTile.setEntrance(true);
             locations[0][14] = entranceTile;
             mapData[0][14] = "enemy";
+            entranceRow = 0;
+            entranceCol = 14;
             // Sets exit
             EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy");
             exitTile.setExit(true);
@@ -198,6 +203,9 @@ public class MapModel {
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
             entranceTile.setEntrance(true);
             locations[0][2] = entranceTile;
+            entranceRow = 0;
+            entranceCol = 2;
+
             // Sets exit
             EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy");
             exitTile.setExit(true);
@@ -358,6 +366,9 @@ public class MapModel {
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
             entranceTile.setEntrance(true);
             locations[0][6] = entranceTile;
+            entranceRow = 0;
+            entranceCol = 6;
+
             // Sets exit
             EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy");
             exitTile.setExit(true);
@@ -531,6 +542,9 @@ public class MapModel {
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
             entranceTile.setEntrance(true);
             locations[0][8] = entranceTile;
+            entranceRow = 0;
+            entranceCol = 8;
+
             // Sets exit
             EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy");
             exitTile.setExit(true);
@@ -618,6 +632,13 @@ public class MapModel {
 
     public Tile[][] getMapTiles() {
         return locations;
+    }
+
+    public int getEntranceRow(){
+        return entranceRow;
+    }
+    public int getEntranceCol(){
+        return entranceCol;
     }
 
 
