@@ -143,12 +143,37 @@ public class GameView extends JPanel {
     // Method to handle placing a tower on a tile
     public void placeTowerOnTile(int row, int col) {
         if (selectedTower != null && points >= selectedTowerCost) {
+            // Adjust the row/column based on the selected tower type
+            switch (selectedTower) {
+                case "Default Tower":
+                    row -= 1;  // Place DefaultTower at row-1
+                    break;
+                case "Boat Tower":
+                    row -= 2;  // Place BoatTower at row-2
+                    break;
+                case "Heavy Tower":
+                    row -= 1;
+                    break;
+                case "Lightning Tower":
+                    row -= 2;
+                    break;
+                case "Flame Tower":
+                    row -= 2;
+                    break;
+                case "BUGM3LT3R":
+                    row -= 1;
+                    break;
+                default:
+                    // No adjustment for unknown tower types
+                    break;
+            }
+
             points -= selectedTowerCost;  // Deduct the cost
             updateMoneyLabel();  // Update the money label
 
             // Create a Tower object based on the selected tower
             Tower tower = new Tower(selectedTower, getTowerImagePath(selectedTower));
-            mapPanel.placeTower(row  , col, tower);  // Place the tower on the map
+            mapPanel.placeTower(row, col, tower);  // Place the tower on the map
 
             selectedTower = null;  // Reset selected tower
             updateTowerButtons();  // Update tower buttons
@@ -156,6 +181,7 @@ public class GameView extends JPanel {
             JOptionPane.showMessageDialog(null, "Not enough money to place " + selectedTower + "!");
         }
     }
+
     // Method to get the image path of a tower based on its name
     private String getTowerImagePath(String towerName) {
         switch (towerName) {
