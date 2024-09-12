@@ -20,7 +20,7 @@ public class Lightning extends TowerProperties implements TowerModelI{
     public void Fire(Wave enemyWave) {
         ArrayList<EnemyModel> waveList = enemyWave.getWave();
         for(EnemyModel e : waveList){
-            e.decreaseHealth(this.getDamage());
+          //  e.decreaseHealth(this.getDamage());
         }
     }
 }

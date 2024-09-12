@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,8 +19,13 @@ public class GameView extends JPanel {
     private String currentQuestion;
 
     private Timer coolDownTimer;
+    private Timer gameLoopTimer;
     private int coolDownSeconds = 10;
     private int points = 0;  // Variable to track points/money
+
+    // List to store enemies
+    private List<EnemyModel> enemies;
+
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) {
         this.questions = questions;
@@ -38,6 +45,11 @@ public class GameView extends JPanel {
 
         // Initialize and set up UI components
         initializeUI();
+
+        // Initialize the enemy list and start the game loop
+        enemies = new ArrayList<>();
+        spawnEnemies();  // Initialize the enemy spawning
+        startGameLoop();  // Start the game update loop
 
         frame.add(this);
         frame.setSize(1400, 900);  // Adjusted size to fit components
@@ -63,7 +75,7 @@ public class GameView extends JPanel {
 
         // Text field for user input
         answerField = new JTextField();
-        answerField.setBounds(0, 160, 300, 30);
+        answerField.setBounds(10, 160, 300, 30);
         add(answerField);
 
         // Set key listener for "Enter" key to submit the answer
@@ -101,6 +113,66 @@ public class GameView extends JPanel {
         moneyLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the amount of money
         add(moneyLabel);
     }
+
+    // Method to spawn enemies at the start of the game
+    // Method to spawn enemies at the start of the game
+    private void spawnEnemies() {
+        // Example: Add Roach at a specific tile (row, col)
+        int startRow = 0;  // Starting row based on map coordinates
+        int startCol = 14; // Starting column based on map coordinates
+        enemies.add(new Roach(startRow, startCol));  // Pass the tile coordinates to the enemy
+    }
+
+
+    // Start the game loop timer for continuous updates
+    private void startGameLoop() {
+        gameLoopTimer = new Timer();
+        gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                updateGame();  // Update game state
+                repaint();  // Redraw the panel with updated enemy positions
+            }
+        }, 0, 100);  // Run every 100ms (10 times per second)
+    }
+
+    private void updateGame() {
+        if (mapModel == null) {
+            System.err.println("MapModel is not initialized");
+            return;
+        }
+
+        // Move each enemy based on the tile map logic
+        for (EnemyModel enemy : enemies) {
+            if (enemy != null) {
+                enemy.moveToNextEnemyTile(mapModel);  // Move based on map tiles
+            }
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+
+        // Determine tile size based on the panel dimensions
+        int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
+        int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
+
+        // Draw each enemy based on their tile positions
+        for (EnemyModel enemy : enemies) {
+            if (enemy instanceof Roach) {
+                Roach roach = (Roach) enemy;
+                // Convert map coordinates to screen coordinates
+                int screenX = roach.getCurrentCol() * tileWidth;
+                int screenY = roach.getCurrentRow() * tileHeight;
+                roach.draw(g, screenX, screenY, tileWidth, tileHeight);  // Pass tile sizes to draw the roach properly
+            }
+        }
+    }
+
+
+
 
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim();
@@ -158,11 +230,5 @@ public class GameView extends JPanel {
     private void updatePoints(int amount) {
         points += amount;  // Add the specified amount to the current points
         moneyLabel.setText(String.valueOf(points));  // Update the label with the new points
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 }
