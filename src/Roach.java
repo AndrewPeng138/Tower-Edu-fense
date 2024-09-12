@@ -7,14 +7,19 @@ public class Roach extends EnemyModel {
     private int currentRow;
     private int currentCol;
 
+
     // Constructor
     public Roach(int startRow, int startCol) {
         this.currentRow = startRow;
         this.currentCol = startCol;
-        this.setHealth(50);  // Set initial health
-        this.setDamage(10);  // Set initial damage
+        this.setHealth(50);   // Set initial health
+        this.setDamage(10);   // Set initial damage
         this.roachImage = new ImageIcon("Images/BugSprites/cockroachPA.png").getImage();
+        System.out.println("Roach starting at: (" + currentRow + ", " + currentCol + ")");
     }
+
+
+
 
     // Getters
     public Image getRoachImage() {
@@ -68,7 +73,7 @@ public class Roach extends EnemyModel {
     }
 
     // Draw the roach on the screen
-    public void draw(Graphics g, int tileSize) {
-        g.drawImage(roachImage, currentCol * tileSize, currentRow * tileSize, tileSize, tileSize, null);
+    public void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight) {
+        g.drawImage(roachImage, screenX, screenY, tileWidth, tileHeight, null);
     }
 }

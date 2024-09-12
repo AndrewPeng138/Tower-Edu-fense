@@ -26,6 +26,7 @@ public class GameView extends JPanel {
     // List to store enemies
     private List<EnemyModel> enemies;
 
+
     public GameView(String backgroundImagePath, Questions questions, String mapType) {
         this.questions = questions;
         this.mapModel = new MapModel(mapType);
@@ -114,10 +115,14 @@ public class GameView extends JPanel {
     }
 
     // Method to spawn enemies at the start of the game
+    // Method to spawn enemies at the start of the game
     private void spawnEnemies() {
-        // Add a Roach as a test enemy. Modify this to add more enemies and different types.
-        enemies.add(new Roach(0, 0));  // Add Roach at the starting position (0, 0)
+        // Example: Add Roach at a specific tile (row, col)
+        int startRow = 0;  // Starting row based on map coordinates
+        int startCol = 14; // Starting column based on map coordinates
+        enemies.add(new Roach(startRow, startCol));  // Pass the tile coordinates to the enemy
     }
+
 
     // Start the game loop timer for continuous updates
     private void startGameLoop() {
@@ -150,7 +155,24 @@ public class GameView extends JPanel {
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
+        // Determine tile size based on the panel dimensions
+        int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
+        int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
+
+        // Draw each enemy based on their tile positions
+        for (EnemyModel enemy : enemies) {
+            if (enemy instanceof Roach) {
+                Roach roach = (Roach) enemy;
+                // Convert map coordinates to screen coordinates
+                int screenX = roach.getCurrentCol() * tileWidth;
+                int screenY = roach.getCurrentRow() * tileHeight;
+                roach.draw(g, screenX, screenY, tileWidth, tileHeight);  // Pass tile sizes to draw the roach properly
+            }
+        }
     }
+
+
+
 
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim();
