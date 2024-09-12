@@ -4,7 +4,9 @@ import javax.swing.ImageIcon;
 
 public class MetalRoach extends EnemyModel{
     private Image metalroachImage;
-    MetalRoach(){
+    MetalRoach(int startRow, int startCol){
+        setCurrentRow(startRow);
+        setCurrentCol(startCol);
         this.setHealth(50);
         this.setDamage(10);
         // Add functionality for immunity

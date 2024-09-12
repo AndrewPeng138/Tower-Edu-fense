@@ -7,7 +7,9 @@ import javax.swing.ImageIcon;
  */
 public class Mosquito extends EnemyModel{
     private Image mosquitoImage;
-    Mosquito(){
+    Mosquito(int startRow, int startCol){
+        setCurrentRow(startRow);
+        setCurrentCol(startCol);
         this.setHealth(20);
         this.setDamage(10);
         this.mosquitoImage = new ImageIcon("Images/BugSprites/mosquitoPA.png").getImage();

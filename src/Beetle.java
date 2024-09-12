@@ -7,7 +7,9 @@ import javax.swing.ImageIcon;
  */
 public class Beetle extends EnemyModel{
     private Image beetleImage;
-    Beetle(){
+    Beetle(int startRow, int startCol){
+        setCurrentRow(startRow);
+        setCurrentCol(startCol);
         this.setHealth(100);
         this.setDamage(10);
         this.beetleImage = new ImageIcon("Images/BugSprites/beetlePA.png").getImage();

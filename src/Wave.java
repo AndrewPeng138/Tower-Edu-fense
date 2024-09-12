@@ -46,13 +46,13 @@ public class Wave {
             for (int i = 0; i < 4; i++) {
                 waveList.add(new Roach(entranceRow, entranceCol));
             }
-            waveList.add(new Beetle());
+            waveList.add(new Beetle(entranceRow, entranceCol));
         }
         if (this.waveCounter == 5) {
             // 4 beetles
             // 400 combined total health
             for (int i = 0; i < 4; i++) {
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 6) {
@@ -61,7 +61,7 @@ public class Wave {
             // 450 combined total health
             for (int i = 0; i < 3; i++) {
                 waveList.add(new Roach(entranceRow, entranceCol));
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 7) {
@@ -70,7 +70,7 @@ public class Wave {
             // 600 combined total health
             for (int i = 0; i < 4; i++) {
                 waveList.add(new Roach(entranceRow, entranceCol));
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 8) {
@@ -80,21 +80,21 @@ public class Wave {
             waveList.add(new Roach(entranceRow, entranceCol));
             waveList.add(new Roach(entranceRow, entranceCol));
             for (int i = 0; i < 6; i++) {
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 9) {
             // 8 beetles
             // 800 combined total health
             for (int i = 0; i < 8; i++) {
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 10) {
             // 45 mosquitos
             // 900 combined total health
             for (int i = 0; i < 45; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 11) {
@@ -102,11 +102,11 @@ public class Wave {
             // 10 roaches
             // 1200 combined total health
             for (int i = 0; i < 10; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
                 waveList.add(new Roach(entranceRow, entranceCol));
             }
             for (int i = 0; i < 25; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
             }
         }
         if (waveCounter == 12) {
@@ -115,19 +115,19 @@ public class Wave {
             // 5 beetles
             // 1450 combined total health
         for (int i = 0; i < 5; i++) {
-            waveList.add(new Mosquito());
+            waveList.add(new Mosquito(entranceRow, entranceCol));
             waveList.add(new Roach(entranceRow, entranceCol));
-            waveList.add(new Beetle());
+            waveList.add(new Beetle(entranceRow, entranceCol));
         }
         for (int i = 0; i < 30; i++) {
-            waveList.add(new Mosquito());
+            waveList.add(new Mosquito(entranceRow, entranceCol));
         }
         }
         if (this.waveCounter == 13) {
             // 16 beetles
             // 1600 combined total health
             for (int i = 0; i < 16; i++) {
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 14) {
@@ -136,20 +136,20 @@ public class Wave {
             // 5 beetles
             // 2000 combined total health
             for (int i = 0; i < 50; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
             }
             for (int i = 0; i < 10; i++) {
                 waveList.add(new Roach(entranceRow, entranceCol));
             }
             for (int i = 0; i < 5; i++) {
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 15) {
             // 10 metal roaches
             // 500 combined total health
             for (int i = 0; i < 10; i++) {
-                waveList.add(new MetalRoach());
+                waveList.add(new MetalRoach(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 16) {
@@ -158,11 +158,11 @@ public class Wave {
             // 50 mosquitos
             // 2000 combined total health
             for (int i = 0; i < 10; i++) {
-                waveList.add(new MetalRoach());
+                waveList.add(new MetalRoach(entranceRow, entranceCol));
                 waveList.add(new Roach(entranceRow, entranceCol));
             }
             for (int i = 0; i < 50; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 17) {
@@ -172,12 +172,12 @@ public class Wave {
             // 25 mosquitos
             // 2500 combined total health
             for (int i = 0; i < 10; i++) {
-                waveList.add(new MetalRoach());
-                waveList.add(new Beetle());
+                waveList.add(new MetalRoach(entranceRow, entranceCol));
+                waveList.add(new Beetle(entranceRow, entranceCol));
                 waveList.add(new Roach(entranceRow, entranceCol));
             }
             for (int i = 0; i < 25; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 18) {
@@ -190,18 +190,18 @@ public class Wave {
             // 5 metal roaches
             // 3000 combined total health
             for (int i = 0; i < 25; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
             }
             // Does this twice
             for (int x = 0; x < 2; x++) {
                 for (int i = 0; i < 5; i++) {
-                    waveList.add(new Beetle());
+                    waveList.add(new Beetle(entranceRow, entranceCol));
                 }
                 for (int i = 0; i < 10; i++) {
                     waveList.add(new Roach(entranceRow, entranceCol));
                 }
                 for (int i = 0; i < 5; i++) {
-                    waveList.add(new MetalRoach());
+                    waveList.add(new MetalRoach(entranceRow, entranceCol));
                 }
             }
         }
@@ -212,12 +212,12 @@ public class Wave {
             // 15 metal roaches
             // 3500 combined total health
             for (int i = 0; i < 25; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
             }
             for (int i = 0; i < 15; i++) {
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
                 waveList.add(new Roach(entranceRow, entranceCol));
-                waveList.add(new MetalRoach());
+                waveList.add(new MetalRoach(entranceRow, entranceCol));
             }
         }
         if (this.waveCounter == 20) {
@@ -232,29 +232,29 @@ public class Wave {
             // 25 mosquitos
             // 4000 combined total health
             for (int i = 0; i < 25; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
             }
             for (int i = 0; i < 5; i++) {
                 waveList.add(new Roach(entranceRow, entranceCol));
             }
             for (int i = 0; i < 5; i++) {
-                waveList.add(new MetalRoach());
+                waveList.add(new MetalRoach(entranceRow, entranceCol));
             }
             for (int i = 0; i < 5; i++) {
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
             }
-            waveList.add(new PrayingMantis());
+            waveList.add(new PrayingMantis(entranceRow, entranceCol));
             for (int i = 0; i < 5; i++) {
                 waveList.add(new Roach(entranceRow, entranceCol));
             }
             for (int i = 0; i < 5; i++) {
-                waveList.add(new MetalRoach());
+                waveList.add(new MetalRoach(entranceRow, entranceCol));
             }
             for (int i = 0; i < 5; i++) {
-                waveList.add(new Beetle());
+                waveList.add(new Beetle(entranceRow, entranceCol));
             }
             for (int i = 0; i < 25; i++) {
-                waveList.add(new Mosquito());
+                waveList.add(new Mosquito(entranceRow, entranceCol));
             }
         }
     }

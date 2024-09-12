@@ -20,7 +20,7 @@ public class GameView extends JPanel {
 
     private Timer coolDownTimer;
     private Timer gameLoopTimer;
-    private int coolDownSeconds = 10;
+    private int coolDownSeconds = 5;
     private int points = 0;  // Variable to track points/money
 
     // List to store enemies
@@ -189,7 +189,7 @@ public class GameView extends JPanel {
     }
 
     private void startCoolDown() {
-        coolDownSeconds = 10;
+        coolDownSeconds = 5;
         countdownLabel.setText("Wait for " + coolDownSeconds + " seconds...");
 
         // Disable input during cool down if the answer is incorrect

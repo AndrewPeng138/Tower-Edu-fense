@@ -6,7 +6,9 @@ import java.awt.*;
  */
 public class PrayingMantis extends EnemyModel{
     private Image mantisImage;
-    PrayingMantis(){
+    PrayingMantis(int startRow, int startCol){
+        setCurrentRow(startRow);
+        setCurrentCol(startCol);
         this.setHealth(1000);
         this.setDamage(10);
         this.mantisImage = new ImageIcon("Images/BugSprites/mantisPA.png").getImage();
