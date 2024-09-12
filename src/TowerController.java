@@ -14,12 +14,13 @@ public class TowerController {
      * Gets y coordinate of tower
      * @return y coordinate of tower
      */
+
     /*public int getY(){
         // TODO: implement method
         // return this.y;
     }*/
 
-    public String getLocation(TowerModel tower) {
+    public String getLocation(TowerProperties tower) {
         String location = tower.getX() + "," + tower.getY();
         return location;
     }

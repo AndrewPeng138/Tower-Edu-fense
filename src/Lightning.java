@@ -6,9 +6,10 @@ import java.util.ArrayList;
  * Faster firing speed
  * 3500 cost
  */
-public class Lightning extends TowerModel{
+public class Lightning extends TowerProperties implements TowerModelI{
     Lightning(){
-        this.setDamage(2);
+        this.setDamage(30);
+        this.setCost(3500);
     }
 
     /**

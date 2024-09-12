@@ -256,4 +256,8 @@ public class Wave {
         }
     }
 
+    public ArrayList<EnemyModel> getWave(){
+        return waveList;
+    }
+
 }

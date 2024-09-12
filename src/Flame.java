@@ -6,9 +6,10 @@ import java.util.ArrayList;
  * Standard firing speed
  * 2000 cost
  */
-public class Flame extends TowerModel{
+public class Flame extends TowerProperties implements TowerModelI{
     Flame(){
         this.setDamage(10);
+        this.setCost(2000);
     }
     /**
      * Basic attack of flame tower

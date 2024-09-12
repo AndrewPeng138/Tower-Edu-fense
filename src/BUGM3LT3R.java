@@ -6,9 +6,10 @@ import java.util.ArrayList;
  * Standard firing speed
  * 10000 cost
  */
-public class BUGM3LT3R extends TowerModel{
+public class BUGM3LT3R extends TowerProperties implements TowerModelI{
     BUGM3LT3R(){
         this.setDamage(10);
+        this.setCost(10000);
     }
     /**
      * Basic attack of BUGM3LT3R

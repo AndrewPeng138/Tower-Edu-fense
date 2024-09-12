@@ -1,4 +1,4 @@
-public abstract class TowerModel {
+public abstract class TowerProperties {
     private int damage;
     private String SpecialEffect;
     private int cost;
@@ -6,11 +6,6 @@ public abstract class TowerModel {
     //private int range;
     private int x;
     private int y;
-
-    /**
-     * Basic attack from tower onto enemies (different for each type of tower)
-     */
-    abstract public void Fire(Wave enemyWave);
 
     /**
      * Gets x coordinate of tower
@@ -52,4 +47,20 @@ public abstract class TowerModel {
      * @param value amount to set towers damage to
      */
     public void setDamage(int value){this.damage = value;}
+
+    /**
+     * Gets tower cost
+     * @return cost of tower
+     */
+    public int getCost(){
+        return this.cost;
+    }
+
+    /**
+     * Sets tower cost
+     * @param value amount to set towers cost to
+     */
+    public void setCost(int value) {
+        this.cost = value;
+    }
 }

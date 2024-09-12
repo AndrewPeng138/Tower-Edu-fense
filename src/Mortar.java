@@ -5,9 +5,10 @@ import java.util.ArrayList;
  * Slow firing speed
  * 3000 cost
  */
-public class Mortar extends TowerModel{
+public class Mortar extends TowerProperties implements TowerModelI{
     Mortar(){
-        this.setDamage(2);
+        this.setDamage(5);
+        this.setCost(3000);
     }
 
     /**
