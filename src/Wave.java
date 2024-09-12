@@ -19,22 +19,22 @@ public class Wave {
         if (this.waveCounter == 1) {
             // 3 Roaches
             // 150 combined total health
-            waveList.add(new Roach());
-            waveList.add(new Roach());
-            waveList.add(new Roach());
+            //waveList.add(new Roach());
+            //waveList.add(new Roach());
+            //waveList.add(new Roach());
         }
         if (this.waveCounter == 2 ) {
             // 4 Roaches
             // 200 combined total health
             for (int i = 0; i < 4; i++) {
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
             }
         }
         if (this.waveCounter == 3) {
             // 6 roaches
             // 300 combined total health
             for (int i = 0; i < 6; i++) {
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
             }
         }
         if (this.waveCounter == 4) {
@@ -42,7 +42,7 @@ public class Wave {
             // 1 beetle
             // 300 combined total health
             for (int i = 0; i < 4; i++) {
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
             }
             waveList.add(new Beetle());
         }
@@ -58,7 +58,7 @@ public class Wave {
             // 3 beetles (every other)
             // 450 combined total health
             for (int i = 0; i < 3; i++) {
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
                 waveList.add(new Beetle());
             }
         }
@@ -67,7 +67,7 @@ public class Wave {
             // 4 beetles (every other)
             // 600 combined total health
             for (int i = 0; i < 4; i++) {
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
                 waveList.add(new Beetle());
             }
         }
@@ -75,8 +75,8 @@ public class Wave {
             // 2 roaches
             // 6 beetles
             // 700 combined total health
-            waveList.add(new Roach());
-            waveList.add(new Roach());
+            //waveList.add(new Roach());
+            //waveList.add(new Roach());
             for (int i = 0; i < 6; i++) {
                 waveList.add(new Beetle());
             }
@@ -101,7 +101,7 @@ public class Wave {
             // 1200 combined total health
             for (int i = 0; i < 10; i++) {
                 waveList.add(new Mosquito());
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
             }
             for (int i = 0; i < 25; i++) {
                 waveList.add(new Mosquito());
@@ -114,7 +114,7 @@ public class Wave {
             // 1450 combined total health
         for (int i = 0; i < 5; i++) {
             waveList.add(new Mosquito());
-            waveList.add(new Roach());
+            //waveList.add(new Roach());
             waveList.add(new Beetle());
         }
         for (int i = 0; i < 30; i++) {
@@ -137,7 +137,7 @@ public class Wave {
                 waveList.add(new Mosquito());
             }
             for (int i = 0; i < 10; i++) {
-                waveList.add(new Roach());
+               // waveList.add(new Roach());
             }
             for (int i = 0; i < 5; i++) {
                 waveList.add(new Beetle());
@@ -157,7 +157,7 @@ public class Wave {
             // 2000 combined total health
             for (int i = 0; i < 10; i++) {
                 waveList.add(new MetalRoach());
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
             }
             for (int i = 0; i < 50; i++) {
                 waveList.add(new Mosquito());
@@ -172,7 +172,7 @@ public class Wave {
             for (int i = 0; i < 10; i++) {
                 waveList.add(new MetalRoach());
                 waveList.add(new Beetle());
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
             }
             for (int i = 0; i < 25; i++) {
                 waveList.add(new Mosquito());
@@ -196,7 +196,7 @@ public class Wave {
                     waveList.add(new Beetle());
                 }
                 for (int i = 0; i < 10; i++) {
-                    waveList.add(new Roach());
+                    //waveList.add(new Roach());
                 }
                 for (int i = 0; i < 5; i++) {
                     waveList.add(new MetalRoach());
@@ -214,7 +214,7 @@ public class Wave {
             }
             for (int i = 0; i < 15; i++) {
                 waveList.add(new Beetle());
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
                 waveList.add(new MetalRoach());
             }
         }
@@ -233,7 +233,7 @@ public class Wave {
                 waveList.add(new Mosquito());
             }
             for (int i = 0; i < 5; i++) {
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
             }
             for (int i = 0; i < 5; i++) {
                 waveList.add(new MetalRoach());
@@ -243,7 +243,7 @@ public class Wave {
             }
             waveList.add(new PrayingMantis());
             for (int i = 0; i < 5; i++) {
-                waveList.add(new Roach());
+                //waveList.add(new Roach());
             }
             for (int i = 0; i < 5; i++) {
                 waveList.add(new MetalRoach());
