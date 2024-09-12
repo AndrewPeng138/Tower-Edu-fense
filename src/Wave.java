@@ -14,7 +14,7 @@ public class Wave {
      * @param waveCounter which wave, 1-20
      */
     public Wave(int waveCounter) {
-        this.waveCounter = waveCounter
+        this.waveCounter = waveCounter;
         // Wave counter determines what enemies are placed into a wave
         if (this.waveCounter == 1) {
             // 3 Roaches
