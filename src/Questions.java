@@ -23,9 +23,13 @@ public abstract class Questions {
         loadQuestionsFromDatabase(category);  // Load questions based on category from the database
     }
 
-    // Method to load questions from the database based on the category
+    // Method to load questions from the database based on the category name
     protected void loadQuestionsFromDatabase(String category) {
-        String query = "SELECT question, answer FROM Questions WHERE category = ?";
+        // Updated query to join Questions with Categories based on category name
+        String query = "SELECT q.question, q.answer " +
+                "FROM Questions q " +
+                "JOIN Categories c ON q.category_id = c.id " +
+                "WHERE c.name = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
