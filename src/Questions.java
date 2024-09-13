@@ -25,10 +25,11 @@ public abstract class Questions {
 
     // Method to load questions from the database based on the category name
     protected void loadQuestionsFromDatabase(String category) {
-        // Updated query to join Questions with Categories based on category name
-        String query = "SELECT q.question, q.answer " +
+        // Updated query to join Questions with Categories and Answers based on category name
+        String query = "SELECT q.question, a.answer " +
                 "FROM Questions q " +
                 "JOIN Categories c ON q.category_id = c.id " +
+                "JOIN Answers a ON q.id = a.question_id " +
                 "WHERE c.name = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -42,7 +43,7 @@ public abstract class Questions {
             while (rs.next()) {
                 String question = rs.getString("question");
                 String answer = rs.getString("answer");
-                questionMap.put(question, answer);
+                questionMap.put(question, answer);  // Store the question-answer pairs
             }
             rs.close();
         } catch (SQLException e) {

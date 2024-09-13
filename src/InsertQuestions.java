@@ -29,9 +29,6 @@ public class InsertQuestions {
             insertDataFromFile(relativePath + "questions/GeographyStateCap.txt", getCategoryId("Geography"));
             insertDataFromFile(relativePath + "questions/ChemistryPeriodicTable.txt", getCategoryId("Chemistry"));
 
-            // Insert sample users
-            insertUsers();
-
             // Close the statement and connection after insertion
             statement.close();
             conn.close();
@@ -68,22 +65,22 @@ public class InsertQuestions {
         String checkCategoryQuery = "SELECT COUNT(*) FROM Categories WHERE name = ?";
         String insertCategoryQuery = "INSERT INTO Categories (name) VALUES (?)";
 
-        statement = conn.prepareStatement(checkCategoryQuery);
+        PreparedStatement checkStmt = conn.prepareStatement(checkCategoryQuery);
 
         // Insert categories (Math, Geography, Chemistry)
         String[] categories = {"Math", "Geography", "Chemistry"};
         for (String category : categories) {
             // Check if the category already exists
-            statement.setString(1, category);
-            ResultSet rs = statement.executeQuery();
+            checkStmt.setString(1, category);
+            ResultSet rs = checkStmt.executeQuery();
             rs.next(); // Move to the first row of the result set
             int count = rs.getInt(1);
 
             // If the category does not exist, insert it
             if (count == 0) {
-                statement = conn.prepareStatement(insertCategoryQuery);
-                statement.setString(1, category);
-                statement.executeUpdate();
+                PreparedStatement insertStmt = conn.prepareStatement(insertCategoryQuery);
+                insertStmt.setString(1, category);
+                insertStmt.executeUpdate(); // Use executeUpdate() for inserts
                 System.out.println(category + " category inserted successfully!");
             } else {
                 System.out.println(category + " category already exists, skipping insertion.");
@@ -109,7 +106,8 @@ public class InsertQuestions {
     public static void insertDataFromFile(String relativePath, int categoryId) {
         try (BufferedReader br = new BufferedReader(new FileReader(relativePath))) {
             String line;
-            String insertQuestionQuery = "INSERT INTO Questions (question, answer, category_id) VALUES (?, ?, ?)";
+            String insertQuestionQuery = "INSERT INTO Questions (question, category_id) VALUES (?, ?)";
+            String insertAnswerQuery = "INSERT INTO Answers (question_id, answer, is_correct) VALUES (?, ?, ?)";
             statement = conn.prepareStatement(insertQuestionQuery);
 
             // Read each line from the file and insert into the database
@@ -117,12 +115,25 @@ public class InsertQuestions {
                 String[] parts = line.split("\\|");
                 if (parts.length == 3) {
                     String question = parts[1];
-                    String answer = parts[2];
+                    String correctAnswer = parts[2];
 
+                    // Insert the question and get the generated question ID
+                    statement = conn.prepareStatement(insertQuestionQuery, PreparedStatement.RETURN_GENERATED_KEYS);
                     statement.setString(1, question);
-                    statement.setString(2, answer);
-                    statement.setInt(3, categoryId); // Link with category
+                    statement.setInt(2, categoryId);
                     statement.executeUpdate();
+
+                    ResultSet rs = statement.getGeneratedKeys();
+                    if (rs.next()) {
+                        int questionId = rs.getInt(1);
+
+                        // Insert the correct answer
+                        statement = conn.prepareStatement(insertAnswerQuery);
+                        statement.setInt(1, questionId);
+                        statement.setString(2, correctAnswer);
+                        statement.setBoolean(3, true);  // Assume the answer is correct
+                        statement.executeUpdate();
+                    }
                 }
             }
             System.out.println("Data from " + relativePath + " inserted successfully!");
@@ -131,19 +142,5 @@ public class InsertQuestions {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    // Method to insert sample users into the database
-    public static void insertUsers() throws SQLException {
-        String insertUserQuery = "INSERT INTO Users (username) VALUES (?)";
-        statement = conn.prepareStatement(insertUserQuery);
-
-        // Add sample users
-        String[] users = {"Player1", "Player2"};
-        for (String user : users) {
-            statement.setString(1, user);
-            statement.executeUpdate();
-        }
-        System.out.println("Users inserted successfully!");
     }
 }
