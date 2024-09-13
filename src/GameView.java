@@ -288,7 +288,17 @@ public class GameView extends JPanel {
         // Example: Add Roach at a specific tile (row, col)
         int startRow = 0;  // Starting row based on map coordinates
         int startCol = 14; // Starting column based on map coordinates
-        enemies.add(new Roach(startRow, startCol));  // Pass the tile coordinates to the enemy
+
+        // Loops through 20 waves
+        for (int i = 1; i < 21; i++) {
+            Wave theWave = new Wave(i);
+            ArrayList<EnemyModel> waveList = theWave.getWave();
+            // Adds to the list "enemies" every enemy in the wave
+            for (int x = 0; x < waveList.size(); x++) {
+                enemies.add(waveList.get(i));
+            }
+
+        }
     }
 
 
