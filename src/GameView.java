@@ -22,6 +22,11 @@ public class GameView extends JPanel {
     private Timer gameLoopTimer;
     private int coolDownSeconds = 10;
     private int points = 0;  // Variable to track points/money
+    private Tile entranceTile;
+    private Tile exitTile;
+    private List<Tile> enemyPath;  // This will store the path of enemy tiles
+    private Tile[][] locations;    // Reference to the map of tiles
+    private Image enemyTileImage;
 
     // List to store enemies
     private List<EnemyModel> enemies;
@@ -51,7 +56,8 @@ public class GameView extends JPanel {
         this.questions = questions;
         this.mapModel = new MapModel(mapType);
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
-        this.mapType = mapType;
+        this.locations = new MapModel(mapType).getLocations();  // Initialize the map (locations)
+        this.enemyPath = new ArrayList<>();
 
         // Set up the JFrame
         JFrame frame = new JFrame("Game View");
@@ -59,23 +65,35 @@ public class GameView extends JPanel {
         WelcomeScreenView.setScreenSize(frame);
         setLayout(null);
 
-        // Create and set up the map panel
-        mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);  // Pass reference to GameView for tile clicks
+        mapPanel = new MapPanel(locations, backgroundImagePath, this);
         mapPanel.setBounds(300, 0, 800, 750);
         add(mapPanel);
 
         // Initialize and set up UI components
         initializeUI();
 
-        // Initialize the enemy list and start the game loop
-        enemies = new ArrayList<>();
-        spawnEnemies();  // Initialize the enemy spawning
-        startGameLoop();  // Start the game update loop
-
         frame.add(this);
-        frame.setSize(1400, 900);  // Adjusted size to fit components
+        frame.setSize(1400, 900);
         frame.setVisible(true);
+
+        entranceTile = findEntranceTile(); // Find entrance tile
+        exitTile = findExitTile(); // Find exit tile
+
+        // If entrance and exit exist, find the enemy path
+        if (entranceTile != null && exitTile != null) {
+            findEnemyPath();
+        }
+
+
+
+        Tile enemyTile = new Tile(enemyTileImage);
+
+        // Initialize the UI and start enemy movement
+        initializeUI();
+        findEnemyPath();
+        startEnemyMovement();
     }
+
 
     private void initializeUI() {
         // Get a random question to display
@@ -138,6 +156,81 @@ public class GameView extends JPanel {
         createTowerButtons();
         updateTowerButtons();
     }
+
+    private Tile findEntranceTile() {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j].isEntrance()) {
+                    return locations[i][j];
+                }
+            }
+        }
+        return null;
+    }
+
+    private Tile findExitTile() {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j].isExit()) {
+                    return locations[i][j];
+                }
+            }
+        }
+        return null;
+    }
+    private void findEnemyPath() {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j] == enemyTile) {  // Check if the current tile is an enemy tile
+                    enemyPath.add(locations[i][j]);  // Add this tile to the enemy path
+                }
+            }
+        }
+    }
+
+
+    private void moveRoachToTile(Roach roach, Tile tile) {
+        int row = getTileRow(tile);
+        int col = getTileCol(tile);
+
+        roach.moveTo(row, col);  // Move the roach to the tile's row and column
+        mapPanel.repaint();      // Repaint the panel to show the updated position of the roach
+    }
+    private int getTileRow(Tile tile) {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j] == tile) {
+                    return i;
+                }
+            }
+        }
+        return -1;  // In case the tile isn't found, return an invalid value
+    }
+
+    private int getTileCol(Tile tile) {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j] == tile) {
+                    return j;
+                }
+            }
+        }
+        return -1;  // In case the tile isn't found, return an invalid value
+    }
+
+    private void startEnemyMovement() {
+        new Thread(() -> {
+            for (Tile tile : enemyPath) {
+                moveRoachToTile(enemies.get(0), tile);  // Move the enemy (roach) to each tile in the path
+                try {
+                    Thread.sleep(500);  // Pause for 0.5 seconds between moves
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 
     // Method to handle placing a tower on a tile
     // Method to handle placing a tower on a tile
