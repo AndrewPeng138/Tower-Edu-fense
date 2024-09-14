@@ -12,6 +12,7 @@ public class GameView extends JPanel {
     private MapModel mapModel;
     private MapPanel mapPanel;
     private JLabel questionLabel;
+    private JLabel questionCountLabel;  // Label to display total number of questions
     private JTextField answerField;
     private JLabel feedbackLabel;
     private JLabel countdownLabel;  // Countdown/cool-down timer display
@@ -45,13 +46,18 @@ public class GameView extends JPanel {
     private String selectedTower = null;  // To store the currently selected tower
     private int selectedTowerCost = 0;
 
-    private String mapType;  // The type of map
+    private String mapType;  // The selected map type (Easy, Medium, etc.)
+    private String category; // The category of questions (Math, Geography, Chemistry)
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) {
         this.questions = questions;
-        this.mapModel = new MapModel(mapType);
-        this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
         this.mapType = mapType;
+        this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
+
+        // Load the total number of questions in the current category
+        String category = questions.getClass().getSimpleName().replace("Questions", ""); // Extract category from the class name
+        int questionCount = questions.getQuestionCountForCategory(category);
+        System.out.println("Total questions in category '" + category + "': " + questionCount);
 
         // Set up the JFrame
         JFrame frame = new JFrame("Game View");
@@ -60,12 +66,13 @@ public class GameView extends JPanel {
         setLayout(null);
 
         // Create and set up the map panel
+        mapModel = new MapModel(mapType);
         mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);  // Pass reference to GameView for tile clicks
         mapPanel.setBounds(300, 0, 800, 750);
         add(mapPanel);
 
         // Initialize and set up UI components
-        initializeUI();
+        initializeUI(questionCount);
 
         // Initialize the enemy list and start the game loop
         enemies = new ArrayList<>();
@@ -77,13 +84,20 @@ public class GameView extends JPanel {
         frame.setVisible(true);
     }
 
-    private void initializeUI() {
+    private void initializeUI(int questionCount) {
+        // Display the total number of questions in the current category
+        questionCountLabel = new JLabel("Total questions: " + questionCount);
+        questionCountLabel.setBounds(10, 20, 600, 30);  // Place the question count above the question
+        questionCountLabel.setForeground(Color.WHITE);
+        questionCountLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Bold and larger font
+        add(questionCountLabel);
+
         // Get a random question to display
         currentQuestion = questions.getAnyQuestion();
 
         // Display the question
         JLabel questionTextLabel = new JLabel("Question:");
-        questionTextLabel.setBounds(10, 50, 600, 50);
+        questionTextLabel.setBounds(10, 60, 600, 50);
         questionTextLabel.setForeground(Color.WHITE);
         questionTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Question"
         add(questionTextLabel);

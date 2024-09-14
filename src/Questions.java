@@ -67,4 +67,30 @@ public abstract class Questions {
         List<String> keys = new ArrayList<>(questionMap.keySet());
         return keys.get(random.nextInt(keys.size())); // Randomly select a question
     }
+
+    public int getQuestionCountForCategory(String category) {
+        int count = 0;
+        String query = "SELECT COUNT(q.id) AS question_count " +
+                "FROM Questions q " +
+                "JOIN Categories c ON q.category_id = c.id " +
+                "WHERE c.name = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, category);  // Make sure category is correctly passed here
+            System.out.println("Executing query with category: " + category);  // Debugging to ensure the category is correct
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt("question_count");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+
+
 }
