@@ -86,7 +86,7 @@ public class GameView extends JPanel {
 
 
 
-        Tile enemyTile = new Tile(enemyTileImage);
+        Tile enemyTile = new EnemyTile();
 
         // Initialize the UI and start enemy movement
         initializeUI();
@@ -181,7 +181,7 @@ public class GameView extends JPanel {
     private void findEnemyPath() {
         for (int i = 0; i < locations.length; i++) {
             for (int j = 0; j < locations[i].length; j++) {
-                if (locations[i][j] == enemyTile) {  // Check if the current tile is an enemy tile
+                if (locations[i][j].getType().equals("enemy")) {  // Check if the current tile is an enemy tile
                     enemyPath.add(locations[i][j]);  // Add this tile to the enemy path
                 }
             }
@@ -221,7 +221,7 @@ public class GameView extends JPanel {
     private void startEnemyMovement() {
         new Thread(() -> {
             for (Tile tile : enemyPath) {
-                moveRoachToTile(enemies.get(0), tile);  // Move the enemy (roach) to each tile in the path
+                moveRoachToTile((Roach) enemies.get(0), tile);  // Move the enemy (roach) to each tile in the path
                 try {
                     Thread.sleep(500);  // Pause for 0.5 seconds between moves
                 } catch (InterruptedException e) {

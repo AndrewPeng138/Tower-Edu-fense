@@ -61,4 +61,5 @@ public abstract class Tile {
     public boolean isEntrance() {
         return isEntrance;
     }
+
 }
