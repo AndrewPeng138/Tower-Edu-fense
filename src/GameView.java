@@ -21,7 +21,7 @@ public class GameView extends JPanel {
     private Timer coolDownTimer;
     private Timer gameLoopTimer;
     private int coolDownSeconds = 5;
-    private int points = 0;  // Variable to track points/money
+    private int points = 100000000;  // Variable to track points/money
 
     // List to store enemies
     private List<EnemyModel> enemies;
