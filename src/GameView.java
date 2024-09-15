@@ -326,23 +326,26 @@ public class GameView extends JPanel {
     // Method to spawn enemies at the start of the game
     // Method to spawn enemies at the start of the game
     private void spawnEnemies() {
-        // Example: Add Roach at a specific tile (row, col)
-        int startRow = 0;  // Starting row based on map coordinates
-        int startCol = 14; // Starting column based on map coordinates
+        // Get the entrance position from the MapModel
+        int startRow = mapModel.getEntranceRow();
+        int startCol = mapModel.getEntranceCol();
 
         // Loops through 20 waves
         for (int i = 1; i < 21; i++) {
             Wave theWave = new Wave(i, mapModel);
             ArrayList<EnemyModel> waveList = theWave.getWave();
-            // Adds to the list "enemies" every enemy in the wave
             System.out.println("We are on wave " + i);
             System.out.println("waveList.size() == " + waveList.size());
-            for (int x = 0; x < waveList.size(); x++) {
-                enemies.add(waveList.get(x));
-            }
 
+            for (EnemyModel enemy : waveList) {
+                // Set the starting position of the enemy to the entrance
+                enemy.setCurrentRow(startRow);
+                enemy.setCurrentCol(startCol);
+                enemies.add(enemy);
+            }
         }
     }
+
 
 
     // Start the game loop timer for continuous updates
@@ -364,7 +367,8 @@ public class GameView extends JPanel {
         }
 
         // Move each enemy based on the tile map logic
-        for (EnemyModel enemy : enemies) {
+        for (EnemyModel enemy : enemies)
+        {
             if (enemy != null) {
                 enemy.moveToNextEnemyTile(mapModel);  // Move based on map tiles
             }
@@ -376,7 +380,6 @@ public class GameView extends JPanel {
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-        // Determine tile size based on the panel dimensions
         int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
         int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
 
@@ -387,13 +390,10 @@ public class GameView extends JPanel {
                 // Convert map coordinates to screen coordinates
                 int screenX = roach.getCurrentCol() * tileWidth;
                 int screenY = roach.getCurrentRow() * tileHeight;
-                roach.draw(g, screenX, screenY, tileWidth, tileHeight);  // Pass tile sizes to draw the roach properly
+                roach.draw(g, screenX, screenY, tileWidth, tileHeight);  // Draw the roach
             }
         }
     }
-
-
-
 
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim();

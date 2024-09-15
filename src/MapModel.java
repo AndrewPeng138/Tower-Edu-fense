@@ -11,6 +11,7 @@ import javax.swing.border.Border;
  * Stores data for the gameMap
  * Construct a game map by making a MapModel object and pass in the map type to auto construct it
  */
+import java.util.ArrayList;
 
 public class MapModel {
     // 2D array contain all the map tiles
@@ -19,6 +20,7 @@ public class MapModel {
     private Roach roach;
     private int entranceRow;
     private int entranceCol;
+    private ArrayList<int[]> enemyPath;  // List to store the path as coordinates
 
     /**
      * Constructor for new maps, keep in mind [y][x] coordinates
@@ -27,6 +29,7 @@ public class MapModel {
     public MapModel(String mapType) {
 
         this.mapData = new String[17][17];
+        this.enemyPath = new ArrayList<>();  // Initialize the path list
         // Instantiates a new Tile Factory to manufacture our necessary tiles
         TileFactory theFactory = new TileFactory();
 
@@ -589,7 +592,24 @@ public class MapModel {
             locations[14][13] = landTile;
         } // End of EXTREME Map if statement
 
+        // Build the enemy path by iterating through the mapData
+        for (int row = 0; row < mapData.length; row++) {
+            for (int col = 0; col < mapData[row].length; col++) {
+                if (mapData[row][col].equals("enemy")) {
+                    enemyPath.add(new int[]{row, col});  // Add enemy tile coordinates to the path
+                }
+            }
+        }
     }
+
+    /**
+     * Get the list of enemy path coordinates.
+     * @return The enemy path as a list of row and column pairs.
+     */
+    public ArrayList<int[]> getEnemyPath() {
+        return enemyPath;
+    }
+
 
     /**
      * Essential method that provides the game board once it is correctly constructed

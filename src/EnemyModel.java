@@ -1,10 +1,12 @@
 import java.awt.*;
+import java.util.List;
 
 public abstract class EnemyModel {
     private int currentRow;
     private int currentCol;
     private int health;
     private int damage;
+    private int pathIndex = 0;  // Tracks the enemy's position along the path
 
     public int getCurrentRow() {
         return currentRow;
@@ -14,9 +16,9 @@ public abstract class EnemyModel {
         return currentCol;
     }
 
-    public void setCurrentRow(int value){this.currentRow = value;}
+    public void setCurrentRow(int value){ this.currentRow = value; }
 
-    public void setCurrentCol(int value){this.currentCol = value;}
+    public void setCurrentCol(int value){ this.currentCol = value; }
 
     public void setHealth(int health) {
         this.health = health;
@@ -37,7 +39,7 @@ public abstract class EnemyModel {
     public abstract boolean isMetal();
 
     /**
-     * Move the enemy to a new tile if it's an enemy tile
+     * Move the enemy to the next tile in the predefined path.
      * @param mapModel Map the enemy is moving on
      */
     public void moveToNextEnemyTile(MapModel mapModel) {
@@ -45,31 +47,13 @@ public abstract class EnemyModel {
             throw new IllegalArgumentException("MapModel cannot be null");
         }
 
-        // Get current position
-        int row = getCurrentRow();
-        int col = getCurrentCol();
-
-        // Check the tiles in order: down, left, right
-        if (isEnemyTile(mapModel, row + 1, col)) {
-            moveTo(row + 1, col); // Move down
-        } else if (isEnemyTile(mapModel, row, col - 1)) {
-            moveTo(row, col - 1); // Move left
-        } else if (isEnemyTile(mapModel, row, col + 1)) {
-            moveTo(row, col + 1); // Move right
+        List<int[]> enemyPath = mapModel.getEnemyPath();  // Get the path from the map
+        if (pathIndex < enemyPath.size()) {
+            // Get the next position in the path
+            int[] nextPosition = enemyPath.get(pathIndex);
+            moveTo(nextPosition[0], nextPosition[1]);  // Move to the next tile
+            pathIndex++;  // Increment the path index
         }
-    }
-
-    /**
-     * Utility method to check if a tile is an enemy tile
-     * @param mapModel Map that tile is on
-     * @param row row of tile
-     * @param col column of tile
-     * @return true if tile is an enemy tile, false if other tile type
-     */
-    private boolean isEnemyTile(MapModel mapModel, int row, int col) {
-        // Check if the position is within bounds
-        String tileType = mapModel.getTileType(row, col);
-        return "enemy".equals(tileType);  // Return true if the tile is an "enemy" tile
     }
 
     /**
@@ -83,12 +67,12 @@ public abstract class EnemyModel {
     }
 
     /**
-     * Abstract method drawing the enemy on the board
-     * @param g
-     * @param screenX
-     * @param screenY
-     * @param tileWidth
-     * @param tileHeight
+     * Abstract method for drawing the enemy on the board
+     * @param g Graphics object
+     * @param screenX X-coordinate on the screen
+     * @param screenY Y-coordinate on the screen
+     * @param tileWidth Width of the tile
+     * @param tileHeight Height of the tile
      */
     public abstract void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight);
 }
