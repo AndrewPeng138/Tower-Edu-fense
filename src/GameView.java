@@ -47,10 +47,14 @@ public class GameView extends JPanel {
     private JButton flameTowerButton;
     private JButton bugm3lt3rButton;
 
-    private String selectedTower = null;  // To store the currently selected tower
-    private int selectedTowerCost = 0;
+    public String selectedTower = null;  // To store the currently selected tower
+    public int selectedTowerCost = 0;
 
     private String mapType;  // The type of map
+
+    private String selectedTowerName = null;
+
+
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) {
         this.questions = questions;
@@ -260,22 +264,22 @@ public class GameView extends JPanel {
             // Adjust the row/column based on the selected tower type
             switch (selectedTower) {
                 case "Default Tower":
-                    row -= 1;  // Place DefaultTower at row-1
+                    row -= 0;  // Place DefaultTower at row-1
                     break;
                 case "Boat Tower":
-                    row -= 1;
+                    row -= 0;
                     break;
                 case "Heavy Tower":
-                    row -= 2;
+                    row -= 0;
                     break;
                 case "Lightning Tower":
-                    row -= 2;
+                    row -= 0;
                     break;
                 case "Flame Tower":
-                    row -= 2;
+                    row -= 0;
                     break;
                 case "BUGM3LT3R":
-                    row -= 3;
+                    row -= 0;
                     break;
                 default:
                     // No adjustment for unknown tower types
@@ -295,6 +299,30 @@ public class GameView extends JPanel {
             JOptionPane.showMessageDialog(null, "Not enough money to place " + selectedTower + "!");
         }
     }
+
+    // Method to get the selected tower as a Tower object
+    public Tower getSelectedTower() {
+        if (selectedTower != null) {
+            switch (selectedTower) {
+                case "Default Tower":
+                    return new Tower("Default Tower", "Images/TowerSprites/DefaultProjectile.png");
+                case "Boat Tower":
+                    return new Tower("Boat Tower", "Images/TowerSprites/BoatTower.png");
+                case "Heavy Tower":
+                    return new Tower("Heavy Tower", "Images/TowerSprites/CannonTower.png");
+                case "Lightning Tower":
+                    return new Tower("Lightning Tower", "Images/TowerSprites/LightningTower.png");
+                case "Flame Tower":
+                    return new Tower("Flame Tower", "Images/TowerSprites/FlameTower.png");
+                case "BUGM3LT3R":
+                    return new Tower("BUGM3LT3R", "Images/TowerSprites/BUGM3LT3R.png");
+                default:
+                    return null;
+            }
+        }
+        return null;
+    }
+
 
     // Method to get the image path of a tower based on its name
     private String getTowerImagePath(String towerName) {
@@ -358,6 +386,8 @@ public class GameView extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (points >= cost) {
                     selectedTower = name;  // Set the selected tower
+                    System.out.println("Selected Tower: " + selectedTower); // Debug statement to check the selected tower
+
                     selectedTowerCost = cost;  // Set the tower cost
                     System.out.println(name + " selected");
                 } else {
@@ -514,6 +544,8 @@ public class GameView extends JPanel {
             answerField.setEnabled(false);
         }
     }
+
+
 
 
 }

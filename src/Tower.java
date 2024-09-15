@@ -17,4 +17,6 @@ public class Tower {
     public Image getTowerImage() {
         return towerImage;
     }
+
+
 }

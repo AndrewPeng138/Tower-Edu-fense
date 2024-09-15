@@ -11,14 +11,17 @@ public abstract class Tile {
     private boolean isEnemyTile; // Flag to indicate if the tile is part of the enemy path
     private boolean isExit;      // Flag to indicate if the tile is an exit
     private boolean isEntrance;  // Flag to indicate if the tile is an entrance
+    private String name;
 
     // Constructor that accepts the image path and sets the tile image
-    public Tile(String imagePath, int row, int col, boolean isEnemyTile, boolean isExit) {
+    public Tile(String imagePath, int row, int col, boolean isEnemyTile, boolean isExit, String name) {
         this.tileImage = new ImageIcon(imagePath).getImage();
+        this.name = name != null ? name : "";
         this.row = row;
         this.col = col;
         this.isEnemyTile = isEnemyTile;
         this.isExit = isExit;
+        this.name = name;
     }
 
     // Constructor that accepts an Image directly
@@ -72,4 +75,8 @@ public abstract class Tile {
     public void setExit(boolean isExit) {
         this.isExit = isExit;
     }
+    public String getName() {
+        return name;
+    }
+
 }
