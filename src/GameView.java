@@ -52,28 +52,28 @@ public class GameView extends JPanel {
     private String mapType;  // The selected map type (Easy, Medium, etc.)
     private String category; // The category of questions (Math, Geography, Chemistry)
 
-//    // ***** AUDIO PLAYERS *****
-//    // Background music
-//    WAVPlayer BGMUSIC_Player = new WAVPlayer("Audio/TE_BGMUSIC.wav");
-//    // Sound effect when bug dies [UNIMPLEMENTED]
-//    WAVPlayer bugDeath_Player = new WAVPlayer("Audio/bugDeath_SE.wav");
-//    // Sound effect when bug is hit [UNIMPLEMENTED]
-//    WAVPlayer bugHit_Player = new WAVPlayer("Audio/bugHit_SE.wav");
-//    // Sound effect when tower is bought [IMPLEMENTED IN placeTowerOnTile]
-//    WAVPlayer buyTower_Player = new WAVPlayer("Audio/buyTower_SE.wav");
-//    // Sound effect when a tower fires, several alternate sounds could be used [UNIMPLEMENTED]
-//    WAVPlayer fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
-//    // Sound effect when the player runs out of health [UNIMPLEMENTED]
-//    WAVPlayer gameOver_Player = new WAVPlayer("Audio/gameOver_SE.wav");
-//    // Sound effect when the player beats all 20 waves [UNIMPLEMENTED]
-//    WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
-//    // Sound effect when a question is answered correctly [UNIMPLEMENTED]
-//    WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
+    // ***** AUDIO PLAYERS *****
+    // Background music
+    WAVPlayer BGMUSIC_Player = new WAVPlayer("Audio/TE_BGMUSIC.wav");
+    // Sound effect when bug dies [UNIMPLEMENTED]
+    WAVPlayer bugDeath_Player = new WAVPlayer("Audio/bugDeath_SE.wav");
+    // Sound effect when bug is hit [UNIMPLEMENTED]
+    WAVPlayer bugHit_Player = new WAVPlayer("Audio/bugHit_SE.wav");
+    // Sound effect when tower is bought [IMPLEMENTED IN placeTowerOnTile]
+    WAVPlayer buyTower_Player = new WAVPlayer("Audio/buyTower_SE.wav");
+    // Sound effect when a tower fires, several alternate sounds could be used [UNIMPLEMENTED]
+    WAVPlayer fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
+    // Sound effect when the player runs out of health [UNIMPLEMENTED]
+    WAVPlayer gameOver_Player = new WAVPlayer("Audio/gameOver_SE.wav");
+    // Sound effect when the player beats all 20 waves [UNIMPLEMENTED]
+    WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
+    // Sound effect when a question is answered correctly [UNIMPLEMENTED]
+    WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
 
 
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
-        //BGMUSIC_Player.play();
+        BGMUSIC_Player.play();
 
         this.questions = questions;
         this.mapType = mapType;
@@ -214,7 +214,7 @@ public class GameView extends JPanel {
             Tower tower = new Tower(selectedTower, getTowerImagePath(selectedTower));
             mapPanel.placeTower(row, col, tower);  // Place the tower on the map
             // Play tower buy sound effect
-            //buyTower_Player.play();
+            buyTower_Player.play();
 
             selectedTower = null;  // Reset selected tower
             updateTowerButtons();  // Update tower buttons
