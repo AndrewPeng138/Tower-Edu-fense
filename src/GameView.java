@@ -1,6 +1,9 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -49,7 +52,29 @@ public class GameView extends JPanel {
     private String mapType;  // The selected map type (Easy, Medium, etc.)
     private String category; // The category of questions (Math, Geography, Chemistry)
 
-    public GameView(String backgroundImagePath, Questions questions, String mapType) {
+    // ***** AUDIO PLAYERS *****
+    // Background music
+    WAVPlayer BGMUSIC_Player = new WAVPlayer("Audio/TE_BGMUSIC.wav");
+    // Sound effect when bug dies [UNIMPLEMENTED]
+    WAVPlayer bugDeath_Player = new WAVPlayer("Audio/bugDeath_SE.wav");
+    // Sound effect when bug is hit [UNIMPLEMENTED]
+    WAVPlayer bugHit_Player = new WAVPlayer("Audio/bugHit_SE.wav");
+    // Sound effect when tower is bought [IMPLEMENTED IN placeTowerOnTile]
+    WAVPlayer buyTower_Player = new WAVPlayer("Audio/buyTower_SE.wav");
+    // Sound effect when a tower fires, several alternate sounds could be used [UNIMPLEMENTED]
+    WAVPlayer fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
+    // Sound effect when the player runs out of health [UNIMPLEMENTED]
+    WAVPlayer gameOver_Player = new WAVPlayer("Audio/gameOver_SE.wav");
+    // Sound effect when the player beats all 20 waves [UNIMPLEMENTED]
+    WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
+    // Sound effect when a question is answered correctly [UNIMPLEMENTED]
+    WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
+
+
+
+    public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        BGMUSIC_Player.play();
+
         this.questions = questions;
         this.mapType = mapType;
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
@@ -188,6 +213,8 @@ public class GameView extends JPanel {
             // Create a Tower object based on the selected tower
             Tower tower = new Tower(selectedTower, getTowerImagePath(selectedTower));
             mapPanel.placeTower(row, col, tower);  // Place the tower on the map
+            // Play tower buy sound effect
+            buyTower_Player.play();
 
             selectedTower = null;  // Reset selected tower
             updateTowerButtons();  // Update tower buttons

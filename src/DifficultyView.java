@@ -1,5 +1,8 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class DifficultyView extends JPanel {
     private JButton[] buttons;
@@ -68,7 +71,15 @@ public class DifficultyView extends JPanel {
 
             buttons[i].addActionListener(e -> {
                 // When a difficulty is selected, pass the background and map type to GameView
-                new GameView(backgroundPath, questions, mapType);  // Pass background, questions, and map type to GameView
+                try {
+                    new GameView(backgroundPath, questions, mapType);  // Pass background, questions, and map type to GameView
+                } catch (UnsupportedAudioFileException ex) {
+                    throw new RuntimeException(ex);
+                } catch (LineUnavailableException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 frame.dispose();  // Close current window
             });
 
