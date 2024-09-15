@@ -24,8 +24,9 @@ public class MapPanel extends JPanel {
 
     private void createTileButtons() {
         // Determine tile size based on the initial panel size
-        int tileWidth = 800 / locations[0].length;  // Assume an initial width for simplicity
-        int tileHeight = 600 / locations.length;    // Assume an initial height for simplicity
+        int tileWidth = 47;
+        int tileHeight = 35;
+        System.out.println("Tile Width: " + tileWidth + ", Tile Height: " + tileHeight);
 
         for (int i = 0; i < locations.length; i++) {
             for (int j = 0; j < locations[i].length; j++) {
