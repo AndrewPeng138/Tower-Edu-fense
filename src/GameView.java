@@ -85,9 +85,9 @@ public class GameView extends JPanel {
         exitTile = findExitTile(); // Find exit tile
 
         // If entrance and exit exist, find the enemy path
-        if (entranceTile != null && exitTile != null) {
-            findEnemyPath();
-        }
+//        if (entranceTile != null && exitTile != null) {
+//            findEnemyPath();
+//        }
 
 
 
@@ -206,6 +206,12 @@ public class GameView extends JPanel {
         int col = getTileCol(tile);
 
         roach.moveTo(row, col);  // Move the roach to the tile's row and column
+        // failed attempt at trying to redraw the roach after it moves
+//        int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
+//        int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
+//        int screenX = roach.getCurrentCol() * tileWidth;
+//        int screenY = roach.getCurrentRow() * tileHeight;
+//        roach.draw(g, screenX, screenY, tileWidth, tileHeight);
         mapPanel.repaint();      // Repaint the panel to show the updated position of the roach
     }
     private int getTileRow(Tile tile) {
