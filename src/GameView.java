@@ -21,7 +21,7 @@ public class GameView extends JPanel {
     private Timer coolDownTimer;
     private Timer gameLoopTimer;
     private int coolDownSeconds = 10;
-    private int points = 0;  // Variable to track points/money
+    private int points = 10000000;  // Variable to track points/money
     private Tile entranceTile;
     private Tile exitTile;
     private List<Tile> enemyPath;  // This will store the path of enemy tiles
@@ -263,10 +263,10 @@ public class GameView extends JPanel {
                     row -= 1;  // Place DefaultTower at row-1
                     break;
                 case "Boat Tower":
-                    row -= 2;  // Place BoatTower at row-2
+                    row -= 1;
                     break;
                 case "Heavy Tower":
-                    row -= 1;
+                    row -= 2;
                     break;
                 case "Lightning Tower":
                     row -= 2;
@@ -275,7 +275,7 @@ public class GameView extends JPanel {
                     row -= 2;
                     break;
                 case "BUGM3LT3R":
-                    row -= 1;
+                    row -= 3;
                     break;
                 default:
                     // No adjustment for unknown tower types
@@ -300,15 +300,15 @@ public class GameView extends JPanel {
     private String getTowerImagePath(String towerName) {
         switch (towerName) {
             case "Default Tower":
-                return "Images/TowerSprites/Default projectile.png";
+                return "Images/TowerSprites/DefaultProjectile.png";
             case "Boat Tower":
-                return "Images/TowerSprites/Boat tower.png";
+                return "Images/TowerSprites/BoatTower.png";
             case "Heavy Tower":
-                return "Images/TowerSprites/Cannon tower.png";
+                return "Images/TowerSprites/CannonTower.png";
             case "Lightning Tower":
-                return "Images/TowerSprites/Lightning tower.png";
+                return "Images/TowerSprites/LightningTower.png";
             case "Flame Tower":
-                return "Images/TowerSprites/Flame tower.png";
+                return "Images/TowerSprites/FlameTower.png";
             case "BUGM3LT3R":
                 return "Images/TowerSprites/BUGM3LT3R.png";
             default:
@@ -462,9 +462,6 @@ public class GameView extends JPanel {
             System.out.println("Enemies list is null in paintComponent");
         }
     }
-
-
-
 
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim();
