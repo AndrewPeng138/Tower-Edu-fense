@@ -1,6 +1,7 @@
 /**
  * Boss enemy that appears on the final wave
- */
+ *//*
+
 public class PrayingMantis extends EnemyModel{
     PrayingMantis(){
         this.setHealth(1000);
@@ -13,3 +14,4 @@ public class PrayingMantis extends EnemyModel{
         return false;
     }
 }
+*/

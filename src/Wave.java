@@ -1,18 +1,23 @@
+/*
 import java.util.ArrayList;
 
+*/
 /**
  * A wave has a specific array list of enemies inside it that is assigned
  * based on which wave counter number it is constructed with
- */
+ *//*
+
 public class Wave {
     // Can be waves 1-20
     private int waveCounter;
     private ArrayList<EnemyModel> waveList;
 
-    /**
+    */
+/**
      * Constructs a wave object that contains the correct wave that the game is on
      * @param waveCounter which wave, 1-20
-     */
+     *//*
+
     public Wave(int waveCounter) {
         this.waveCounter = waveCounter;
         // Wave counter determines what enemies are placed into a wave
@@ -262,3 +267,4 @@ public class Wave {
     }
 
 }
+*/

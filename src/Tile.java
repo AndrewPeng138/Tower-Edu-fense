@@ -10,7 +10,7 @@ public abstract class Tile {
     private int col;          // Column of the tile
     private boolean isEnemyTile; // Flag to indicate if the tile is part of the enemy path
     private boolean isExit;      // Flag to indicate if the tile is an exit
-    private boolean isEntrance;
+    private boolean isEntrance;  // Flag to indicate if the tile is an entrance
 
     // Constructor that accepts the image path and sets the tile image
     public Tile(String imagePath, int row, int col, boolean isEnemyTile, boolean isExit) {
@@ -58,8 +58,18 @@ public abstract class Tile {
         return isExit;
     }
 
+    // Check if this tile is an entrance
     public boolean isEntrance() {
         return isEntrance;
     }
 
+    // Setter for isEntrance
+    public void setEntrance(boolean isEntrance) {
+        this.isEntrance = isEntrance;
+    }
+
+    // Setter for isExit (in case you need to modify exit as well)
+    public void setExit(boolean isExit) {
+        this.isExit = isExit;
+    }
 }

@@ -15,7 +15,7 @@ import javax.swing.border.Border;
 public class MapModel {
     // 2D array contain all the map tiles
     private Tile[][] locations = new Tile[17][17];
-    private String[][] mapData;
+
     private Roach roach;
 
     /**
@@ -23,16 +23,14 @@ public class MapModel {
      * @param mapType easy, normal, hard, or extreme map
      */
     public MapModel(String mapType) {
-        this.mapData = new String[17][17];
         // Instantiates a new Tile Factory to manufacture our necessary tiles
         TileFactory theFactory = new TileFactory();
 
         // Fill the grid with border tiles
         for (int i = 0; i < locations.length; i++) {
             for (int j = 0; j < locations.length; j++) {
-                BorderTile borderTile = (BorderTile) theFactory.createTile("border");
+                BorderTile borderTile = (BorderTile) theFactory.createTile("border", 0, 0, false, false);
                 locations[i][j] = borderTile;
-                mapData[i][j] = "border";
             }
         }
 
@@ -40,153 +38,107 @@ public class MapModel {
         // EASY MAP
         if (mapType.equals("easy")) {
             // Sets entrance
-            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
+            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
             entranceTile.setEntrance(true);
             locations[0][14] = entranceTile;
-            mapData[0][14] = "enemy";
             // Sets exit
-            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy");
+            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
             exitTile.setExit(true);
             locations[16][2] = exitTile;
-            mapData[16][2] = "enemy";
 
             // Stock tiles to be placed anywhere
-            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy");
-            LandTile landTile = (LandTile) theFactory.createTile("land");
+            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
+            LandTile landTile = (LandTile) theFactory.createTile("land", 0, 0, false, false);
 
             // First row of map (Mostly land)
             for (int x = 1; x < 14; x++) {
                 locations[1][x] = landTile;
-                mapData[1][x] = "land";
             }
             locations[1][14] = enemyTile;
-            mapData[1][14] = "enemy";
             locations[1][15] = landTile;
-            mapData[1][15] = "land";
             // Second row of map (Mostly enemy)
             locations[2][1] = landTile;
             for (int x = 2; x < 15; x++) {
                 locations[2][x] = enemyTile;
-                mapData[2][x] = "enemy";
             }
             locations[2][15] = landTile;
-            mapData[2][15] = "enemy";
             // Third row of map (Mostly land)
             locations[3][1] = landTile;
-            mapData[3][1] = "land";
             locations[3][2] = enemyTile;
-            mapData[3][2] = "enemy";
             for (int x = 3; x < 16; x++) {
                 locations[3][x] = landTile;
-                mapData[3][x] = "land";
             }
             // Fourth row of map (Mostly enemy)
             locations[4][1] = landTile;
-            mapData[4][1] = "land";
             for (int x = 2; x < 15; x++) {
                 locations[4][x] = enemyTile;
-                mapData[4][x] = "enemy";
             }
             locations[4][15] = landTile;
-            mapData[4][15] = "land";
             // Fifth row of map (Mostly land)
             for (int x = 1; x < 14; x++) {
                 locations[5][x] = landTile;
-                mapData[5][x] = "land";
             }
             locations[5][14] = enemyTile;
-            mapData[5][14] = "enemy";
             locations[5][15] = landTile;
-            mapData[5][15] = "land";
             // Sixth row of map (Mostly enemy)
             locations[6][1] = landTile;
-            mapData[6][1] = "land";
             for (int x = 2; x < 15; x++) {
                 locations[6][x] = enemyTile;
-                mapData[6][x] = "enemy";
             }
             locations[6][15] = landTile;
-            mapData[6][15] = "land";
             // Seventh row of map (Mostly land)
             locations[7][1] = landTile;
-            mapData[7][1] = "land";
             locations[7][2] = enemyTile;
-            mapData[7][2] = "enemy";
             for (int x = 3; x < 16; x++) {
                 locations[7][x] = landTile;
-                mapData[7][x] = "land";
             }
             // Eighth row of map (Mostly enemy)
             locations[8][1] = landTile;
-            mapData[8][1] = "land";
             for (int x = 2; x < 15; x++) {
                 locations[8][x] = enemyTile;
-                mapData[8][x] = "enemy";
             }
             locations[8][15] = landTile;
-            mapData[8][15] = "land";
             // Ninth row of map (Mostly land)
             for (int x = 1; x < 14; x++) {
                 locations[9][x] = landTile;
-                mapData[9][x] = "land";
             }
             locations[9][14] = enemyTile;
-            mapData[9][14] = "enemy";
             locations[9][15] = landTile;
-            mapData[9][15] = "land";
             // Tenth row of map (Mostly enemy)
             locations[10][1] = landTile;
-            mapData[10][1] = "land";
             for (int x = 2; x < 15; x++) {
                 locations[10][x] = enemyTile;
-                mapData[10][x] = "enemy";
             }
             locations[10][15] = landTile;
-            mapData[10][15] = "land";
             // Eleventh row of map (Mostly land)
             locations[11][1] = landTile;
-            mapData[11][1] = "land";
             locations[11][2] = enemyTile;
-            mapData[11][2] = "enemy";
             for (int x = 3; x < 16; x++) {
                 locations[11][x] = landTile;
-                mapData[11][x] = "land";
             }
             // Twelfth row of map (Mostly enemy)
             locations[12][1] = landTile;
-            mapData[12][1] = "land";
             for (int x = 2; x < 15; x++) {
                 locations[12][x] = enemyTile;
-                mapData[12][x] = "enemy";
             }
             locations[12][15] = landTile;
-            mapData[12][15] = "land";
             // Thirteenth row of map (Mostly land)
             for (int x = 1; x < 14; x++) {
                 locations[13][x] = landTile;
-                mapData[13][x] = "land";
             }
             locations[13][14] = enemyTile;
-            mapData[13][14] = "enemy";
             locations[13][15] = landTile;
-            mapData[13][15] = "land";
             // Fourteenth row of map (Mostly enemy)
             locations[14][1] = landTile;
-            mapData[14][1] = "land";
             for (int x = 2; x < 15; x++) {
                 locations[14][x] = enemyTile;
-                mapData[14][x] = "enemy";
             }
             locations[14][15] = landTile;
-            mapData[14][15] = "land";
             // Fifteenth row of map (Mostly land)
             locations[15][1] = landTile;
-            mapData[15][1] = "land";
             locations[15][2] = enemyTile;
-            mapData[15][2] = "enemy";
             for (int x = 3; x < 16; x++) {
                 locations[15][x] = landTile;
-                mapData[15][x] = "land";
             }
 
         } // End of Easy Map if statement
@@ -195,18 +147,18 @@ public class MapModel {
         // NORMAL MAP
         if (mapType.equals("normal")) {
             // Sets entrance
-            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
+            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
             entranceTile.setEntrance(true);
             locations[0][2] = entranceTile;
             // Sets exit
-            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy");
+            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
             exitTile.setExit(true);
             locations[16][14] = exitTile;
 
             // Stock tiles to be placed anywhere
-            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy");
-            LandTile landTile = (LandTile) theFactory.createTile("land");
-            WaterTile waterTile = (WaterTile) theFactory.createTile("water");
+            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
+            LandTile landTile = (LandTile) theFactory.createTile("land", 0, 0, false, false);
+            WaterTile waterTile = (WaterTile) theFactory.createTile("water", 0, 0, false, false);
             // First row of map (Mostly water)
             locations[1][1] = waterTile;
             locations[1][2] = enemyTile;
@@ -355,18 +307,18 @@ public class MapModel {
         // HARD MAP
         if (mapType.equals("hard")) {
             // Sets entrance
-            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
+            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
             entranceTile.setEntrance(true);
             locations[0][6] = entranceTile;
             // Sets exit
-            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy");
+            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
             exitTile.setExit(true);
             locations[16][10] = exitTile;
 
             // Stock tiles to be placed anywhere
-            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy");
-            LandTile landTile = (LandTile) theFactory.createTile("land");
-            WaterTile waterTile = (WaterTile) theFactory.createTile("water");
+            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
+            LandTile landTile = (LandTile) theFactory.createTile("land", 0, 0, false, false);
+            WaterTile waterTile = (WaterTile) theFactory.createTile("water", 0, 0, false, false);
             // First row of map (Mostly water)
             for (int x = 1; x < 6; x++) {
                 locations[1][x] = waterTile;
@@ -528,18 +480,18 @@ public class MapModel {
         // EXTREME MAP
         if (mapType.equals("extreme")) {
             // Sets entrance
-            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy");
+            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
             entranceTile.setEntrance(true);
             locations[0][8] = entranceTile;
             // Sets exit
-            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy");
+            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
             exitTile.setExit(true);
             locations[16][8] = exitTile;
 
             // Stock tiles to be placed anywhere
-            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy");
-            LandTile landTile = (LandTile) theFactory.createTile("land");
-            WaterTile waterTile = (WaterTile) theFactory.createTile("water");
+            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
+            LandTile landTile = (LandTile) theFactory.createTile("land", 0, 0, false, false);
+            WaterTile waterTile = (WaterTile) theFactory.createTile("water", 0, 0, false, false);
             // Fills the play area with water
             for (int x = 1; x < 16; x++) {
                 for (int y = 1; y < 16; y++) {
@@ -608,16 +560,44 @@ public class MapModel {
         }
     }
 
-    public String getTileType(int row, int col) {
-        if (row >= 0 && row < mapData.length && col >= 0 && col < mapData[0].length) {
-            return mapData[row][col];
-        } else {
-            return "border";  // Return border tile type if out of bounds
-        }
-    }
 
     public Tile[][] getMapTiles() {
         return locations;
+    }
+
+    // Method to get the width of the map
+    public int getMapWidth() {
+        return locations[0].length;
+    }
+
+    // Method to get the height of the map
+    public int getMapHeight() {
+        return locations.length;
+    }
+
+    // Method to get a specific tile
+    public Tile getTile(int y, int x) {
+        if (y >= 0 && y < locations.length && x >= 0 && x < locations[0].length) {
+            return locations[y][x];
+        }
+        return null; // Return null if out of bounds
+    }
+
+    // Method to get tile type based on row and column
+    public String getTileType(int row, int col) {
+        if (row < 0 || col < 0 || row >= locations.length || col >= locations[0].length) {
+            return "unknown"; // Handle out-of-bounds access
+        }
+        return locations[row][col].getType();
+    }
+
+    // Methods to get the row and column count
+    public int getRowCount() {
+        return locations.length;
+    }
+
+    public int getColCount() {
+        return locations[0].length;
     }
 
 

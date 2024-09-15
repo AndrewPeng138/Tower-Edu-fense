@@ -29,7 +29,7 @@ public class GameView extends JPanel {
     private Image enemyTileImage;
 
     // List to store enemies
-    private List<EnemyModel> enemies;
+    private List<EnemyModel> enemies = new ArrayList<>();
 
     // Tower costs
     private final int DEFAULT_TOWER_COST = 500;
@@ -58,6 +58,11 @@ public class GameView extends JPanel {
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
         this.locations = new MapModel(mapType).getLocations();  // Initialize the map (locations)
         this.enemyPath = new ArrayList<>();
+        this.mapType = mapType;
+        this.enemies = new ArrayList<>();
+        System.out.println("Adding enemy...");
+        enemies.add(new Roach(mapModel, 0, 14));  // Example: adding an enemy
+        System.out.println("Enemy added. Size: " + enemies.size());
 
         // Set up the JFrame
         JFrame frame = new JFrame("Game View");
@@ -86,7 +91,14 @@ public class GameView extends JPanel {
 
 
 
-        Tile enemyTile = new EnemyTile();
+        int x = 5; // Example value, replace with the actual x-coordinate
+        int y = 3; // Example value, replace with the actual y-coordinate
+        boolean isEntrance = false; // Set this based on whether this is the entrance
+        boolean isExit = false; // Set this based on whether this is the exit
+
+        Tile enemyTile = new EnemyTile(x, y, isEntrance, isExit);
+
+
 
         // Initialize the UI and start enemy movement
         initializeUI();
@@ -219,6 +231,9 @@ public class GameView extends JPanel {
     }
 
     private void startEnemyMovement() {
+        if (enemies == null) {
+            throw new IllegalStateException("Enemies list is not initialized");
+        }
         new Thread(() -> {
             for (Tile tile : enemyPath) {
                 moveRoachToTile((Roach) enemies.get(0), tile);  // Move the enemy (roach) to each tile in the path
@@ -381,7 +396,8 @@ public class GameView extends JPanel {
         // Example: Add Roach at a specific tile (row, col)
         int startRow = 0;  // Starting row based on map coordinates
         int startCol = 14; // Starting column based on map coordinates
-        enemies.add(new Roach(startRow, startCol));  // Pass the tile coordinates to the enemy
+        enemies.add(new Roach(mapModel, startRow, startCol));
+        // Pass the tile coordinates to the enemy
     }
 
 
@@ -416,6 +432,8 @@ public class GameView extends JPanel {
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
+
+
         // Determine tile size based on the panel dimensions
         int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
         int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
@@ -429,6 +447,13 @@ public class GameView extends JPanel {
                 int screenY = roach.getCurrentRow() * tileHeight;
                 roach.draw(g, screenX, screenY, tileWidth, tileHeight);  // Pass tile sizes to draw the roach properly
             }
+        }
+        if (enemies != null) {
+            for (EnemyModel enemy : enemies) {
+                // Draw each enemy
+            }
+        } else {
+            System.out.println("Enemies list is null in paintComponent");
         }
     }
 
