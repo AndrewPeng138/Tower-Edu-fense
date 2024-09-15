@@ -75,7 +75,7 @@ public class GameView extends JPanel {
         initializeUI(questionCount);
 
         // Initialize the enemy list and start the game loop
-        enemies = new ArrayList<>();
+        enemies = new ArrayList<EnemyModel>();
         spawnEnemies();  // Initialize the enemy spawning
         startGameLoop();  // Start the game update loop
 
@@ -305,11 +305,13 @@ public class GameView extends JPanel {
 
         // Loops through 20 waves
         for (int i = 1; i < 21; i++) {
-            Wave theWave = new Wave(i);
+            Wave theWave = new Wave(i, mapModel);
             ArrayList<EnemyModel> waveList = theWave.getWave();
             // Adds to the list "enemies" every enemy in the wave
+            System.out.println("We are on wave " + i);
+            System.out.println("waveList.size() == " + waveList.size());
             for (int x = 0; x < waveList.size(); x++) {
-                enemies.add(waveList.get(i));
+                enemies.add(waveList.get(x));
             }
 
         }

@@ -13,6 +13,7 @@ public class Beetle extends EnemyModel{
         this.setHealth(100);
         this.setDamage(10);
         this.beetleImage = new ImageIcon("Images/BugSprites/beetlePA.png").getImage();
+        System.out.println("Beetle starting at: (" + getCurrentRow() + ", " + getCurrentCol() + ")");
     }
 
     @Override

@@ -12,10 +12,8 @@ public class Wave {
     /**
      * Constructs a wave object that contains the correct wave that the game is on
      * @param waveCounter which wave, 1-20
+     * @param mapModel provides the reference point for where the enemies spawn
      */
-    public Wave(int waveCounter) {
-        this.waveCounter = waveCounter;
-    }
 
     public Wave(int waveCounter, MapModel mapModel) {
         this.waveCounter = waveCounter;
@@ -261,10 +259,6 @@ public class Wave {
             for (int i = 0; i < 25; i++) {
                 waveList.add(new Mosquito(entranceRow, entranceCol));
             }
-        }
-        else {
-            // THIS SHOULD NEVER HAPPEN
-            waveList.add(new Roach(entranceRow, entranceCol));
         }
     }
 
