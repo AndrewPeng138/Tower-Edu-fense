@@ -1,3 +1,4 @@
+
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
@@ -74,6 +75,7 @@ public class GameView extends JPanel {
     WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
     private Cannon cannon;
     private Timer timer;
+    private JButton button;
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.questions = questions;
@@ -83,7 +85,29 @@ public class GameView extends JPanel {
         this.enemyPath = new ArrayList<>();
         this.mapType = mapType;
         BGMUSIC_Player.play();
-        this.mapType = mapType;
+
+        // Set up the JFrame first
+        JFrame frame = new JFrame("Game View");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        WelcomeScreenView.setScreenSize(frame);
+        setLayout(null);
+
+        // back button
+        ImageIcon playButtonIcon = new ImageIcon("Images/MapButton.png");
+        Image playButtonImage = playButtonIcon.getImage().getScaledInstance(250, 150, Image.SCALE_SMOOTH);
+        ImageIcon resizedPlayButtonIcon = new ImageIcon(playButtonImage);
+
+        JButton button = new JButton(resizedPlayButtonIcon);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.addActionListener(e -> {
+            new WorldMapView();  // Open WorldMapView when button is clicked
+        });
+
+        button.setBounds(560, 750, 250, 150);
+        frame.add(button);  // Add the button to the frame
 
         // Load the total number of questions in the current category
         String category = questions.getClass().getSimpleName().replace("Questions", ""); // Extract category from the class name
@@ -92,14 +116,7 @@ public class GameView extends JPanel {
 
         cannon = new Cannon("right");
 
-
-
-        // Set up the JFrame
-        JFrame frame = new JFrame("Game View");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        WelcomeScreenView.setScreenSize(frame);
-        setLayout(null);
-
+        // Add the map panel after initializing the frame
         mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);
         mapPanel.setBounds(300, 0, 800, 750);
         add(mapPanel);
@@ -107,7 +124,7 @@ public class GameView extends JPanel {
         // Initialize UI components with question count and session-based tracking
         initializeUI(questionCount);
 
-        // Initialize enemies, start game loop, and other setups...
+        // Add this component to the frame
         frame.add(this);
         frame.setSize(1400, 900);
         frame.setVisible(true);
@@ -121,6 +138,7 @@ public class GameView extends JPanel {
         enemies.add(testRoach);
         updateGame();
     }
+
 
     private void initializeUI(int questionCount) {
         // Display the total number of questions in the current category
