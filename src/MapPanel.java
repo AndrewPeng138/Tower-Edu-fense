@@ -3,6 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Represents a panel displaying a map with tiles and placed towers.
+ * The panel includes interactive tile buttons that handle user input for placing towers.
+ */
+
 public class MapPanel extends JPanel {
     public Tile[][] locations;
     public Image backgroundImage;
@@ -10,7 +15,14 @@ public class MapPanel extends JPanel {
     private GameView gameView;
     private JButton[][] tileButtons;
 
-
+    /**
+     * Constructs a MapPanel with specified tile locations, background image path, and game view.
+     * Initializes the map with interactive buttons for each tile.
+     *
+     * @param locations 2D array of {@link Tile} objects representing the map layout.
+     * @param backgroundImagePath Path to the background image file.
+     * @param gameView The parent {@link GameView} instance to interact with.
+     */
     public MapPanel(Tile[][] locations, String backgroundImagePath, GameView gameView) {
         this.locations = locations;
         this.gameView = gameView;
@@ -24,7 +36,10 @@ public class MapPanel extends JPanel {
         // Create buttons for each tile
         createTileButtons();
     }
-
+    /**
+     * Creates and initializes buttons for each tile in the map.
+     * Sets up action listeners for handling tile clicks.
+     */
     private void createTileButtons() {
         int tileWidth = 47;
         int tileHeight = 47;
@@ -62,7 +77,13 @@ public class MapPanel extends JPanel {
         }
     }
 
-
+    /**
+     * Handles the click event for a tile button.
+     * Checks the type of tile and places the selected tower if the tile is valid.
+     *
+     * @param row The row index of the clicked tile.
+     * @param col The column index of the clicked tile.
+     */
     private void handleTileClick(int row, int col) {
         try {
             Tile tile = locations[row][col];
@@ -84,6 +105,9 @@ public class MapPanel extends JPanel {
             } else if (tile.getName().equals("water") && !selectedTower.getName().equals("Boat Tower")) {
                 throw new IllegalArgumentException("Only Boat Towers can be placed on water.");
             }
+             else if (tile.getName().equals("land") && selectedTower.getName().equals("Boat Tower")) {
+            throw new IllegalArgumentException("Boats Towers can only be placed in the water.");
+                }
 
             // Place the tower on the map using GameView's method
             System.out.println("Calling gameView.placeTowerOnTile...");
@@ -95,7 +119,11 @@ public class MapPanel extends JPanel {
     }
 
 
-
+    /**
+     * Paints the component, including the background image and placed towers.
+     *
+     * @param g The {@link Graphics} object used for painting.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -129,10 +157,25 @@ public class MapPanel extends JPanel {
         }
     }
 
+    /**
+     * Places a tower on a specific tile and repaints the map panel.
+     *
+     * @param row The row index of the tile where the tower should be placed.
+     * @param col The column index of the tile where the tower should be placed.
+     * @param tower The {@link Tower} to place on the tile.
+     */
     public void placeTower(int row, int col, Tower tower) {
         placedTowers[row][col] = tower;  // Place the tower in the specified tile
         repaint();  // Redraw the map to include the new tower
     }
+
+    /**
+     * Gets the JButton associated with a specific tile.
+     *
+     * @param x The row index of the tile.
+     * @param y The column index of the tile.
+     * @return The {@link JButton} associated with the specified tile.
+     */
     public JButton getButton(int x, int y){
         return tileButtons[x][y];
     }
