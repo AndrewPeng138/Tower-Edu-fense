@@ -506,7 +506,7 @@ public class GameView extends JPanel {
         for (EnemyModel enemy : enemies)
         {
             if (enemy != null) {
-                enemy.moveToNextEnemyTile(mapModel);  // Move based on map tiles
+                enemy.moveToNextEnemyTile(mapModel,enemyPath);  // Move based on map tiles
             }
         }
     }
