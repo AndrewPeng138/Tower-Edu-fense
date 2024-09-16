@@ -136,4 +136,8 @@ public class MapPanel extends JPanel {
         placedTowers[row][col] = tower;  // Place the tower in the specified tile
         repaint();  // Redraw the map to include the new tower
     }
+    public JButton getButton(int x, int y){
+        return tileButtons[x][y];
+    }
+
 }

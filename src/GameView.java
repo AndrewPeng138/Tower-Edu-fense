@@ -133,19 +133,6 @@ public class GameView extends JPanel {
         entranceTile = findEntranceTile(); // Find entrance tile
         exitTile = findExitTile(); // Find exit tile
 
-        // If entrance and exit exist, find the enemy path
-//        if (entranceTile != null && exitTile != null) {
-//            findEnemyPath();
-//        }
-        int x = 5; // Example value, replace with the actual x-coordinate
-        int y = 3; // Example value, replace with the actual y-coordinate
-        boolean isEntrance = false; // Set this based on whether this is the entrance
-        boolean isExit = false; // Set this based on whether this is the exit
-
-        Tile enemyTile = new EnemyTile(x, y, isEntrance, isExit);
-
-
-
         // Initialize the UI and start enemy movement
         findEnemyPath();
         startEnemyMovement();
@@ -283,14 +270,9 @@ public class GameView extends JPanel {
     private void moveRoachToTile(Roach roach, Tile tile) {
         int row = getTileRow(tile);
         int col = getTileCol(tile);
-
-        roach.moveTo(row, col);  // Move the roach to the tile's row and column
-        // failed attempt at trying to redraw the roach after it moves
-//        int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
-//        int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
-//        int screenX = roach.getCurrentCol() * tileWidth;
-//        int screenY = roach.getCurrentRow() * tileHeight;
-//        roach.draw(g, screenX, screenY, tileWidth, tileHeight);
+        JButton button = mapPanel.getButton(row, col);
+        Point location = button.getLocation();
+        roach.moveTo(location.x, location.y);  // Move the roach to the tile's row and column
         mapPanel.repaint();      // Repaint the panel to show the updated position of the roach
     }
     private int getTileRow(Tile tile) {
