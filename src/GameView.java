@@ -245,13 +245,38 @@ public class GameView extends JPanel {
         return null;
     }
     private void findEnemyPath() {
-        for (int i = 0; i < locations.length; i++) {
-            for (int j = 0; j < locations[i].length; j++) {
-                if (locations[i][j].getType().equals("enemy")) {  // Check if the current tile is an enemy tile
-                    enemyPath.add(locations[i][j]);  // Add this tile to the enemy path
-                }
+        Tile currentTile  = findEntranceTile();
+        while(!currentTile.isExit()) {
+            enemyPath.add(currentTile);
+            int row = currentTile.getRow();
+            int col = currentTile.getCol();
+            Tile below = null;
+            Tile right = null;
+            Tile left = null;
+            if (row + 1 < locations.length) {
+                below = locations[row + 1][col];
+            }
+            if (col+1 < locations[row].length){
+                right = locations[row][col+1];
+            }
+            if (col-1 >= 0){
+                left = locations[row][col-1];
+            }
+            if(below != null && below.isEnemyTile() && !enemyPath.contains(below)) {
+                currentTile = below;
+                continue;
+            }
+            if(right != null && right.isEnemyTile() && !enemyPath.contains(right)) {
+                currentTile = right;
+                continue;
+            }
+            if(left != null && left.isEnemyTile() && !enemyPath.contains(left)) {
+                currentTile = left;
+                continue;
             }
         }
+        // adding exit tile
+        enemyPath.add(currentTile);
     }
 
 
@@ -527,7 +552,7 @@ public class GameView extends JPanel {
         for (EnemyModel enemy : enemies)
         {
             if (enemy != null) {
-                enemy.moveToNextEnemyTile(mapModel);  // Move based on map tiles
+                enemy.moveToNextEnemyTile(mapModel, enemyPath);  // Move based on map tiles
             }
         }
     }
