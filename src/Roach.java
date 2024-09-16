@@ -10,12 +10,13 @@ public class Roach extends EnemyModel {
 
     // Constructor
     public Roach(int startRow, int startCol) {
-        setCurrentRow(startRow);
-        setCurrentCol(startCol);
+        currentRow = startRow;
+        currentCol = startCol;
         this.setHealth(50);   // Set initial health
         this.setDamage(10);   // Set initial damage
         this.roachImage = new ImageIcon("Images/BugSprites/cockroachPA.png").getImage();
     }
+
 
     // Getters
     public Image getRoachImage() {
@@ -33,6 +34,19 @@ public class Roach extends EnemyModel {
     @Override
     public boolean isMetal() {
         return false;
+    }
+
+    /**
+     * Method moving enemy to a new tile
+     *
+     * @param newRow row number of new tile
+     * @param newCol column number of new tile
+     */
+    @Override
+    public void moveTo(int newRow, int newCol) {
+        currentRow  = newRow;
+        currentCol = newCol;
+        System.out.println("moving roach");
     }
 
     // Utility method to check if a tile is an enemy tile

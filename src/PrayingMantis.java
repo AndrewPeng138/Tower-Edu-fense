@@ -20,6 +20,18 @@ public class PrayingMantis extends EnemyModel{
     }
 
     /**
+     * Method moving enemy to a new tile
+     *
+     * @param newRow row number of new tile
+     * @param newCol column number of new tile
+     */
+    @Override
+    public void moveTo(int newRow, int newCol) {
+        currentRow  = newRow;
+        currentCol = newCol;
+    }
+
+    /**
      * Abstract method drawing the enemy on the board
      *
      * @param g

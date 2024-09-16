@@ -3,7 +3,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.*;
+import java.lang.Thread;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
@@ -132,9 +133,10 @@ public class GameView extends JPanel {
 
         // Initialize the UI and start enemy movement
         findEnemyPath();
-        Roach testRoach = new Roach(10,10);
+        Roach testRoach = new Roach(0,0);
         enemies.add(testRoach);
-        updateGame();
+        startGameLoop();
+        //updateGame();
     }
 
     private void initializeUI(int questionCount) {
@@ -543,15 +545,26 @@ public class GameView extends JPanel {
 
     // Start the game loop timer for continuous updates
     public void startGameLoop() {
-        gameLoopTimer = new Timer();
-        gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
+//        gameLoopTimer = new Timer();
+//        gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                findEnemyPath();
+//                updateGame();  // Update game state
+//                mapPanel.repaint();  // Redraw the panel with updated enemy positions
+//            }
+//        }, 0, 100);  // Run every 100ms (10 times per second)
+        while(true){
+            try {
+                Thread.sleep(500);
                 findEnemyPath();
-                updateGame();  // Update game state
-                mapPanel.repaint();  // Redraw the panel with updated enemy positions
+                updateGame();
+                mapPanel.repaint();
             }
-        }, 0, 100);  // Run every 100ms (10 times per second)
+            catch(Exception e){
+                System.out.println(e);
+            }
+        }
     }
 
     public void updateGame() {
@@ -559,7 +572,6 @@ public class GameView extends JPanel {
             System.err.println("MapModel is not initialized");
             return;
         }
-
         // Move each enemy based on the tile map logic
         moveAllEnemies();
     }

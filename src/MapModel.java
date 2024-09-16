@@ -45,6 +45,8 @@ public class MapModel {
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 14, true, false);
             entranceTile.setEntrance(true);
             locations[0][14] = entranceTile;
+            this.entranceRow = 0;
+            this.entranceCol = 14;
             // Sets exit
             EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 2, false, true);
             exitTile.setExit(true);
@@ -154,6 +156,8 @@ public class MapModel {
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 2, true, false);
             entranceTile.setEntrance(true);
             locations[0][2] = entranceTile;
+            this.entranceRow = 0;
+            this.entranceCol = 2;
             // Sets exit
             EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 14, false, true);
             exitTile.setExit(true);
@@ -314,6 +318,8 @@ public class MapModel {
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 6, true, false);
             entranceTile.setEntrance(true);
             locations[0][6] = entranceTile;
+            this.entranceRow = 0;
+            this.entranceCol = 6;
             // Sets exit
             EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 10, false, true);
             exitTile.setExit(true);
@@ -475,6 +481,8 @@ public class MapModel {
             EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 8, true, false);
             entranceTile.setEntrance(true);
             locations[0][8] = entranceTile;
+            this.entranceRow = 0;
+            this.entranceCol = 8;
             // Sets exit
             EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 8, false, true);
             exitTile.setExit(true);

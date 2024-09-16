@@ -3,8 +3,8 @@ import java.awt.*;
 import java.util.List;
 
 public abstract class EnemyModel {
-    private int currentRow;
-    private int currentCol;
+    protected int currentRow;
+    protected int currentCol;
     private int health;
     private int damage;
     private int pathIndex = 0;  // Tracks the enemy's position along the path
@@ -48,9 +48,10 @@ public abstract class EnemyModel {
             throw new IllegalArgumentException("MapModel cannot be null");
         }
         if (pathIndex < enemyPath.size()) {
+            Tile currentTile = enemyPath.get(pathIndex);
             // Get the next position in the path
-            int row = enemyPath.get(pathIndex).getRow();
-            int col = enemyPath.get(pathIndex).getRow();
+            int row = currentTile.getRow();
+            int col = currentTile.getCol();
             JButton button = mapPanel.getButton(row, col);
             Point location = button.getLocation();
             moveTo(location.x, location.y);
@@ -63,10 +64,7 @@ public abstract class EnemyModel {
      * @param newRow row number of new tile
      * @param newCol column number of new tile
      */
-    public void moveTo(int newRow, int newCol) {
-        this.currentRow = newRow;
-        this.currentCol = newCol;
-    }
+    public abstract void moveTo(int newRow, int newCol);
 
     /**
      * Abstract method for drawing the enemy on the board

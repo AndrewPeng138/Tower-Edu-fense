@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class WorldMapView extends JPanel {
-    private JBuowtton[] buttons;
+    private JButton[] buttons;
     private Image backgroundImage;
     private JFrame frame;
 
