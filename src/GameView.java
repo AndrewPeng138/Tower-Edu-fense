@@ -4,10 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class GameView extends JPanel {
     private Image backgroundImage;
@@ -65,8 +64,10 @@ public class GameView extends JPanel {
     public String selectedTower = null;  // To store the currently selected tower
     public int selectedTowerCost = 0;
     private String selectedTowerName = null;
+    private static final int MAX_LINE_LENGTH = 23;
     private String mapType;  // The selected map type (Easy, Medium, etc.)
     private String category; // The category of questions (Math, Geography, Chemistry)
+
 
     // ***** AUDIO PLAYERS *****
     // Background music
@@ -85,19 +86,28 @@ public class GameView extends JPanel {
     WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
     // Sound effect when a question is answered correctly [UNIMPLEMENTED]
     WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
-
+    private Cannon cannon;
+    private Timer timer;
 
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.questions = questions;
         this.mapModel = new MapModel(mapType);
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
+        this.locations = new MapModel(mapType).getLocations();  // Initialize the map (locations)
+        this.enemyPath = new ArrayList<>();
+        this.mapType = mapType;
+        BGMUSIC_Player.play();
         this.mapType = mapType;
 
         // Load the total number of questions in the current category
         String category = questions.getClass().getSimpleName().replace("Questions", ""); // Extract category from the class name
         int questionCount = questions.getQuestionCountForCategory(category);
         System.out.println("Total questions in category '" + category + "': " + questionCount);
+
+        cannon = new Cannon("right");
+
+
 
         // Set up the JFrame
         JFrame frame = new JFrame("Game View");
@@ -116,6 +126,13 @@ public class GameView extends JPanel {
         frame.add(this);
         frame.setSize(1400, 900);
         frame.setVisible(true);
+
+        entranceTile = findEntranceTile(); // Find entrance tile
+        exitTile = findExitTile(); // Find exit tile
+
+        // Initialize the UI and start enemy movement
+        findEnemyPath();
+        startEnemyMovement();
     }
 
     private void initializeUI(int questionCount) {
@@ -125,6 +142,13 @@ public class GameView extends JPanel {
         questionCountLabel.setForeground(Color.WHITE);
         questionCountLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Bold and larger font
         add(questionCountLabel);
+
+        // Money label to display points
+        JLabel moneyTextLabel = new JLabel("Money:");
+        moneyTextLabel.setBounds(1120, 50, 200, 40);  // Positioned on the right side
+        moneyTextLabel.setForeground(Color.WHITE);
+        moneyTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Money"
+        add(moneyTextLabel);
 
         // Label to display correct answers
         correctAnswersLabel = new JLabel("Correct answers: 0");
@@ -150,6 +174,7 @@ public class GameView extends JPanel {
         questionTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Question"
         add(questionTextLabel);
 
+
         questionLabel = new JLabel(currentQuestion);
         questionLabel.setBounds(10, 230, 600, 50);  // Adjusted position below "Question" label
         questionLabel.setForeground(Color.WHITE);
@@ -159,6 +184,26 @@ public class GameView extends JPanel {
         // Text field for user input
         answerField = new JTextField();
         answerField.setBounds(10, 290, 300, 30);  // Adjusted position below the question
+
+        // Wrap the question text
+        String wrappedQuestion = wrapText(currentQuestion, MAX_LINE_LENGTH);
+
+        // Update or create the question label
+        if (questionLabel != null) {
+            questionLabel.setText("<html><pre>" + wrappedQuestion + "</pre></html>");
+        } else {
+            questionLabel = new JLabel("<html><pre>" + wrappedQuestion + "</pre></html>");
+            questionLabel.setBounds(10, 100, 600, 100);  // Adjust the height as needed
+            questionLabel.setForeground(Color.WHITE);
+            questionLabel.setFont(new Font("Arial", Font.PLAIN, 15));  // Font for the actual question
+            add(questionLabel);
+        }
+
+
+        // Text field for user input
+        answerField = new JTextField();
+        answerField.setBounds(10, 180, 300, 30);
+
         add(answerField);
 
         // Set key listener for "Enter" key to submit the answer
@@ -183,14 +228,9 @@ public class GameView extends JPanel {
         countdownLabel.setForeground(Color.RED);
         add(countdownLabel);
 
-        // Money label to display points
-        JLabel moneyTextLabel = new JLabel("Money:");
-        moneyTextLabel.setBounds(1120, 50, 200, 40);  // Positioned on the right side
-        moneyTextLabel.setForeground(Color.WHITE);
-        moneyTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Money"
-        add(moneyTextLabel);
 
-        moneyLabel = new JLabel("0");  // Initial money is 0
+
+        moneyLabel = new JLabel("10000");  // Initial money is 0
         moneyLabel.setBounds(1220, 52, 200, 40);
         moneyLabel.setForeground(Color.WHITE);
         moneyLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the amount of money
@@ -201,6 +241,18 @@ public class GameView extends JPanel {
         updateTowerButtons();
     }
 
+    private String wrapText(String text, int maxLineLength) {
+        StringBuilder wrappedText = new StringBuilder();
+        int start = 0;
+
+        while (start < text.length()) {
+            int end = Math.min(text.length(), start + maxLineLength);
+            wrappedText.append(text, start, end);
+            wrappedText.append("\n");
+            start = end;
+        }
+
+        return wrappedText.toString();}
 
     private Tile findEntranceTile() {
         for (int i = 0; i < locations.length; i++) {
@@ -224,27 +276,47 @@ public class GameView extends JPanel {
         return null;
     }
     private void findEnemyPath() {
-        for (int i = 0; i < locations.length; i++) {
-            for (int j = 0; j < locations[i].length; j++) {
-                if (locations[i][j].getType().equals("enemy")) {  // Check if the current tile is an enemy tile
-                    enemyPath.add(locations[i][j]);  // Add this tile to the enemy path
-                }
+        Tile currentTile  = findEntranceTile();
+        while(!currentTile.isExit()) {
+            enemyPath.add(currentTile);
+            int row = currentTile.getRow();
+            int col = currentTile.getCol();
+            Tile below = null;
+            Tile right = null;
+            Tile left = null;
+            if (row + 1 < locations.length) {
+                below = locations[row + 1][col];
+            }
+            if (col+1 < locations[row].length){
+                right = locations[row][col+1];
+            }
+            if (col-1 >= 0){
+                left = locations[row][col-1];
+            }
+            if(below != null && below.isEnemyTile() && !enemyPath.contains(below)) {
+                currentTile = below;
+                continue;
+            }
+            if(right != null && right.isEnemyTile() && !enemyPath.contains(right)) {
+                currentTile = right;
+                continue;
+            }
+            if(left != null && left.isEnemyTile() && !enemyPath.contains(left)) {
+                currentTile = left;
+                continue;
             }
         }
+        // adding exit tile
+        enemyPath.add(currentTile);
     }
 
 
     private void moveRoachToTile(Roach roach, Tile tile) {
         int row = getTileRow(tile);
         int col = getTileCol(tile);
-
-        roach.moveTo(row, col);  // Move the roach to the tile's row and column
-        // failed attempt at trying to redraw the roach after it moves
-//        int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
-//        int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
-//        int screenX = roach.getCurrentCol() * tileWidth;
-//        int screenY = roach.getCurrentRow() * tileHeight;
-//        roach.draw(g, screenX, screenY, tileWidth, tileHeight);
+        JButton button = mapPanel.getButton(row, col);
+        Point location = button.getLocation();
+        roach.moveTo(location.x, location.y);  // Move the roach to the tile's row and column
         mapPanel.repaint();      // Repaint the panel to show the updated position of the roach
     }
     private int getTileRow(Tile tile) {
@@ -506,7 +578,9 @@ public class GameView extends JPanel {
         for (EnemyModel enemy : enemies)
         {
             if (enemy != null) {
-                enemy.moveToNextEnemyTile(mapModel,enemyPath);  // Move based on map tiles
+
+                enemy.moveToNextEnemyTile(mapModel, enemyPath);  // Move based on map tiles
+
             }
         }
     }
@@ -611,7 +685,6 @@ public class GameView extends JPanel {
             }
         }, 0, 1000);  // Execute every 1 second
     }
-
 
     private void moveToNextQuestion() {
         currentQuestion = questions.getAnyQuestion();

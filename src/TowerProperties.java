@@ -63,4 +63,6 @@ public abstract class TowerProperties {
     public void setCost(int value) {
         this.cost = value;
     }
+
+    public abstract void Fire(Wave enemyWave);
 }
