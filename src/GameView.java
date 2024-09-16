@@ -138,6 +138,13 @@ public class GameView extends JPanel {
         questionCountLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Bold and larger font
         add(questionCountLabel);
 
+        // Money label to display points
+        JLabel moneyTextLabel = new JLabel("Money:");
+        moneyTextLabel.setBounds(1120, 50, 200, 40);  // Positioned on the right side
+        moneyTextLabel.setForeground(Color.WHITE);
+        moneyTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Money"
+        add(moneyTextLabel);
+
         // Label to display correct answers
         correctAnswersLabel = new JLabel("Correct answers: 0");
         correctAnswersLabel.setBounds(10, 70, 300, 40);  // Increased height and adjusted position
@@ -195,14 +202,9 @@ public class GameView extends JPanel {
         countdownLabel.setForeground(Color.RED);
         add(countdownLabel);
 
-        // Money label to display points
-        JLabel moneyTextLabel = new JLabel("Money:");
-        moneyTextLabel.setBounds(1120, 50, 200, 40);  // Positioned on the right side
-        moneyTextLabel.setForeground(Color.WHITE);
-        moneyTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Money"
-        add(moneyTextLabel);
 
-        moneyLabel = new JLabel("0");  // Initial money is 0
+
+        moneyLabel = new JLabel("10000");  // Initial money is 0
         moneyLabel.setBounds(1220, 52, 200, 40);
         moneyLabel.setForeground(Color.WHITE);
         moneyLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the amount of money
