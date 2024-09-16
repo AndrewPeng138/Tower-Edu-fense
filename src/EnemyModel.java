@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public abstract class EnemyModel {
      * Move the enemy to the next tile in the predefined path.
      * @param mapModel Map the enemy is moving on
      */
-    public void moveToNextEnemyTile(MapModel mapModel, List<Tile> enemyPath) {
+    public void moveToNextEnemyTile(MapModel mapModel, MapPanel mapPanel, List<Tile> enemyPath) {
         if (mapModel == null) {
             throw new IllegalArgumentException("MapModel cannot be null");
         }
@@ -50,7 +51,9 @@ public abstract class EnemyModel {
             // Get the next position in the path
             int row = enemyPath.get(pathIndex).getRow();
             int col = enemyPath.get(pathIndex).getRow();
-            moveTo(row, col);  // Move to the next tile
+            JButton button = mapPanel.getButton(row, col);
+            Point location = button.getLocation();
+            moveTo(location.x, location.y);
             pathIndex++;  // Increment the path index
         }
     }
@@ -77,14 +80,6 @@ public abstract class EnemyModel {
 
     public void decreaseHealth(int damage) {
         health = -1;
-    }
-
-    public int getX() {
-        return currentRow;
-    }
-
-    public int getY() {
-        return currentCol;
     }
 
 }

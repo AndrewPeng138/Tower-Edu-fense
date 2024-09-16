@@ -30,26 +30,6 @@ public class Roach extends EnemyModel {
         return currentCol;
     }
 
-    // Move the roach to a new tile if it's an enemy tile
-    public void moveToNextEnemyTile(MapModel mapModel) {
-        if (mapModel == null) {
-            throw new IllegalArgumentException("MapModel cannot be null");
-        }
-
-        // Get current position
-        int row = currentRow;
-        int col = currentCol;
-
-        // Check the tiles in order: down, left, right
-        if (isEnemyTile(mapModel, row + 1, col)) {
-            moveTo(row + 1, col); // Move down
-        } else if (isEnemyTile(mapModel, row, col - 1)) {
-            moveTo(row, col - 1); // Move left
-        } else if (isEnemyTile(mapModel, row, col + 1)) {
-            moveTo(row, col + 1); // Move right
-        }
-    }
-
     @Override
     public boolean isMetal() {
         return false;
@@ -62,11 +42,6 @@ public class Roach extends EnemyModel {
         return "enemy".equals(tileType);  // Return true if the tile is an "enemy" tile
     }
 
-    // Update current position
-    public void moveTo(int newRow, int newCol) {
-        this.currentRow = newRow;
-        this.currentCol = newCol;
-    }
 
     // Draw the roach on the screen
     public void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight) {

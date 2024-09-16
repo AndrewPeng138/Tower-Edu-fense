@@ -132,7 +132,9 @@ public class GameView extends JPanel {
 
         // Initialize the UI and start enemy movement
         findEnemyPath();
-        startEnemyMovement();
+        Roach testRoach = new Roach(10,10);
+        enemies.add(testRoach);
+        updateGame();
     }
 
     private void initializeUI(int questionCount) {
@@ -310,15 +312,14 @@ public class GameView extends JPanel {
         enemyPath.add(currentTile);
     }
 
-
-    private void moveRoachToTile(Roach roach, Tile tile) {
-        int row = getTileRow(tile);
-        int col = getTileCol(tile);
-        JButton button = mapPanel.getButton(row, col);
-        Point location = button.getLocation();
-        roach.moveTo(location.x, location.y);  // Move the roach to the tile's row and column
-        mapPanel.repaint();      // Repaint the panel to show the updated position of the roach
+    public void moveAllEnemies(){
+        for (EnemyModel enemy : enemies){
+            enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath);
+            mapPanel.repaint();
+        }
     }
+
+
     private int getTileRow(Tile tile) {
         for (int i = 0; i < locations.length; i++) {
             for (int j = 0; j < locations[i].length; j++) {
@@ -341,21 +342,6 @@ public class GameView extends JPanel {
         return -1;  // In case the tile isn't found, return an invalid value
     }
 
-    private void startEnemyMovement() {
-        if (enemies == null) {
-            throw new IllegalStateException("Enemies list is not initialized");
-        }
-        new Thread(() -> {
-            for (Tile tile : enemyPath) {
-                moveRoachToTile((Roach) enemies.get(0), tile);  // Move the enemy (roach) to each tile in the path
-                try {
-                    Thread.sleep(500);  // Pause for 0.5 seconds between moves
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
 
 
     // Method to handle placing a tower on a tile
@@ -540,8 +526,8 @@ public class GameView extends JPanel {
         for (int i = 1; i < 21; i++) {
             Wave theWave = new Wave(i, mapModel);
             ArrayList<EnemyModel> waveList = theWave.getWave();
-            System.out.println("We are on wave " + i);
-            System.out.println("waveList.size() == " + waveList.size());
+            //System.out.println("We are on wave " + i);
+            //System.out.println("waveList.size() == " + waveList.size());
 
             for (EnemyModel enemy : waveList) {
                 // Set the starting position of the enemy to the entrance
@@ -556,33 +542,26 @@ public class GameView extends JPanel {
 
 
     // Start the game loop timer for continuous updates
-    private void startGameLoop() {
+    public void startGameLoop() {
         gameLoopTimer = new Timer();
         gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 findEnemyPath();
                 updateGame();  // Update game state
-                repaint();  // Redraw the panel with updated enemy positions
+                mapPanel.repaint();  // Redraw the panel with updated enemy positions
             }
         }, 0, 100);  // Run every 100ms (10 times per second)
     }
 
-    private void updateGame() {
+    public void updateGame() {
         if (mapModel == null) {
             System.err.println("MapModel is not initialized");
             return;
         }
 
         // Move each enemy based on the tile map logic
-        for (EnemyModel enemy : enemies)
-        {
-            if (enemy != null) {
-
-                enemy.moveToNextEnemyTile(mapModel, enemyPath);  // Move based on map tiles
-
-            }
-        }
+        moveAllEnemies();
     }
 
     @Override
@@ -595,21 +574,15 @@ public class GameView extends JPanel {
         int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
         int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
 
-        // Draw each enemy based on their tile positions
-        for (EnemyModel enemy : enemies) {
-            if (enemy instanceof Roach) {
-                Roach roach = (Roach) enemy;
-                // Convert map coordinates to screen coordinates
-                int screenX = roach.getCurrentCol() * tileWidth;
-                int screenY = roach.getCurrentRow() * tileHeight;
-                roach.draw(g, screenX, screenY, tileWidth, tileHeight);  // Draw the roach
-            }
-        }
         if (enemies != null) {
             for (EnemyModel enemy : enemies) {
-                // Draw each enemy
+                    // Convert map coordinates to screen coordinates
+                    int screenX = enemy.getCurrentCol() * tileWidth;
+                    int screenY = enemy.getCurrentRow() * tileHeight;
+                    enemy.draw(g, screenX, screenY, tileWidth, tileHeight);
             }
-        } else {
+        }
+        else {
             System.out.println("Enemies list is null in paintComponent");
         }
     }
