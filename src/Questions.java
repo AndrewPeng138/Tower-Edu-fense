@@ -25,8 +25,8 @@ public abstract class Questions {
 
     // Method to load questions from the database based on the category name
     protected void loadQuestionsFromDatabase(String category) {
-        // Updated query to join Questions with Categories and Answers based on category name
-        String query = "SELECT q.question, a.answer " +
+        // Query to join Questions with Categories and Answers based on category name
+        String query = "SELECT q.id, q.question, a.answer " +
                 "FROM Questions q " +
                 "JOIN Categories c ON q.category_id = c.id " +
                 "JOIN Answers a ON q.id = a.question_id " +
@@ -78,7 +78,6 @@ public abstract class Questions {
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, category);  // Make sure category is correctly passed here
-            System.out.println("Executing query with category: " + category);  // Debugging to ensure the category is correct
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -92,5 +91,43 @@ public abstract class Questions {
         return count;
     }
 
+    // New method to log player answers
+    public void logPlayerAnswer(int sessionId, int questionId, boolean isCorrect) {
+        String query = "INSERT INTO PlayerAnswers (session_id, question_id, is_correct) VALUES (?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, sessionId);  // Set the session ID
+            stmt.setInt(2, questionId);  // Set the question ID
+            stmt.setBoolean(3, isCorrect);  // Set if the answer was correct or not
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getQuestionId(String question) {
+        int questionId = -1;  // Default value if question is not found
+
+        String query = "SELECT id FROM Questions WHERE question = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, question);  // Set the question text in the SQL query
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                questionId = rs.getInt("id");  // Get the question ID from the result set
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return questionId;  // Return the question ID (or -1 if not found)
+    }
 
 }

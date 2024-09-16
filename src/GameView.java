@@ -16,6 +16,9 @@ public class GameView extends JPanel {
     private MapPanel mapPanel;
     private JLabel questionLabel;
     private JLabel questionCountLabel;  // Label to display total number of questions
+    private JLabel answerResultLabel;   // Label to display correct/incorrect count
+    private JLabel correctAnswersLabel;  // Label to display correct answer count
+    private JLabel incorrectAnswersLabel;  // Label to display incorrect answer count
     private JTextField answerField;
     private JLabel feedbackLabel;
     private JLabel countdownLabel;  // Countdown/cool-down timer display
@@ -26,7 +29,10 @@ public class GameView extends JPanel {
     private Timer gameLoopTimer;
 
     private int coolDownSeconds = 5;
-    private int points = 100000000;  // Variable to track points/money
+    private int points = 10000;  // Variable to track points/money
+    private int sessionId = 1;  // Assuming each player has a session ID. In a real scenario, this would be dynamic.
+    private int correctAnswers = 0;  // Track correct answers
+    private int incorrectAnswers = 0;  // Track incorrect answers
 
 
     private Tile entranceTile;
@@ -54,6 +60,7 @@ public class GameView extends JPanel {
     private JButton lightningTowerButton;
     private JButton flameTowerButton;
     private JButton bugm3lt3rButton;
+
 
     public String selectedTower = null;  // To store the currently selected tower
     public int selectedTowerCost = 0;
@@ -85,22 +92,12 @@ public class GameView extends JPanel {
         this.questions = questions;
         this.mapModel = new MapModel(mapType);
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
-        this.locations = new MapModel(mapType).getLocations();  // Initialize the map (locations)
-        //this.enemyPath = new ArrayList<>();
         this.mapType = mapType;
-        this.enemies = new ArrayList<>();
-        System.out.println("Adding enemy...");
-        enemies.add(new Roach( 0, 14));  // Example: adding an enemy
-        System.out.println("Enemy added. Size: " + enemies.size());
-        BGMUSIC_Player.play();
-        this.questions = questions;
-        this.mapType = mapType;
-        this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
+
         // Load the total number of questions in the current category
         String category = questions.getClass().getSimpleName().replace("Questions", ""); // Extract category from the class name
         int questionCount = questions.getQuestionCountForCategory(category);
         System.out.println("Total questions in category '" + category + "': " + questionCount);
-
 
         // Set up the JFrame
         JFrame frame = new JFrame("Game View");
@@ -108,80 +105,60 @@ public class GameView extends JPanel {
         WelcomeScreenView.setScreenSize(frame);
         setLayout(null);
 
-
-        mapPanel = new MapPanel(locations, backgroundImagePath, this);
-        // Create and set up the map panel
-        mapModel = new MapModel(mapType);
-        mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);  // Pass reference to GameView for tile clicks
+        mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);
         mapPanel.setBounds(300, 0, 800, 750);
         add(mapPanel);
 
-        // Initialize and set up UI components
+        // Initialize UI components with question count and session-based tracking
         initializeUI(questionCount);
 
-
-        // Initialize the enemy list and start the game loop
-        enemies = new ArrayList<EnemyModel>();
-        spawnEnemies();  // Initialize the enemy spawning
-        startGameLoop();  // Start the game update loop
-
-
+        // Initialize enemies, start game loop, and other setups...
         frame.add(this);
         frame.setSize(1400, 900);
         frame.setVisible(true);
-
-        entranceTile = findEntranceTile(); // Find entrance tile
-        exitTile = findExitTile(); // Find exit tile
-
-        // If entrance and exit exist, find the enemy path
-//        if (entranceTile != null && exitTile != null) {
-//            findEnemyPath();
-//        }
-        int x = 5; // Example value, replace with the actual x-coordinate
-        int y = 3; // Example value, replace with the actual y-coordinate
-        boolean isEntrance = false; // Set this based on whether this is the entrance
-        boolean isExit = false; // Set this based on whether this is the exit
-
-        Tile enemyTile = new EnemyTile(x, y, isEntrance, isExit);
-
-
-
-        // Initialize the UI and start enemy movement
-        initializeUI(questionCount);
-        findEnemyPath();
-        startEnemyMovement();
     }
-
-
-
 
     private void initializeUI(int questionCount) {
         // Display the total number of questions in the current category
         questionCountLabel = new JLabel("Total questions: " + questionCount);
-        questionCountLabel.setBounds(10, 20, 600, 30);  // Place the question count above the question
+        questionCountLabel.setBounds(10, 20, 300, 40);  // Increased height for better spacing
         questionCountLabel.setForeground(Color.WHITE);
         questionCountLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Bold and larger font
         add(questionCountLabel);
+
+        // Label to display correct answers
+        correctAnswersLabel = new JLabel("Correct answers: 0");
+        correctAnswersLabel.setBounds(10, 70, 300, 40);  // Increased height and adjusted position
+        correctAnswersLabel.setForeground(Color.WHITE);
+        correctAnswersLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Bold and larger font
+        add(correctAnswersLabel);
+
+        // Label to display incorrect answers
+        incorrectAnswersLabel = new JLabel("Incorrect answers: 0");
+        incorrectAnswersLabel.setBounds(10, 120, 300, 40);  // Increased height and adjusted position
+        incorrectAnswersLabel.setForeground(Color.WHITE);
+        incorrectAnswersLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Bold and larger font
+        add(incorrectAnswersLabel);
 
         // Get a random question to display
         currentQuestion = questions.getAnyQuestion();
 
         // Display the question
         JLabel questionTextLabel = new JLabel("Question:");
-        questionTextLabel.setBounds(10, 60, 600, 50);
+        questionTextLabel.setBounds(10, 170, 600, 50);  // Adjusted position for more spacing
         questionTextLabel.setForeground(Color.WHITE);
         questionTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Question"
         add(questionTextLabel);
 
         questionLabel = new JLabel(currentQuestion);
-        questionLabel.setBounds(10, 100, 600, 50);
+        questionLabel.setBounds(10, 230, 600, 50);  // Adjusted position below "Question" label
         questionLabel.setForeground(Color.WHITE);
         questionLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the actual question
         add(questionLabel);
 
         // Text field for user input
         answerField = new JTextField();
-        answerField.setBounds(10, 160, 300, 30);
+        answerField.setBounds(10, 290, 300, 30);  // Adjusted position below the question
         add(answerField);
 
         // Set key listener for "Enter" key to submit the answer
@@ -196,25 +173,25 @@ public class GameView extends JPanel {
 
         // Feedback label
         feedbackLabel = new JLabel("");
-        feedbackLabel.setBounds(10, 240, 600, 30);
+        feedbackLabel.setBounds(10, 340, 600, 40);  // Increased height and adjusted position
         feedbackLabel.setForeground(Color.WHITE);
         add(feedbackLabel);
 
         // Countdown label (for cool down)
         countdownLabel = new JLabel("");
-        countdownLabel.setBounds(10, 280, 600, 30);
+        countdownLabel.setBounds(10, 380, 600, 40);  // Increased height and adjusted position
         countdownLabel.setForeground(Color.RED);
         add(countdownLabel);
 
         // Money label to display points
         JLabel moneyTextLabel = new JLabel("Money:");
-        moneyTextLabel.setBounds(1120, 50, 200, 30);  // Positioned on the right side
+        moneyTextLabel.setBounds(1120, 50, 200, 40);  // Positioned on the right side
         moneyTextLabel.setForeground(Color.WHITE);
         moneyTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Money"
         add(moneyTextLabel);
 
         moneyLabel = new JLabel("0");  // Initial money is 0
-        moneyLabel.setBounds(1220, 52, 200, 30);
+        moneyLabel.setBounds(1220, 52, 200, 40);
         moneyLabel.setForeground(Color.WHITE);
         moneyLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the amount of money
         add(moneyLabel);
@@ -223,6 +200,7 @@ public class GameView extends JPanel {
         createTowerButtons();
         updateTowerButtons();
     }
+
 
     private Tile findEntranceTile() {
         for (int i = 0; i < locations.length; i++) {
@@ -566,21 +544,54 @@ public class GameView extends JPanel {
         String userAnswer = answerField.getText().trim();
         String correctAnswer = questions.getAnswer(currentQuestion);
 
-        if (userAnswer.equalsIgnoreCase(correctAnswer)) {
+        // Fetch the question ID based on the current question
+        int questionId = questions.getQuestionId(currentQuestion);
+
+        // Disable the answer field immediately when checking the answer
+        answerField.setEnabled(false);
+
+        boolean isCorrect = userAnswer.equalsIgnoreCase(correctAnswer);
+        if (isCorrect) {
             feedbackLabel.setText("Correct!");
-            updatePoints(100);  // Award 100 points for correct answer
-            moveToNextQuestion();  // Automatically move to the next question if the answer is correct
+            updatePoints(100);  // Award points for correct answer
+            correctAnswers++;  // Increment correct answer count
+            // Log the player's correct answer
+            int sessionId = 1; // You can dynamically fetch sessionId as needed
+            questions.logPlayerAnswer(sessionId, questionId, true);
+
+            // Move to the next question immediately after correct answer
+            moveToNextQuestion();
+            answerField.setEnabled(true);  // Re-enable answer field
         } else {
             feedbackLabel.setText("Incorrect. The correct answer is: " + correctAnswer);
-            startCoolDown();  // Start the 10-second cool down if the answer is incorrect
+            incorrectAnswers++;  // Increment incorrect answer count
+
+            // Log the player's incorrect answer
+            int sessionId = 1; // You can dynamically fetch sessionId as needed
+            questions.logPlayerAnswer(sessionId, questionId, false);
+
+            // Start the cool-down timer and wait for 5 seconds before moving to the next question
+            startCoolDown();  // Start the cool-down and prevent switching question during the cool-down
         }
+
+        // Update the answer result labels
+        updateAnswerResultLabel();  // This will update correct/incorrect answers
     }
+
+
+    private void updateAnswerResultLabel() {
+        // Update the correct and incorrect answers labels
+        correctAnswersLabel.setText("Correct answers: " + correctAnswers);
+        incorrectAnswersLabel.setText("Incorrect answers: " + incorrectAnswers);
+    }
+
+
 
     private void startCoolDown() {
         coolDownSeconds = 5;
         countdownLabel.setText("Wait for " + coolDownSeconds + " seconds...");
 
-        // Disable input during cool down if the answer is incorrect
+        // Disable input during cool down
         answerField.setEnabled(false);
 
         coolDownTimer = new Timer();
@@ -591,14 +602,16 @@ public class GameView extends JPanel {
                     countdownLabel.setText("Wait for " + coolDownSeconds + " seconds...");
                     coolDownSeconds--;
                 } else {
-                    // Re-enable input after the cool-down period
+                    // After the cool-down ends, switch to the next question
                     countdownLabel.setText("");
                     coolDownTimer.cancel();
-                    moveToNextQuestion();  // Automatically move to the next question after the cool down
+                    moveToNextQuestion();  // Switch to the next question only after the cool-down
+                    answerField.setEnabled(true);  // Re-enable input after the cool-down
                 }
             }
         }, 0, 1000);  // Execute every 1 second
     }
+
 
     private void moveToNextQuestion() {
         currentQuestion = questions.getAnyQuestion();
