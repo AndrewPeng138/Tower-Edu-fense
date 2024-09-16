@@ -2,20 +2,21 @@ import java.util.Map;
 
 public class MathQuestions extends Questions {
 
-    /**
-     * Constructor for MathQuestions which loads questions from a specific file.
-     * @param filename The path to the file containing math questions and answers.
-     */
-    public MathQuestions(String filename) {
-        super(filename);  // Call the superclass constructor to load questions from the specified file
+    // Constructor that loads math questions from the database
+    public MathQuestions() {
+        super("Math");  // Pass "Math" as the category to the parent class
+    }
+
+    @Override
+    public String getAnswer(String question) {
+        return questionMap.get(question);  // Retrieve the answer for the given question
     }
 
     /**
-     * Retrieves the question that corresponds to a specific answer by searching through the questionMap.
-     * This method returns the first question that matches the given answer, if any.
-     * If no questions match the answer, this method returns null.
-     * @param answer The text of the answer for which the corresponding question is needed.
-     * @return The question that corresponds to the given answer, or null if no matching question is found.
+     * Retrieves the question corresponding to a specific answer.
+     * This method searches through the questionMap.
+     * @param answer The answer text.
+     * @return The question that corresponds to the given answer, or null if no match is found.
      */
     public String getQuestion(String answer) {
         for (Map.Entry<String, String> entry : questionMap.entrySet()) {
@@ -26,12 +27,6 @@ public class MathQuestions extends Questions {
         return null;  // Return null if no matching question is found
     }
 
-    /**
-     * Updates or sets the answer for a given question in the questionMap.
-     * This method allows modifying the answer for an existing question or adding a new question-answer pair if the question does not exist.
-     * @param question The text of the question.
-     * @param answer The new text of the answer.
-     */
     public void setAnswer(String question, String answer) {
         questionMap.put(question, answer);  // Update or set the answer for the given question
     }

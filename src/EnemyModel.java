@@ -1,83 +1,85 @@
-public class EnemyModel {
-    private int damage;
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+
+public abstract class EnemyModel {
+    private int currentRow;
+    private int currentCol;
     private int health;
-    private int speed;
-    private int x;
-    private int y;
+    private int damage;
+    private int pathIndex = 0;  // Tracks the enemy's position along the path
 
-    /**
-     * basic movement by enemy
-     */
-    public void move(int nextX, int nextY) {
-        this.x = nextX;
-        this.y = nextY;
-    }
-    /**
-     * Gets x coordinate of enemy
-     * @return x coordinate of enemy
-     */
-    public int getX(){
-        return this.x;
-    }
-    /**
-     * Gets y coordinate of enemy
-     * @return y coordinate of enemy
-     */
-    public int getY(){
-        return this.y;
+    public int getCurrentRow() {
+        return currentRow;
     }
 
-    /**
-     * Set the x coordinate of enemy
-     * @param value x coordinate to be set
-     */
-    public void setX(int value){
-        this.x = value;
-    }
-    /**
-     * Set the y coordinate of enemy
-     * @param value y coordinate to be set
-     */
-    public void setY(int value){
-        this.y = value;
+    public int getCurrentCol() {
+        return currentCol;
     }
 
-    /**
-     * Setting position of enemy
-     * @param enemyX x coordinate to be set
-     * @param enemyY y coordinate to be set
-     */
-    public void setPosition(int enemyX, int enemyY){
-        this.x = enemyX;
-        this.y = enemyY;
+    public void setCurrentRow(int value){ this.currentRow = value; }
+
+    public void setCurrentCol(int value){ this.currentCol = value; }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
-    /**
-     * Sets health of enemy
-     * @param value health value to be set
-     */
-    public void setHealth(int value){
-        this.health = value;
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
-    /**
-     * Sets speed of enemy
-     * @param value speed value to be set
-     */
-    public void setSpeed(int value){
-        this.speed = value;
+
+    public int getHealth() {
+        return health;
     }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public abstract boolean isMetal();
+
     /**
-     * Sets health of enemy
-     * @param value health value to be set
+     * Move the enemy to the next tile in the predefined path.
+     * @param mapModel Map the enemy is moving on
      */
-    public void setDamage(int value){
-        this.damage = value;
+    public void moveToNextEnemyTile(MapModel mapModel, MapPanel mapPanel, List<Tile> enemyPath) {
+        if (mapModel == null) {
+            throw new IllegalArgumentException("MapModel cannot be null");
+        }
+        if (pathIndex < enemyPath.size()) {
+            // Get the next position in the path
+            int row = enemyPath.get(pathIndex).getRow();
+            int col = enemyPath.get(pathIndex).getRow();
+            JButton button = mapPanel.getButton(row, col);
+            Point location = button.getLocation();
+            moveTo(location.x, location.y);
+            pathIndex++;  // Increment the path index
+        }
     }
 
     /**
-     * Decrease health taken from damage by certain amount
-     * @param value amount of health enemy lost
+     * Method moving enemy to a new tile
+     * @param newRow row number of new tile
+     * @param newCol column number of new tile
      */
-    public void decreaseHealth(int value){
-        this.health -= value;
+    public void moveTo(int newRow, int newCol) {
+        this.currentRow = newRow;
+        this.currentCol = newCol;
     }
+
+    /**
+     * Abstract method for drawing the enemy on the board
+     * @param g Graphics object
+     * @param screenX X-coordinate on the screen
+     * @param screenY Y-coordinate on the screen
+     * @param tileWidth Width of the tile
+     * @param tileHeight Height of the tile
+     */
+    public abstract void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight);
+
+    public void decreaseHealth(int damage) {
+        health = -1;
+    }
+
 }
