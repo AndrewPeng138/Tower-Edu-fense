@@ -75,4 +75,17 @@ public abstract class EnemyModel {
      * @param tileHeight Height of the tile
      */
     public abstract void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight);
+
+    public void decreaseHealth(int damage) {
+        health = -1;
+    }
+
+    public int getX() {
+        return currentRow;
+    }
+
+    public int getY() {
+        return currentCol;
+    }
+
 }
