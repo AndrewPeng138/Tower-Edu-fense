@@ -64,39 +64,35 @@ public class MapPanel extends JPanel {
 
     private void handleTileClick(int row, int col) {
         try {
-            // Perform checks before placing the tower
             Tile tile = locations[row][col];
-            Tower selectedTower = gameView.getSelectedTower(); // Ensure this method exists and returns the currently selected tower
+            Tower selectedTower = gameView.getSelectedTower(); // Get the selected tower
 
             if (selectedTower == null) {
+                System.out.println("No tower selected.");  // Debug statement
                 throw new IllegalStateException("No tower is currently selected.");
             }
 
-            String tileName = tile.getName();
-            String towerName = selectedTower.getName();
+            System.out.println("Clicked tile at row: " + row + ", col: " + col);
+            System.out.println("Selected Tower: " + selectedTower.getName());
 
-            if (tileName == null) {
-                throw new IllegalArgumentException("Tile name is null.");
-            }
-
-            if (tileName.equals("enemy")) {
+            // Handle different tile types
+            if (tile.getName().equals("enemy")) {
                 throw new IllegalArgumentException("You can't place a tower on the enemy path.");
-            } else if (tileName.equals("border")) {
+            } else if (tile.getName().equals("border")) {
                 throw new IllegalArgumentException("You can't place a tower on the border.");
-            } else if (tileName.equals("water")) {
-                if (!towerName.equals("Boat Tower")) {
-                    throw new IllegalArgumentException("You can only place Boat Towers on the water.");
-                }
-            } else if (towerName.equals("Boat Tower") && !tileName.equals("water")) {
-                throw new IllegalArgumentException("Boats can only be placed on the water.");
+            } else if (tile.getName().equals("water") && !selectedTower.getName().equals("Boat Tower")) {
+                throw new IllegalArgumentException("Only Boat Towers can be placed on water.");
             }
 
-            // Place the tower if all checks pass
-            placeTower(row, col, selectedTower);
+            // Place the tower on the map using GameView's method
+            System.out.println("Calling gameView.placeTowerOnTile...");
+            gameView.placeTowerOnTile(row, col);
         } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Error placing tower: " + e.getMessage());  // Debug error message
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
 
     @Override

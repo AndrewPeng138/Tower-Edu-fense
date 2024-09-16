@@ -23,51 +23,37 @@ public class GameView extends JPanel {
     private JLabel countdownLabel;  // Countdown/cool-down timer display
     private JLabel moneyLabel;  // Label to display the user's points/money
     private String currentQuestion;
-
     private Timer coolDownTimer;
     private Timer gameLoopTimer;
-
     private int coolDownSeconds = 5;
     private int points = 10000;  // Variable to track points/money
     private int sessionId = 1;  // Assuming each player has a session ID. In a real scenario, this would be dynamic.
     private int correctAnswers = 0;  // Track correct answers
     private int incorrectAnswers = 0;  // Track incorrect answers
-
-
     private Tile entranceTile;
     private Tile exitTile;
     private List<Tile> enemyPath;  // This will store the path of enemy tiles
     private Tile[][] locations;    // Reference to the map of tiles
     private Image enemyTileImage;
-
-
-    // List to store enemies
-    private List<EnemyModel> enemies = new ArrayList<>();
-
-    // Tower costs
-    private final int DEFAULT_TOWER_COST = 500;
+    private List<EnemyModel> enemies = new ArrayList<>(); // List to store enemies
+    private final int DEFAULT_TOWER_COST = 500; // Tower costs
     private final int BOAT_TOWER_COST = 1500;
     private final int HEAVY_TOWER_COST = 3000;
     private final int LIGHTNING_TOWER_COST = 4500;
     private final int FLAME_TOWER_COST = 2000;
     private final int BUGM3LT3R_TOWER_COST = 10000;
-
-    // Towers
-    private JButton defaultTowerButton;
+    private JButton defaultTowerButton; // Towers
     private JButton boatTowerButton;
     private JButton heavyTowerButton;
     private JButton lightningTowerButton;
     private JButton flameTowerButton;
     private JButton bugm3lt3rButton;
-
-
     public String selectedTower = null;  // To store the currently selected tower
     public int selectedTowerCost = 0;
     private String selectedTowerName = null;
     private static final int MAX_LINE_LENGTH = 23;
     private String mapType;  // The selected map type (Easy, Medium, etc.)
     private String category; // The category of questions (Math, Geography, Chemistry)
-
 
     // ***** AUDIO PLAYERS *****
     // Background music
@@ -88,7 +74,6 @@ public class GameView extends JPanel {
     WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
     private Cannon cannon;
     private Timer timer;
-
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.questions = questions;
@@ -186,6 +171,7 @@ public class GameView extends JPanel {
         // Text field for user input
         answerField = new JTextField();
         answerField.setBounds(10, 290, 300, 30);  // Adjusted position below the question
+        add(answerField);
 
         // Wrap the question text
         String wrappedQuestion = wrapText(currentQuestion, MAX_LINE_LENGTH);
@@ -200,13 +186,6 @@ public class GameView extends JPanel {
             questionLabel.setFont(new Font("Arial", Font.PLAIN, 15));  // Font for the actual question
             add(questionLabel);
         }
-
-
-        // Text field for user input
-        answerField = new JTextField();
-        answerField.setBounds(10, 180, 300, 30);
-
-        add(answerField);
 
         // Set key listener for "Enter" key to submit the answer
         answerField.addKeyListener(new KeyAdapter() {
@@ -230,8 +209,6 @@ public class GameView extends JPanel {
         countdownLabel.setForeground(Color.RED);
         add(countdownLabel);
 
-
-
         moneyLabel = new JLabel("10000");  // Initial money is 0
         moneyLabel.setBounds(1220, 52, 200, 40);
         moneyLabel.setForeground(Color.WHITE);
@@ -253,7 +230,6 @@ public class GameView extends JPanel {
             wrappedText.append("\n");
             start = end;
         }
-
         return wrappedText.toString();}
 
     private Tile findEntranceTile() {
@@ -345,9 +321,10 @@ public class GameView extends JPanel {
 
 
     // Method to handle placing a tower on a tile
-    // Method to handle placing a tower on a tile
     public void placeTowerOnTile(int row, int col) {
-        if (selectedTower != null && points >= selectedTowerCost) {
+        if (selectedTower != null && points >= selectedTowerCost)
+        {
+
             // Adjust the row/column based on the selected tower type
             switch (selectedTower) {
                 case "Cannon Tower":
@@ -375,6 +352,7 @@ public class GameView extends JPanel {
 
             points -= selectedTowerCost;  // Deduct the cost
             updateMoneyLabel();  // Update the money label
+
 
             // Create a Tower object based on the selected tower
             Tower tower = new Tower(selectedTower, getTowerImagePath(selectedTower));
@@ -478,10 +456,8 @@ public class GameView extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (points >= cost) {
                     selectedTower = name;  // Set the selected tower
-                    System.out.println("Selected Tower: " + selectedTower); // Debug statement to check the selected tower
-
                     selectedTowerCost = cost;  // Set the tower cost
-                    System.out.println(name + " selected");
+                    System.out.println("Tower selected: " + selectedTower + ", Cost: " + selectedTowerCost);
                 } else {
                     JOptionPane.showMessageDialog(null, "Not enough money for " + name + "!");
                 }
@@ -490,20 +466,22 @@ public class GameView extends JPanel {
         return button;
     }
 
+
     // Update tower buttons, enabling/disabling them based on current points
     private void updateTowerButtons() {
         defaultTowerButton.setEnabled(points >= DEFAULT_TOWER_COST);
-        boatTowerButton.setEnabled(points >= BOAT_TOWER_COST && !mapType.equalsIgnoreCase("Easy"));  // Only enabled if not "Easy" map
+        boatTowerButton.setEnabled(points >= BOAT_TOWER_COST && !mapType.equalsIgnoreCase("Easy"));
         heavyTowerButton.setEnabled(points >= HEAVY_TOWER_COST);
         lightningTowerButton.setEnabled(points >= LIGHTNING_TOWER_COST);
         flameTowerButton.setEnabled(points >= FLAME_TOWER_COST);
         bugm3lt3rButton.setEnabled(points >= BUGM3LT3R_TOWER_COST);
+
     }
 
 
     // Method to update the money label
     private void updateMoneyLabel() {
-        moneyLabel.setText(String.valueOf(points));
+        moneyLabel.setText(String.valueOf(points)); //Update label with current points
     }
 
 
@@ -541,8 +519,6 @@ public class GameView extends JPanel {
         }
 
     }
-
-
 
     // Start the game loop timer for continuous updates
     public void startGameLoop() {
