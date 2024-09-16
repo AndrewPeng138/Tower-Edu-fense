@@ -21,12 +21,13 @@ public class DifficultyView extends JPanel {
         setLayout(null);
 
         // Buttons
-        buttons = new JButton[4];
+        buttons = new JButton[5];
         String[] buttonImages = {
                 "Images/EasyButton.png",
                 "Images/MediumButton.png",
                 "Images/HardButton.png",
-                "Images/ExpertButton.png"
+                "Images/ExpertButton.png",
+                "Images/BackButton.png"
         };
 
         // Custom width and height for buttons
@@ -65,26 +66,33 @@ public class DifficultyView extends JPanel {
             int buttonY = 150 + i * 150;  // Vertical position for each button
             buttons[i].setBounds(575, buttonY, buttonWidth, buttonHeight);
 
-            // Add action listeners to each button to load the corresponding background and map type
-            String backgroundPath = gameBackgrounds[i];  // Background image path for this difficulty
-            String mapType = mapTypes[i];  // Map type corresponding to this difficulty
+            // Add action listeners to each button
+            if (i < 4) {
+                // Regular difficulty buttons
+                String backgroundPath = gameBackgrounds[i];  // Background image path for this difficulty
+                String mapType = mapTypes[i];  // Map type corresponding to this difficulty
 
-            buttons[i].addActionListener(e -> {
-                // When a difficulty is selected, pass the background and map type to GameView
-                try {
-                    new GameView(backgroundPath, questions, mapType);  // Pass background, questions, and map type to GameView
-                } catch (UnsupportedAudioFileException ex) {
-                    throw new RuntimeException(ex);
-                } catch (LineUnavailableException ex) {
-                    throw new RuntimeException(ex);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                frame.dispose();  // Close current window
-            });
+                buttons[i].addActionListener(e -> {
+                    // When a difficulty is selected, pass the background and map type to GameView
+                    try {
+                        new GameView(backgroundPath, questions, mapType);  // Pass background, questions, and map type to GameView
+                    } catch (UnsupportedAudioFileException | LineUnavailableException | IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    frame.dispose();  // Close current window
+                });
+            } else {
+                // Back button
+                buttons[i].addActionListener(e -> {
+                    // Navigate back to the WelcomeScreenView
+                    new WorldMapView(); // Show WelcomeScreenView
+                    frame.dispose();  // Close current window
+                });
+            }
 
             add(buttons[i]);  // Add the button to the panel
         }
+
 
         // Add the DifficultyView panel to the frame
         frame.add(this);

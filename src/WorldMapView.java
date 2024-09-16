@@ -15,7 +15,7 @@ public class WorldMapView extends JPanel {
         WelcomeScreenView.setScreenSize(frame);
         setLayout(null);
 
-        buttons = new JButton[3];
+        buttons = new JButton[4];
 
         // Button 1: Math
         buttons[0] = createButton("Images/MathButton.png", 200, 100);
@@ -25,9 +25,13 @@ public class WorldMapView extends JPanel {
         buttons[1] = createButton("Images/GeographyButton.png", 200, 100);
         buttons[1].setBounds(760, 380, 150, 100);  // Set position for Geography button
 
-        // Button 3: Chemistry (was Science earlier, adjust as per your naming)
+        // Button 3: Chemistry
         buttons[2] = createButton("Images/ScienceButton.png", 200, 100);
         buttons[2].setBounds(925, 620, 150, 100);  // Set position for Chemistry button
+
+        // Button 4: Back Button
+        buttons[3] = createButton("Images/BackButton.png", 200, 100);
+        buttons[3].setBounds(80, 80, 150, 100);  // Set position for Chemistry button
 
         // Add the buttons and their actions
         buttons[0].addActionListener(e -> {
@@ -48,6 +52,11 @@ public class WorldMapView extends JPanel {
             // Load Chemistry questions from the database and pass them to DifficultyView
             Questions chemistryQuestions = new ChemistryQuestions();  // No more file paths needed
             new DifficultyView(chemistryQuestions);  // Pass the chemistry questions to DifficultyView
+            frame.dispose();       // Close current window
+        });
+
+        buttons[3].addActionListener(e -> {
+            new WelcomeScreenView();
             frame.dispose();       // Close current window
         });
 
