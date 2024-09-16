@@ -46,7 +46,6 @@ public abstract class EnemyModel {
         if (mapModel == null) {
             throw new IllegalArgumentException("MapModel cannot be null");
         }
-
         if (pathIndex < enemyPath.size()) {
             // Get the next position in the path
             int row = enemyPath.get(pathIndex).getRow();
