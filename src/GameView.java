@@ -342,35 +342,8 @@ public class GameView extends JPanel {
     public void placeTowerOnTile(int row, int col) {
         if (selectedTower != null && points >= selectedTowerCost)
         {
-
-            // Adjust the row/column based on the selected tower type
-            switch (selectedTower) {
-                case "Cannon Tower":
-                    row -= 0;  // Place DefaultTower at row-1
-                    break;
-                case "Boat Tower":
-                    row -= 0;
-                    break;
-                case "Mortar Tower":
-                    row -= 0;
-                    break;
-                case "Lightning Tower":
-                    row -= 0;
-                    break;
-                case "Flame Tower":
-                    row -= 0;
-                    break;
-                case "BUGM3LT3R":
-                    row -= 0;
-                    break;
-                default:
-                    // No adjustment for unknown tower types
-                    break;
-            }
-
             points -= selectedTowerCost;  // Deduct the cost
             updateMoneyLabel();  // Update the money label
-
 
             // Create a Tower object based on the selected tower
             Tower tower = new Tower(selectedTower, getTowerImagePath(selectedTower));
@@ -432,43 +405,58 @@ public class GameView extends JPanel {
     // Create tower buttons and place them under the money label
     private void createTowerButtons() {
         int baseY = 100;  // Base Y position under the money label
-        int buttonHeight = 50;
+        int buttonHeight = 60;
 
-        // Default Tower
-        defaultTowerButton = createTowerButton("Cannon Tower", DEFAULT_TOWER_COST, 1120, baseY);
+        // Default Tower (with image)
+        defaultTowerButton = createTowerButton("Cannon Tower", DEFAULT_TOWER_COST, "Images/TowerSprites/CannonTower.png", 1120, baseY);
         add(defaultTowerButton);
 
-        // Boat Tower (Disabled on Easy map)
-        boatTowerButton = createTowerButton("Boat Tower", BOAT_TOWER_COST, 1120, baseY + buttonHeight);
+        // Boat Tower (with image, disabled on Easy map)
+        boatTowerButton = createTowerButton("Boat Tower", BOAT_TOWER_COST, "Images/TowerSprites/BoatTower.png", 1120, baseY + buttonHeight);
         if (mapType.equalsIgnoreCase("Easy")) {
             boatTowerButton.setVisible(false);  // Hide if map type is "Easy"
         }
         add(boatTowerButton);
 
-        // Heavy Tower
-        heavyTowerButton = createTowerButton("Mortar Tower", HEAVY_TOWER_COST, 1120, baseY + 2 * buttonHeight);
+        // Heavy Tower (with image)
+        heavyTowerButton = createTowerButton("Mortar Tower", HEAVY_TOWER_COST, "Images/TowerSprites/Mortar.png", 1120, baseY + 2 * buttonHeight);
         add(heavyTowerButton);
 
-        // Lightning Tower
-        lightningTowerButton = createTowerButton("Lightning Tower", LIGHTNING_TOWER_COST, 1120, baseY + 3 * buttonHeight);
+        // Lightning Tower (with image)
+        lightningTowerButton = createTowerButton("Lightning Tower", LIGHTNING_TOWER_COST, "Images/TowerSprites/LightningTower.png", 1120, baseY + 3 * buttonHeight);
         add(lightningTowerButton);
 
-        // Flame Tower
-        flameTowerButton = createTowerButton("Flame Tower", FLAME_TOWER_COST, 1120, baseY + 4 * buttonHeight);
+        // Flame Tower (with image)
+        flameTowerButton = createTowerButton("Flame Tower", FLAME_TOWER_COST, "Images/TowerSprites/FlameTower.png", 1120, baseY + 4 * buttonHeight);
         add(flameTowerButton);
 
-        // BUGM3LT3R Tower
-        bugm3lt3rButton = createTowerButton("BUGM3LT3R", BUGM3LT3R_TOWER_COST, 1120, baseY + 5 * buttonHeight);
+        // BUGM3LT3R Tower (with image)
+        bugm3lt3rButton = createTowerButton("BUGM3LT3R", BUGM3LT3R_TOWER_COST, "Images/TowerSprites/BUGM3LT3R.png", 1120, baseY + 5 * buttonHeight);
         add(bugm3lt3rButton);
-
     }
 
 
 
+
     // Method to create a tower button with an action listener
-    private JButton createTowerButton(String name, int cost, int x, int y) {
+    private JButton createTowerButton(String name, int cost, String imagePath, int x, int y) {
         JButton button = new JButton(name + " - $" + cost);
-        button.setBounds(x, y, 200, 50);
+        button.setBounds(x, y, 200, 60);
+// Load the image icon
+        ImageIcon originalIcon = new ImageIcon(imagePath);
+
+        // Resize the image
+        Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH); // Set desired width and height
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+        // Set the scaled image as the button icon
+        button.setIcon(scaledIcon);
+
+        // Adjust text position relative to the image
+        button.setHorizontalTextPosition(SwingConstants.CENTER);  // Center text
+        button.setVerticalTextPosition(SwingConstants.BOTTOM);    // Put text below image
+
+
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
