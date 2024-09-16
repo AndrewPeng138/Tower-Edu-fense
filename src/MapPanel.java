@@ -18,7 +18,8 @@ public class MapPanel extends JPanel {
 
         // Load the background map image
         backgroundImage = new ImageIcon(backgroundImagePath).getImage();
-        setLayout(null);  // Use absolute positioning for placing buttons
+        setLayout(new GridLayout(locations.length, locations[0].length, 0, 0));  // No gaps
+        // Use absolute positioning for placing buttons
 
         // Create buttons for each tile
         createTileButtons();
@@ -35,7 +36,7 @@ public class MapPanel extends JPanel {
             for (int j = 0; j < locations[i].length; j++) {
                 // Create a new JButton for each tile
                 JButton tileButton = new JButton();
-                tileButton.setBounds(j * tileWidth, i * tileHeight, tileWidth, tileHeight);
+                tileButton.setBounds(j * tileWidth, i * tileHeight , tileWidth  , tileHeight  );
                 tileButton.setOpaque(false);
                 tileButton.setContentAreaFilled(false);
                 tileButton.setBorderPainted(false);
