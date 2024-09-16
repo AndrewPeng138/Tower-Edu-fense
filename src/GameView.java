@@ -86,7 +86,7 @@ public class GameView extends JPanel {
         this.mapModel = new MapModel(mapType);
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
         this.locations = new MapModel(mapType).getLocations();  // Initialize the map (locations)
-        //this.enemyPath = new ArrayList<>();
+        this.enemyPath = new ArrayList<>();
         this.mapType = mapType;
         this.enemies = new ArrayList<>();
         System.out.println("Adding enemy...");
