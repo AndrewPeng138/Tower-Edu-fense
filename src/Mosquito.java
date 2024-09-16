@@ -4,8 +4,7 @@ import javax.swing.ImageIcon;
 
 /**
  * A lower health enemy that appears more often
- *//*
-
+ */
 public class Mosquito extends EnemyModel{
     private Image mosquitoImage;
     Mosquito(int startRow, int startCol){
@@ -37,4 +36,3 @@ public class Mosquito extends EnemyModel{
     }
 
 }
-*/

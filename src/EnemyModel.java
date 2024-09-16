@@ -1,49 +1,24 @@
 import java.awt.*;
+import java.util.List;
 
 public abstract class EnemyModel {
-    protected int xPosition;
-    protected int yPosition;
-    protected MapModel mapModel;
-    protected int health;
-    protected int damage;
-    protected int currentRow;
-    protected int currentCol;
+    private int currentRow;
+    private int currentCol;
+    private int health;
+    private int damage;
+    private int pathIndex = 0;  // Tracks the enemy's position along the path
 
-    // Constructor
-    public EnemyModel(MapModel mapModel, int startX, int startY) {
-        this.mapModel = mapModel;
-        this.xPosition = startX;
-        this.yPosition = startY;
-        this.health = 0;
-        this.damage = 0;
+    public int getCurrentRow() {
+        return currentRow;
     }
 
-    // Abstract method to get the image of the enemy
-    public abstract Image getImage();
-
-    // Method to move the enemy
-    public void move(int newX, int newY) {
-        if (newX >= 0 && newX < mapModel.getMapWidth() && newY >= 0 && newY < mapModel.getMapHeight()) {
-            Tile targetTile = mapModel.getTile(newY, newX);
-            if (canMoveToTile(targetTile)) {
-                xPosition = newX;
-                yPosition = newY;
-            }
-        }
+    public int getCurrentCol() {
+        return currentCol;
     }
 
-    // Method to check if the enemy can move to a specific tile
-    private boolean canMoveToTile(Tile tile) {
-        return tile instanceof EnemyTile;
-    }
+    public void setCurrentRow(int value){ this.currentRow = value; }
 
-    public int getXPosition() {
-        return xPosition;
-    }
-
-    public int getYPosition() {
-        return yPosition;
-    }
+    public void setCurrentCol(int value){ this.currentCol = value; }
 
     public void setHealth(int health) {
         this.health = health;
@@ -61,30 +36,43 @@ public abstract class EnemyModel {
         return damage;
     }
 
-    public boolean isMetal() {
-        return false; // Default implementation
+    public abstract boolean isMetal();
+
+    /**
+     * Move the enemy to the next tile in the predefined path.
+     * @param mapModel Map the enemy is moving on
+     */
+    public void moveToNextEnemyTile(MapModel mapModel) {
+        if (mapModel == null) {
+            throw new IllegalArgumentException("MapModel cannot be null");
+        }
+
+        List<int[]> enemyPath = mapModel.getEnemyPath();  // Get the path from the map
+        if (pathIndex < enemyPath.size()) {
+            // Get the next position in the path
+            int[] nextPosition = enemyPath.get(pathIndex);
+            moveTo(nextPosition[0], nextPosition[1]);  // Move to the next tile
+            pathIndex++;  // Increment the path index
+        }
     }
 
+    /**
+     * Method moving enemy to a new tile
+     * @param newRow row number of new tile
+     * @param newCol column number of new tile
+     */
     public void moveTo(int newRow, int newCol) {
         this.currentRow = newRow;
         this.currentCol = newCol;
     }
 
-    public void moveToNextEnemyTile(MapModel mapModel) {
-        // Check left, right, and down tiles
-        String leftTile = mapModel.getTileType(currentRow, currentCol - 1);
-        String rightTile = mapModel.getTileType(currentRow, currentCol + 1);
-        String downTile = mapModel.getTileType(currentRow + 1, currentCol);
-
-        // Move to an "enemy" tile if available
-        if (downTile.equals("enemy")) {
-            moveTo(currentRow + 1, currentCol);
-        } else if (leftTile.equals("enemy")) {
-            moveTo(currentRow, currentCol - 1);
-        } else if (rightTile.equals("enemy")) {
-            moveTo(currentRow, currentCol + 1);
-        }
-    }
+    /**
+     * Abstract method for drawing the enemy on the board
+     * @param g Graphics object
+     * @param screenX X-coordinate on the screen
+     * @param screenY Y-coordinate on the screen
+     * @param tileWidth Width of the tile
+     * @param tileHeight Height of the tile
+     */
     public abstract void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight);
-
 }

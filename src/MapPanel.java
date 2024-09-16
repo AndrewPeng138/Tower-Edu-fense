@@ -8,6 +8,8 @@ public class MapPanel extends JPanel {
     public Image backgroundImage;
     public Tower[][] placedTowers; // Store the placed towers
     private GameView gameView;
+    private JButton[][] tileButtons;
+
 
     public MapPanel(Tile[][] locations, String backgroundImagePath, GameView gameView) {
         this.locations = locations;
@@ -23,20 +25,24 @@ public class MapPanel extends JPanel {
     }
 
     private void createTileButtons() {
-        // Determine tile size based on the initial panel size
         int tileWidth = 47;
         int tileHeight = 47;
-        System.out.println("Tile Width: " + tileWidth + ", Tile Height: " + tileHeight);
+
+        // Initialize the button array with the size of 'locations'
+        tileButtons = new JButton[locations.length][locations[0].length];
 
         for (int i = 0; i < locations.length; i++) {
             for (int j = 0; j < locations[i].length; j++) {
                 // Create a new JButton for each tile
                 JButton tileButton = new JButton();
-                tileButton.setBounds(j * tileWidth, i * tileHeight, tileWidth, tileHeight);  // Position the button
-                tileButton.setOpaque(false);  // Make button background transparent
-                tileButton.setContentAreaFilled(false);  // Remove background fill
-                tileButton.setBorderPainted(false);  // Remove border
-                tileButton.setFocusPainted(false);  // Remove focus indicator
+                tileButton.setBounds(j * tileWidth, i * tileHeight, tileWidth, tileHeight);
+                tileButton.setOpaque(false);
+                tileButton.setContentAreaFilled(false);
+                tileButton.setBorderPainted(false);
+                tileButton.setFocusPainted(false);
+
+                // Store the button in the array
+                tileButtons[i][j] = tileButton;
 
                 // Add action listener to handle click event
                 int row = i, col = j;
@@ -49,9 +55,12 @@ public class MapPanel extends JPanel {
 
                 // Add the button to the panel
                 add(tileButton);
+
+
             }
         }
     }
+
 
     private void handleTileClick(int row, int col) {
         try {

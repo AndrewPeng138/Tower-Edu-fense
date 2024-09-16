@@ -9,14 +9,13 @@ public class Roach extends EnemyModel {
 
 
     // Constructor
-    public Roach(MapModel mapModel, int startRow, int startCol) {
-        super(mapModel, startRow, startCol);  // Correct constructor call
-        this.currentRow = startRow;
-        this.currentCol = startCol;
+    public Roach(int startRow, int startCol) {
+        setCurrentRow(startRow);
+        setCurrentCol(startCol);
+        this.setHealth(50);   // Set initial health
+        this.setDamage(10);   // Set initial damage
         this.roachImage = new ImageIcon("Images/BugSprites/cockroachPA.png").getImage();
-        System.out.println("Roach starting at: (" + currentRow + ", " + currentCol + ")");
     }
-
 
     // Getters
     public Image getRoachImage() {

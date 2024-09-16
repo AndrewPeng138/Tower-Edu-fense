@@ -1,6 +1,9 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -12,6 +15,7 @@ public class GameView extends JPanel {
     private MapModel mapModel;
     private MapPanel mapPanel;
     private JLabel questionLabel;
+    private JLabel questionCountLabel;  // Label to display total number of questions
     private JTextField answerField;
     private JLabel feedbackLabel;
     private JLabel countdownLabel;  // Countdown/cool-down timer display
@@ -53,24 +57,50 @@ public class GameView extends JPanel {
 
     public String selectedTower = null;  // To store the currently selected tower
     public int selectedTowerCost = 0;
-
-    private String mapType;  // The type of map
-
     private String selectedTowerName = null;
+    private String mapType;  // The selected map type (Easy, Medium, etc.)
+    private String category; // The category of questions (Math, Geography, Chemistry)
+
+    // ***** AUDIO PLAYERS *****
+    // Background music
+    WAVPlayer BGMUSIC_Player = new WAVPlayer("Audio/TE_BGMUSIC.wav");
+    // Sound effect when bug dies [UNIMPLEMENTED]
+    WAVPlayer bugDeath_Player = new WAVPlayer("Audio/bugDeath_SE.wav");
+    // Sound effect when bug is hit [UNIMPLEMENTED]
+    WAVPlayer bugHit_Player = new WAVPlayer("Audio/bugHit_SE.wav");
+    // Sound effect when tower is bought [IMPLEMENTED IN placeTowerOnTile]
+    WAVPlayer buyTower_Player = new WAVPlayer("Audio/buyTower_SE.wav");
+    // Sound effect when a tower fires, several alternate sounds could be used [UNIMPLEMENTED]
+    WAVPlayer fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
+    // Sound effect when the player runs out of health [UNIMPLEMENTED]
+    WAVPlayer gameOver_Player = new WAVPlayer("Audio/gameOver_SE.wav");
+    // Sound effect when the player beats all 20 waves [UNIMPLEMENTED]
+    WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
+    // Sound effect when a question is answered correctly [UNIMPLEMENTED]
+    WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
 
 
 
-    public GameView(String backgroundImagePath, Questions questions, String mapType) {
+    public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.questions = questions;
         this.mapModel = new MapModel(mapType);
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
         this.locations = new MapModel(mapType).getLocations();  // Initialize the map (locations)
-        this.enemyPath = new ArrayList<>();
+        //this.enemyPath = new ArrayList<>();
         this.mapType = mapType;
         this.enemies = new ArrayList<>();
         System.out.println("Adding enemy...");
-        enemies.add(new Roach(mapModel, 0, 14));  // Example: adding an enemy
+        enemies.add(new Roach( 0, 14));  // Example: adding an enemy
         System.out.println("Enemy added. Size: " + enemies.size());
+        BGMUSIC_Player.play();
+        this.questions = questions;
+        this.mapType = mapType;
+        this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
+        // Load the total number of questions in the current category
+        String category = questions.getClass().getSimpleName().replace("Questions", ""); // Extract category from the class name
+        int questionCount = questions.getQuestionCountForCategory(category);
+        System.out.println("Total questions in category '" + category + "': " + questionCount);
+
 
         // Set up the JFrame
         JFrame frame = new JFrame("Game View");
@@ -78,12 +108,23 @@ public class GameView extends JPanel {
         WelcomeScreenView.setScreenSize(frame);
         setLayout(null);
 
+
         mapPanel = new MapPanel(locations, backgroundImagePath, this);
+        // Create and set up the map panel
+        mapModel = new MapModel(mapType);
+        mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);  // Pass reference to GameView for tile clicks
         mapPanel.setBounds(300, 0, 800, 750);
         add(mapPanel);
 
         // Initialize and set up UI components
-        initializeUI();
+        initializeUI(questionCount);
+
+
+        // Initialize the enemy list and start the game loop
+        enemies = new ArrayList<EnemyModel>();
+        spawnEnemies();  // Initialize the enemy spawning
+        startGameLoop();  // Start the game update loop
+
 
         frame.add(this);
         frame.setSize(1400, 900);
@@ -96,9 +137,6 @@ public class GameView extends JPanel {
 //        if (entranceTile != null && exitTile != null) {
 //            findEnemyPath();
 //        }
-
-
-
         int x = 5; // Example value, replace with the actual x-coordinate
         int y = 3; // Example value, replace with the actual y-coordinate
         boolean isEntrance = false; // Set this based on whether this is the entrance
@@ -109,19 +147,28 @@ public class GameView extends JPanel {
 
 
         // Initialize the UI and start enemy movement
-        initializeUI();
+        initializeUI(questionCount);
         findEnemyPath();
         startEnemyMovement();
     }
 
 
-    private void initializeUI() {
+
+
+    private void initializeUI(int questionCount) {
+        // Display the total number of questions in the current category
+        questionCountLabel = new JLabel("Total questions: " + questionCount);
+        questionCountLabel.setBounds(10, 20, 600, 30);  // Place the question count above the question
+        questionCountLabel.setForeground(Color.WHITE);
+        questionCountLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Bold and larger font
+        add(questionCountLabel);
+
         // Get a random question to display
         currentQuestion = questions.getAnyQuestion();
 
         // Display the question
         JLabel questionTextLabel = new JLabel("Question:");
-        questionTextLabel.setBounds(10, 50, 600, 50);
+        questionTextLabel.setBounds(10, 60, 600, 50);
         questionTextLabel.setForeground(Color.WHITE);
         questionTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Question"
         add(questionTextLabel);
@@ -267,13 +314,13 @@ public class GameView extends JPanel {
         if (selectedTower != null && points >= selectedTowerCost) {
             // Adjust the row/column based on the selected tower type
             switch (selectedTower) {
-                case "Default Tower":
+                case "Cannon Tower":
                     row -= 0;  // Place DefaultTower at row-1
                     break;
                 case "Boat Tower":
                     row -= 0;
                     break;
-                case "Heavy Tower":
+                case "Mortar Tower":
                     row -= 0;
                     break;
                 case "Lightning Tower":
@@ -296,6 +343,8 @@ public class GameView extends JPanel {
             // Create a Tower object based on the selected tower
             Tower tower = new Tower(selectedTower, getTowerImagePath(selectedTower));
             mapPanel.placeTower(row, col, tower);  // Place the tower on the map
+            // Play tower buy sound effect
+            buyTower_Player.play();
 
             selectedTower = null;  // Reset selected tower
             updateTowerButtons();  // Update tower buttons
@@ -308,12 +357,12 @@ public class GameView extends JPanel {
     public Tower getSelectedTower() {
         if (selectedTower != null) {
             switch (selectedTower) {
-                case "Default Tower":
-                    return new Tower("Default Tower", "Images/TowerSprites/CannonTower.png");
+                case "Cannon Tower":
+                    return new Tower("Cannon Tower", "Images/TowerSprites/CannonTower.png");
                 case "Boat Tower":
                     return new Tower("Boat Tower", "Images/TowerSprites/BoatTower.png");
-                case "Heavy Tower":
-                    return new Tower("Heavy Tower", "Images/TowerSprites/Mortar.png");
+                case "Mortar Tower":
+                    return new Tower("Mortar Tower", "Images/TowerSprites/Mortar.png");
                 case "Lightning Tower":
                     return new Tower("Lightning Tower", "Images/TowerSprites/LightningTower.png");
                 case "Flame Tower":
@@ -331,11 +380,11 @@ public class GameView extends JPanel {
     // Method to get the image path of a tower based on its name
     private String getTowerImagePath(String towerName) {
         switch (towerName) {
-            case "Default Tower":
+            case "Cannon Tower":
                 return "Images/TowerSprites/CannonTower.png";
             case "Boat Tower":
                 return "Images/TowerSprites/BoatTower.png";
-            case "Heavy Tower":
+            case "Mortar Tower":
                 return "Images/TowerSprites/Mortar.png";
             case "Lightning Tower":
                 return "Images/TowerSprites/LightningTower.png";
@@ -354,7 +403,7 @@ public class GameView extends JPanel {
         int buttonHeight = 50;
 
         // Default Tower
-        defaultTowerButton = createTowerButton("Canon Tower", DEFAULT_TOWER_COST, 1120, baseY);
+        defaultTowerButton = createTowerButton("Cannon Tower", DEFAULT_TOWER_COST, 1120, baseY);
         add(defaultTowerButton);
 
         // Boat Tower (Disabled on Easy map)
@@ -431,14 +480,29 @@ public class GameView extends JPanel {
 
 
     // Method to spawn enemies at the start of the game
-    // Method to spawn enemies at the start of the game
     private void spawnEnemies() {
-        // Example: Add Roach at a specific tile (row, col)
-        int startRow = 0;  // Starting row based on map coordinates
-        int startCol = 14; // Starting column based on map coordinates
-        enemies.add(new Roach(mapModel, startRow, startCol));
-        // Pass the tile coordinates to the enemy
+
+        // Get the entrance position from the MapModel
+        int startRow = mapModel.getEntranceRow();
+        int startCol = mapModel.getEntranceCol();
+
+        // Loops through 20 waves
+        for (int i = 1; i < 21; i++) {
+            Wave theWave = new Wave(i, mapModel);
+            ArrayList<EnemyModel> waveList = theWave.getWave();
+            System.out.println("We are on wave " + i);
+            System.out.println("waveList.size() == " + waveList.size());
+
+            for (EnemyModel enemy : waveList) {
+                // Set the starting position of the enemy to the entrance
+                enemy.setCurrentRow(startRow);
+                enemy.setCurrentCol(startCol);
+                enemies.add(enemy);
+            }
+        }
+
     }
+
 
 
     // Start the game loop timer for continuous updates
@@ -447,6 +511,7 @@ public class GameView extends JPanel {
         gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                findEnemyPath();
                 updateGame();  // Update game state
                 repaint();  // Redraw the panel with updated enemy positions
             }
@@ -460,7 +525,8 @@ public class GameView extends JPanel {
         }
 
         // Move each enemy based on the tile map logic
-        for (EnemyModel enemy : enemies) {
+        for (EnemyModel enemy : enemies)
+        {
             if (enemy != null) {
                 enemy.moveToNextEnemyTile(mapModel);  // Move based on map tiles
             }
@@ -472,9 +538,8 @@ public class GameView extends JPanel {
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-
-
         // Determine tile size based on the panel dimensions
+
         int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
         int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
 
@@ -485,7 +550,7 @@ public class GameView extends JPanel {
                 // Convert map coordinates to screen coordinates
                 int screenX = roach.getCurrentCol() * tileWidth;
                 int screenY = roach.getCurrentRow() * tileHeight;
-                roach.draw(g, screenX, screenY, tileWidth, tileHeight);  // Pass tile sizes to draw the roach properly
+                roach.draw(g, screenX, screenY, tileWidth, tileHeight);  // Draw the roach
             }
         }
         if (enemies != null) {
@@ -548,7 +613,6 @@ public class GameView extends JPanel {
             answerField.setEnabled(false);
         }
     }
-
 
 
 

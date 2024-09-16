@@ -3,8 +3,7 @@ import java.awt.*;
 
 /**
  * Boss enemy that appears on the final wave
- *//*
-
+ */
 public class PrayingMantis extends EnemyModel{
     private Image mantisImage;
     PrayingMantis(int startRow, int startCol){
@@ -34,4 +33,3 @@ public class PrayingMantis extends EnemyModel{
         g.drawImage(mantisImage, screenX, screenY, tileWidth, tileHeight, null);
     }
 }
-*/

@@ -23,9 +23,14 @@ public abstract class Questions {
         loadQuestionsFromDatabase(category);  // Load questions based on category from the database
     }
 
-    // Method to load questions from the database based on the category
+    // Method to load questions from the database based on the category name
     protected void loadQuestionsFromDatabase(String category) {
-        String query = "SELECT question, answer FROM Questions WHERE category = ?";
+        // Updated query to join Questions with Categories and Answers based on category name
+        String query = "SELECT q.question, a.answer " +
+                "FROM Questions q " +
+                "JOIN Categories c ON q.category_id = c.id " +
+                "JOIN Answers a ON q.id = a.question_id " +
+                "WHERE c.name = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -38,7 +43,7 @@ public abstract class Questions {
             while (rs.next()) {
                 String question = rs.getString("question");
                 String answer = rs.getString("answer");
-                questionMap.put(question, answer);
+                questionMap.put(question, answer);  // Store the question-answer pairs
             }
             rs.close();
         } catch (SQLException e) {
@@ -62,4 +67,30 @@ public abstract class Questions {
         List<String> keys = new ArrayList<>(questionMap.keySet());
         return keys.get(random.nextInt(keys.size())); // Randomly select a question
     }
+
+    public int getQuestionCountForCategory(String category) {
+        int count = 0;
+        String query = "SELECT COUNT(q.id) AS question_count " +
+                "FROM Questions q " +
+                "JOIN Categories c ON q.category_id = c.id " +
+                "WHERE c.name = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, category);  // Make sure category is correctly passed here
+            System.out.println("Executing query with category: " + category);  // Debugging to ensure the category is correct
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt("question_count");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+
+
 }

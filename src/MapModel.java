@@ -6,6 +6,7 @@ import javax.swing.border.Border;
  */
 
 import javax.swing.border.Border;
+import java.util.ArrayList;
 
 /**
  * Stores data for the gameMap
@@ -17,6 +18,9 @@ public class MapModel {
     private Tile[][] locations = new Tile[17][17];
 
     private Roach roach;
+    private int entranceRow;
+    private int entranceCol;
+    private ArrayList<int[]> enemyPath;
 
     /**
      * Constructor for new maps, keep in mind [y][x] coordinates
@@ -42,7 +46,7 @@ public class MapModel {
             entranceTile.setEntrance(true);
             locations[0][14] = entranceTile;
             // Sets exit
-            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 2, true, false);
+            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 2, false, true);
             exitTile.setExit(true);
             locations[16][2] = exitTile;
 
@@ -54,89 +58,89 @@ public class MapModel {
             for (int x = 1; x < 14; x++) {
                 locations[1][x] = theFactory.createTile("land", 1, x, false, false);
             }
-            locations[1][14] = theFactory.createTile("enemy", 1, 14, true, false);
+            locations[1][14] = theFactory.createTile("enemy", 1, 14, false, false);
             locations[1][15] = theFactory.createTile("land", 1, 15, false, false);
             // Second row of map (Mostly enemy)
             locations[2][1] = theFactory.createTile("land", 2, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[2][x] = theFactory.createTile("enemy", 2, x, true, false);
+                locations[2][x] = theFactory.createTile("enemy", 2, x, false, false);
             }
             locations[2][15] = theFactory.createTile("land", 2, 15, false, false);
             // Third row of map (Mostly land)
             locations[3][1] = theFactory.createTile("land", 3, 1, false, false);
-            locations[3][2] = theFactory.createTile("enemy", 3, 2, true, false);
+            locations[3][2] = theFactory.createTile("enemy", 3, 2, false, false);
             for (int x = 3; x < 16; x++) {
                 locations[3][x] = theFactory.createTile("land", 3, x, false, false);
             }
             // Fourth row of map (Mostly enemy)
             locations[4][1] = theFactory.createTile("land", 4, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[4][x] = theFactory.createTile("enemy", 4, x, true, false);
+                locations[4][x] = theFactory.createTile("enemy", 4, x, false, false);
             }
             locations[4][15] = theFactory.createTile("land", 4, 15, false, false);
             // Fifth row of map (Mostly land)
             for (int x = 1; x < 14; x++) {
                 locations[5][x] = theFactory.createTile("land", 5, x, false, false);
             }
-            locations[5][14] = theFactory.createTile("enemy", 5, 14, true, false);
+            locations[5][14] = theFactory.createTile("enemy", 5, 14, false, false);
             locations[5][15] = theFactory.createTile("land", 5, 15, false, false);
             // Sixth row of map (Mostly enemy)
             locations[6][1] = theFactory.createTile("land", 6, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[6][x] = theFactory.createTile("enemy", 6, x, true, false);
+                locations[6][x] = theFactory.createTile("enemy", 6, x, false, false);
             }
             locations[6][15] = theFactory.createTile("land", 6, 15, false, false);
             // Seventh row of map (Mostly land)
             locations[7][1] = theFactory.createTile("land", 7, 1, false, false);
-            locations[7][2] = theFactory.createTile("enemy", 7, 2, true, false);
+            locations[7][2] = theFactory.createTile("enemy", 7, 2, false, false);
             for (int x = 3; x < 16; x++) {
                 locations[7][x] = theFactory.createTile("land", 7, x, false, false);
             }
             // Eighth row of map (Mostly enemy)
             locations[8][1] = theFactory.createTile("land", 8, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[8][x] = theFactory.createTile("enemy", 8, x, true, false);
+                locations[8][x] = theFactory.createTile("enemy", 8, x, false, false);
             }
             locations[8][15] = theFactory.createTile("land", 8, 15, false, false);
             // Ninth row of map (Mostly land)
             for (int x = 1; x < 14; x++) {
                 locations[9][x] = theFactory.createTile("land", 9, x, false, false);
             }
-            locations[9][14] = theFactory.createTile("enemy", 9, 14, true, false);
+            locations[9][14] = theFactory.createTile("enemy", 9, 14, false, false);
             locations[9][15] = theFactory.createTile("land", 9, 15, false, false);
             // Tenth row of map (Mostly enemy)
             locations[10][1] = theFactory.createTile("land", 10, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[10][x] = theFactory.createTile("enemy", 10, x, true, false);
+                locations[10][x] = theFactory.createTile("enemy", 10, x, false, false);
             }
             locations[10][15] = theFactory.createTile("land", 10, 15, false, false);
             // Eleventh row of map (Mostly land)
             locations[11][1] = theFactory.createTile("land", 11, 1, false, false);
-            locations[11][2] = theFactory.createTile("enemy", 11, 2, true, false);
+            locations[11][2] = theFactory.createTile("enemy", 11, 2, false, false);
             for (int x = 3; x < 16; x++) {
                 locations[11][x] = theFactory.createTile("land", 11, x, false, false);
             }
             // Twelfth row of map (Mostly enemy)
             locations[12][1] = theFactory.createTile("land", 12, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[12][x] = theFactory.createTile("enemy", 12, x, true, false);
+                locations[12][x] = theFactory.createTile("enemy", 12, x, false, false);
             }
             locations[12][15] = theFactory.createTile("land", 12, 15, false, false);
             // Thirteenth row of map (Mostly land)
             for (int x = 1; x < 14; x++) {
                 locations[13][x] = theFactory.createTile("land", 13, x, false, false);
             }
-            locations[13][14] = theFactory.createTile("enemy", 13, 14, true, false);
+            locations[13][14] = theFactory.createTile("enemy", 13, 14, false, false);
             locations[13][15] = theFactory.createTile("land", 13, 15, false, false);
             // Fourteenth row of map (Mostly enemy)
             locations[14][1] = theFactory.createTile("land", 14, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[14][x] = theFactory.createTile("enemy", 14, x, true, false);
+                locations[14][x] = theFactory.createTile("enemy", 14, x, false, false);
             }
             locations[14][15] = theFactory.createTile("land", 14, 15, false, false);
             // Fifteenth row of map (Mostly land)
             locations[15][1] = theFactory.createTile("land", 15, 1, false, false);
-            locations[15][2] = theFactory.createTile("enemy", 15, 2, true, false);
+            locations[15][2] = theFactory.createTile("enemy", 15, 2, false, false);
             for (int x = 3; x < 16; x++) {
                 locations[15][x] = theFactory.createTile("land", 15, x, false, false);
             }
@@ -151,7 +155,7 @@ public class MapModel {
             entranceTile.setEntrance(true);
             locations[0][2] = entranceTile;
             // Sets exit
-            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 14, true, false);
+            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 14, false, true);
             exitTile.setExit(true);
             locations[16][14] = exitTile;
 
@@ -161,13 +165,13 @@ public class MapModel {
 //            WaterTile waterTile = (WaterTile) theFactory.createTile("water", 0, 0, false, false);
             // First row of map (Mostly water)
             locations[1][1] = theFactory.createTile("water", 1, 1, false, false);
-            locations[1][2] = theFactory.createTile("enemy", 1, 2, true, false);
+            locations[1][2] = theFactory.createTile("enemy", 1, 2, false, false);
             for (int x = 3; x < 16; x++) {
                 locations[1][x] = theFactory.createTile("water", 1, x, false, false);
             }
             // Second row of map (dashed land row)
             locations[2][1] = theFactory.createTile("water", 2, 1, false, false);
-            locations[2][2] = theFactory.createTile("enemy", 2, 2, true, false);
+            locations[2][2] = theFactory.createTile("enemy", 2, 2, false, false);
             locations[2][3] = theFactory.createTile("water", 2, 3, false, false);
             locations[2][4] = theFactory.createTile("land", 2, 4, false, false);
             locations[2][5] = theFactory.createTile("land", 2, 5, false, false);
@@ -184,21 +188,21 @@ public class MapModel {
             locations[2][15] = theFactory.createTile("water", 2, 15, false, false);
             // Third row of map (Mostly water)
             locations[3][1] = theFactory.createTile("water", 3, 1, false, false);
-            locations[3][2] = theFactory.createTile("enemy", 3, 2, true, false);
+            locations[3][2] = theFactory.createTile("enemy", 3, 2, false, false);
             for (int x = 3; x < 16; x++) {
                 locations[3][x] = theFactory.createTile("water", 3, x, false, false);
             }
             // Fourth row of map (Mostly enemy)
             locations[4][1] = theFactory.createTile("water", 4, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[4][x] = theFactory.createTile("enemy", 4, x, true, false);
+                locations[4][x] = theFactory.createTile("enemy", 4, x, false, false);
             }
             locations[4][15] = theFactory.createTile("water", 4, 15, false, false);
             // Fifth row of map (Mostly water)
             for (int x = 1; x < 14; x++) {
                 locations[5][x] = theFactory.createTile("water", 5, x, false, false);
             }
-            locations[5][14] = theFactory.createTile("enemy", 5, 14, true, false);
+            locations[5][14] = theFactory.createTile("enemy", 5, 14, false, false);
             locations[5][15] = theFactory.createTile("water", 5, 15, false, false);
             // Sixth row of map (Big dashed land row 1)
             locations[6][1] = theFactory.createTile("water", 6, 1, false, false);
@@ -215,7 +219,7 @@ public class MapModel {
             locations[6][11] = theFactory.createTile("land", 6, 11, false, false);
             locations[6][12] = theFactory.createTile("land", 6, 12, false, false);
             locations[6][13] = theFactory.createTile("water", 6, 13, false, false);
-            locations[6][14] = theFactory.createTile("enemy", 6, 14, true, false);
+            locations[6][14] = theFactory.createTile("enemy", 6, 14, false, false);
             locations[6][15] = theFactory.createTile("water", 6, 15, false, false);
             // Seventh row of map (Big dashed land row 2)
             locations[7][1] = theFactory.createTile("water", 7, 1, false, false);
@@ -232,29 +236,29 @@ public class MapModel {
             locations[7][11] = theFactory.createTile("land", 7, 11, false, false);
             locations[7][12] = theFactory.createTile("land", 7, 12, false, false);
             locations[7][13] = theFactory.createTile("water", 7, 13, false, false);
-            locations[7][14] = theFactory.createTile("enemy", 7, 14, true, false);
+            locations[7][14] = theFactory.createTile("enemy", 7, 14, false, false);
             locations[7][15] = theFactory.createTile("water", 7, 15, false, false);
             // Eighth row of map (Mostly water)
             for (int x = 1; x < 14; x++) {
                 locations[8][x] = theFactory.createTile("water", 8, x, false, false);
             }
-            locations[8][14] = theFactory.createTile("enemy", 8, 14, true, false);
+            locations[8][14] = theFactory.createTile("enemy", 8, 14, false, false);
             locations[8][15] = theFactory.createTile("water", 8, 15, false, false);
             // Ninth row of map (Mostly enemy)
             locations[9][1] = theFactory.createTile("water", 9, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[9][x] = theFactory.createTile("enemy", 9, x, true, false);
+                locations[9][x] = theFactory.createTile("enemy", 9, x, false, false);
             }
             locations[9][15] = theFactory.createTile("water", 9, 15, false, false);
             // Tenth row of map (Mostly water)
             locations[10][1] = theFactory.createTile("water", 10, 1, false, false);
-            locations[10][2] = theFactory.createTile("enemy", 10, 2, true, false);
+            locations[10][2] = theFactory.createTile("enemy", 10, 2, false, false);
             for (int x = 3; x < 16; x++) {
                 locations[10][x] = theFactory.createTile("water", 10, 15, false, false);
             }
             // Eleventh row of map (Big dashed land row 1)
             locations[11][1] = theFactory.createTile("water", 11, 1, false, false);
-            locations[11][2] = theFactory.createTile("enemy", 11, 2, true, false);
+            locations[11][2] = theFactory.createTile("enemy", 11, 2, false, false);
             locations[11][3] = theFactory.createTile("water", 11, 3, false, false);
             locations[11][4] = theFactory.createTile("land", 11, 4, false, false);
             locations[11][5] = theFactory.createTile("land", 11, 5, false, false);
@@ -270,7 +274,7 @@ public class MapModel {
             locations[11][15] = theFactory.createTile("water", 11, 15, false, false);
             // Twelfth row of map (Big dashed land row 2)
             locations[12][1] = theFactory.createTile("water", 12, 1, false, false);
-            locations[12][2] = theFactory.createTile("enemy", 12, 2, true, false);
+            locations[12][2] = theFactory.createTile("enemy", 12, 2, false, false);
             locations[12][3] = theFactory.createTile("water", 12, 3, false, false);
             locations[12][4] = theFactory.createTile("land", 12, 4, false, false);
             locations[12][5] = theFactory.createTile("land", 12, 5, false, false);
@@ -286,57 +290,54 @@ public class MapModel {
             locations[12][15] = theFactory.createTile("water", 12, 15, false, false);
             // Thirteenth row of map (Mostly water)
             locations[13][1] = theFactory.createTile("water", 13, 1, false, false);
-            locations[13][2] = theFactory.createTile("enemy", 13, 2, true, false);
+            locations[13][2] = theFactory.createTile("enemy", 13, 2, false, false);
             for (int x = 3; x < 16; x++) {
                 locations[13][x] = theFactory.createTile("water", 13, x, false, false);
             }
             // Fourteenth row of map (Mostly enemy)
             locations[14][1] = theFactory.createTile("water", 14, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[14][x] = theFactory.createTile("enemy", 14, x, true, false);
+                locations[14][x] = theFactory.createTile("enemy", 14, x, false, false);
             }
             locations[14][15] = theFactory.createTile("water", 14, 15, false, false);
             // Fifteenth row of map (Mostly water)
             for (int x = 1; x < 14; x++) {
                 locations[15][x] = theFactory.createTile("water", 15, x, false, false);
             }
-            locations[15][14] = theFactory.createTile("enemy", 15, 14, true, false);
+            locations[15][14] = theFactory.createTile("enemy", 15, 14, false, false);
             locations[15][15] = theFactory.createTile("water", 15, 15, false, false);
 
         } // End of Normal Map if statement
         // HARD MAP
         if (mapType.equals("hard")) {
             // Sets entrance
-            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
+            EnemyTile entranceTile = (EnemyTile) theFactory.createTile("enemy", 0, 6, true, false);
             entranceTile.setEntrance(true);
             locations[0][6] = entranceTile;
             // Sets exit
-            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
+            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 10, false, true);
             exitTile.setExit(true);
             locations[16][10] = exitTile;
 
             // Stock tiles to be placed anywhere
-            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
-            LandTile landTile = (LandTile) theFactory.createTile("land", 0, 0, false, false);
-            WaterTile waterTile = (WaterTile) theFactory.createTile("water", 0, 0, false, false);
+//            EnemyTile enemyTile = (EnemyTile) theFactory.createTile("enemy", 0, 0, true, false);
+//            LandTile landTile = (LandTile) theFactory.createTile("land", 0, 0, false, false);
+//            WaterTile waterTile = (WaterTile) theFactory.createTile("water", 0, 0, false, false);
             // First row of map (Mostly water)
             for (int x = 1; x < 16; x++) {
                 locations[1][x] = theFactory.createTile("water", 1, x, false, false);
             }
-            locations[1][6] = theFactory.createTile("enemy", 1, 6, true, false);
-            for (int x = 7; x < 16; x++) {
-                locations[1][x] = theFactory.createTile("water", 1, x, false, false);
-            }
+            locations[1][6] = theFactory.createTile("enemy", 1, 6, false, false);
             // Second row of map (Mostly water)
             for (int x = 1; x < 16; x++) {
                 locations[2][x] = theFactory.createTile("water", 2, x, false, false);
             }
-            locations[2][6] = theFactory.createTile("enemy", 2, 6, true, false);
+            locations[2][6] = theFactory.createTile("enemy", 2, 6, false, false);
             // Third row of map (Big island row 1)
             for (int x = 1; x < 6; x++) {
                 locations[3][x] = theFactory.createTile("water", 3, x, false, false);
             }
-            locations[3][6] = theFactory.createTile("enemy", 3, 6, true, false);
+            locations[3][6] = theFactory.createTile("enemy", 3, 6, false, false);
             // 3 wide blue line in middle
             for (int x = 7; x < 10; x++) {
                 locations[3][x] = theFactory.createTile("water", 3, x, false, false);
@@ -350,7 +351,7 @@ public class MapModel {
             // Fourth row of map (Big island row 2)
             locations[4][1] = theFactory.createTile("water", 4, 1, false, false);
             for (int x = 2; x < 7; x++) {
-                locations[4][x] = theFactory.createTile("enemy", 4, x, true, false);
+                locations[4][x] = theFactory.createTile("enemy", 4, x, false, false);
             }
             // 3 wide blue line in middle
             for (int x = 7; x < 10; x++) {
@@ -364,7 +365,7 @@ public class MapModel {
             locations[4][15] = theFactory.createTile("water", 4, 15, false, false);
             // Fifth row of map (Big island row 3)
             locations[5][1] = theFactory.createTile("water", 5, 1, false, false);
-            locations[5][2] = theFactory.createTile("enemy", 5, 2, true, false);
+            locations[5][2] = theFactory.createTile("enemy", 5, 2, false, false);
             for (int x = 3; x < 10; x++) {
                 locations[5][x] = theFactory.createTile("water", 5, x, false, false);
             }
@@ -376,7 +377,7 @@ public class MapModel {
             locations[5][15] = theFactory.createTile("water", 5, 15, false, false);
             // Sixth row of map (Little island row 1)
             locations[6][1] = theFactory.createTile("water", 6, 1, false, false);
-            locations[6][2] = theFactory.createTile("enemy", 6, 2, true, false);
+            locations[6][2] = theFactory.createTile("enemy", 6, 2, false, false);
             locations[6][3] = theFactory.createTile("water", 6, 3, false, false);
             // little island
             for (int x = 4; x < 7; x++) {
@@ -387,7 +388,7 @@ public class MapModel {
             }
             // Seventh row of map (Little island row 2)
             locations[7][1] = theFactory.createTile("water", 7, 1, false, false);
-            locations[7][2] = theFactory.createTile("enemy", 7, 2, true, false);
+            locations[7][2] = theFactory.createTile("enemy", 7, 2, false, false);
             locations[7][3] = theFactory.createTile("water", 7, 3, false, false);
             // little island
             for (int x = 4; x < 7; x++) {
@@ -398,21 +399,21 @@ public class MapModel {
             }
             // Eighth row of map (Mostly water)
             locations[8][1] = theFactory.createTile("water", 8, 1, false, false);
-            locations[8][2] = theFactory.createTile("enemy", 8, 2, true, false);
+            locations[8][2] = theFactory.createTile("enemy", 8, 2, false, false);
             for (int x = 3; x < 16; x++) {
                 locations[8][x] = theFactory.createTile("water", 8, x, false, false);
             }
             // Ninth row of map (Mostly enemy)
             locations[9][1] = theFactory.createTile("water", 9, 1, false, false);
             for (int x = 2; x < 15; x++) {
-                locations[9][x] = theFactory.createTile("enemy", 9, x, true, false);
+                locations[9][x] = theFactory.createTile("enemy", 9, x, false, false);
             }
             locations[9][15] = theFactory.createTile("water", 9, 15, false, false);
             // Tenth row of map (Mostly water)
             for (int x = 1; x < 16; x++) {
                 locations[10][x] = theFactory.createTile("water", 10, x, false, false);
             }
-            locations[10][14] = theFactory.createTile("enemy", 10, 14, true, false);
+            locations[10][14] = theFactory.createTile("enemy", 10, 14, false, false);
             // Eleventh row of map (Little island row 1)
             for (int x = 1; x < 16; x++) {
                 locations[11][x] = theFactory.createTile("water", 11, x, false, false);
@@ -420,7 +421,7 @@ public class MapModel {
             for (int x = 10; x < 13; x++) {
                 locations[11][x] = theFactory.createTile("land", 11, x, false, false);
             }
-            locations[11][14] = theFactory.createTile("enemy", 11, 14, true, false);
+            locations[11][14] = theFactory.createTile("enemy", 11, 14, false, false);
             // Twelfth row of map (Double island row)
             locations[12][1] = theFactory.createTile("water", 12, 1, false, false);
             locations[12][2] = theFactory.createTile("water", 12, 2, false, false);
@@ -434,7 +435,7 @@ public class MapModel {
             for (int x = 10; x < 13; x++) {
                 locations[12][x] = theFactory.createTile("land", 12, x, false, false);
             }
-            locations[12][14] = theFactory.createTile("enemy", 12, 14, true, false);
+            locations[12][14] = theFactory.createTile("enemy", 12, 14, false, false);
             // Thirteenth row of map (Big island row 2)
             locations[13][1] = theFactory.createTile("water", 13, 1, false, false);
             locations[13][2] = theFactory.createTile("water", 13, 2, false, false);
@@ -444,7 +445,7 @@ public class MapModel {
             for (int x = 7; x < 16; x++) {
                 locations[13][x] = theFactory.createTile("water", 13, x, false, false);
             }
-            locations[13][14] = theFactory.createTile("enemy", 13, 14, true, false);
+            locations[13][14] = theFactory.createTile("enemy", 13, 14, false, false);
             // Fourteenth row of map (Big island row 3);
             locations[14][1] = theFactory.createTile("water", 14, 1, false, false);
             locations[14][2] = theFactory.createTile("water", 14, 2, false, false);
@@ -456,14 +457,14 @@ public class MapModel {
                 locations[14][x] = theFactory.createTile("water", 14, x, false, false);
             }
             for (int x = 10; x < 15; x++) {
-                locations[14][x] = theFactory.createTile("enemy", 14, x, true, false);
+                locations[14][x] = theFactory.createTile("enemy", 14, x, false, false);
             }
             locations[14][15] = theFactory.createTile("water", 14, 15, false, false);
             // Fifteenth row of map (Mostly water)
             for (int x = 1; x < 10; x++) {
                 locations[15][x] = theFactory.createTile("water", 15, x, false, false);
             }
-            locations[15][10] = theFactory.createTile("enemy", 15, 10, true, false);
+            locations[15][10] = theFactory.createTile("enemy", 15, 10,false, false);
             for (int x = 11; x < 16; x++) {
                 locations[15][x] = theFactory.createTile("water", 15, x, false, false);
             }
@@ -475,7 +476,7 @@ public class MapModel {
             entranceTile.setEntrance(true);
             locations[0][8] = entranceTile;
             // Sets exit
-            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 8, true, false);
+            EnemyTile exitTile = (EnemyTile) theFactory.createTile("enemy", 16, 8, false, true);
             exitTile.setExit(true);
             locations[16][8] = exitTile;
 
@@ -491,7 +492,7 @@ public class MapModel {
             }
             // Draws the enemy path strip down column 8
             for (int y = 1; y < 16; y++) {
-                locations[y][8] = theFactory.createTile("enemy", y, 8, true, false);
+                locations[y][8] = theFactory.createTile("enemy", y, 8, false, false);
             }
             // Manually adds islands
             // Big island
@@ -591,6 +592,22 @@ public class MapModel {
     public int getColCount() {
         return locations[0].length;
     }
+
+    public int getEntranceRow(){
+        return entranceRow;
+    }
+    public int getEntranceCol(){
+        return entranceCol;
+    }
+
+    /**
+     * Get the list of enemy path coordinates.
+     * @return The enemy path as a list of row and column pairs.
+     */
+    public ArrayList<int[]> getEnemyPath() {
+        return enemyPath;
+    }
+
 
 
 }
