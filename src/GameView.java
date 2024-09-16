@@ -4,10 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class GameView extends JPanel {
     private Image backgroundImage;
@@ -65,8 +64,10 @@ public class GameView extends JPanel {
     public String selectedTower = null;  // To store the currently selected tower
     public int selectedTowerCost = 0;
     private String selectedTowerName = null;
+    private static final int MAX_LINE_LENGTH = 23;
     private String mapType;  // The selected map type (Easy, Medium, etc.)
     private String category; // The category of questions (Math, Geography, Chemistry)
+
 
     // ***** AUDIO PLAYERS *****
     // Background music
@@ -85,7 +86,8 @@ public class GameView extends JPanel {
     WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
     // Sound effect when a question is answered correctly [UNIMPLEMENTED]
     WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
-
+    private Cannon cannon;
+    private Timer timer;
 
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -102,6 +104,9 @@ public class GameView extends JPanel {
         String category = questions.getClass().getSimpleName().replace("Questions", ""); // Extract category from the class name
         int questionCount = questions.getQuestionCountForCategory(category);
         System.out.println("Total questions in category '" + category + "': " + questionCount);
+
+        cannon = new Cannon("right");
+
 
 
         // Set up the JFrame
@@ -169,6 +174,7 @@ public class GameView extends JPanel {
         questionTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Question"
         add(questionTextLabel);
 
+
         questionLabel = new JLabel(currentQuestion);
         questionLabel.setBounds(10, 230, 600, 50);  // Adjusted position below "Question" label
         questionLabel.setForeground(Color.WHITE);
@@ -178,6 +184,26 @@ public class GameView extends JPanel {
         // Text field for user input
         answerField = new JTextField();
         answerField.setBounds(10, 290, 300, 30);  // Adjusted position below the question
+
+        // Wrap the question text
+        String wrappedQuestion = wrapText(currentQuestion, MAX_LINE_LENGTH);
+
+        // Update or create the question label
+        if (questionLabel != null) {
+            questionLabel.setText("<html><pre>" + wrappedQuestion + "</pre></html>");
+        } else {
+            questionLabel = new JLabel("<html><pre>" + wrappedQuestion + "</pre></html>");
+            questionLabel.setBounds(10, 100, 600, 100);  // Adjust the height as needed
+            questionLabel.setForeground(Color.WHITE);
+            questionLabel.setFont(new Font("Arial", Font.PLAIN, 15));  // Font for the actual question
+            add(questionLabel);
+        }
+
+
+        // Text field for user input
+        answerField = new JTextField();
+        answerField.setBounds(10, 180, 300, 30);
+
         add(answerField);
 
         // Set key listener for "Enter" key to submit the answer
@@ -214,6 +240,19 @@ public class GameView extends JPanel {
         createTowerButtons();
         updateTowerButtons();
     }
+
+    private String wrapText(String text, int maxLineLength) {
+        StringBuilder wrappedText = new StringBuilder();
+        int start = 0;
+
+        while (start < text.length()) {
+            int end = Math.min(text.length(), start + maxLineLength);
+            wrappedText.append(text, start, end);
+            wrappedText.append("\n");
+            start = end;
+        }
+
+        return wrappedText.toString();}
 
     private Tile findEntranceTile() {
         for (int i = 0; i < locations.length; i++) {
