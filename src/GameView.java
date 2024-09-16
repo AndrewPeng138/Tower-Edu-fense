@@ -80,7 +80,8 @@ public class GameView extends JPanel {
     WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
     // Sound effect when a question is answered correctly [UNIMPLEMENTED]
     WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
-
+    private Cannon cannon;
+    private Timer timer;
 
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -101,6 +102,9 @@ public class GameView extends JPanel {
         String category = questions.getClass().getSimpleName().replace("Questions", ""); // Extract category from the class name
         int questionCount = questions.getQuestionCountForCategory(category);
         System.out.println("Total questions in category '" + category + "': " + questionCount);
+
+        cannon = new Cannon("right");
+
 
 
         // Set up the JFrame
