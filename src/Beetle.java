@@ -4,7 +4,8 @@ import javax.swing.ImageIcon;
 
 /**
  * "Tankier" enemy with more health than a standard roach
- */
+ *//*
+
 public class Beetle extends EnemyModel{
     private Image beetleImage;
     Beetle(int startRow, int startCol){
@@ -34,3 +35,4 @@ public class Beetle extends EnemyModel{
         g.drawImage(beetleImage, screenX, screenY, tileWidth, tileHeight, null);
     }
 }
+*/

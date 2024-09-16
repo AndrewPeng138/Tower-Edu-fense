@@ -1,46 +1,13 @@
 public class EnemyTile extends Tile {
     private String type = "enemy";
-    boolean isEntrance;
-    boolean isExit;
 
-    public EnemyTile() {
-        super("Images/TileSprites/enemypath pixel art.png");
+    public EnemyTile(int row, int col, boolean isEntrance, boolean isExit) {
+        super("Images/TileSprites/enemypath pixel art.png", row, col, true, isExit, "enemy"); // EnemyTile always has isEnemyTile = true
+        this.setEntrance(isEntrance); // Use the setter to mark the tile as an entrance
     }
 
     @Override
     public String getType() {
         return type;
     }
-
-    /**
-     * Sets whether this tile is the entrance tile
-     * @param choice true indicates this is an entrance tile
-     */
-    public void setEntrance(boolean choice) {
-        isEntrance = choice;
-    }
-
-    /**
-     * Determines whether this is an entrance tile
-     * @return true if this is an entrance tile
-     */
-    public boolean getEntrance() {
-        return isEntrance;
-    }
-    /**
-     * Sets whether this tile is the exit tile
-     * @param choice true indicates this is an exit tile
-     */
-    public void setExit(boolean choice) {
-        isExit = choice;
-    }
-
-    /**
-     * Determines whether this is an exit tile
-     * @return true if this is an exit tile
-     */
-    public boolean getExit() {
-        return isExit;
-    }
-
 }

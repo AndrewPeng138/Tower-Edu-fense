@@ -24,8 +24,9 @@ public class MapPanel extends JPanel {
 
     private void createTileButtons() {
         // Determine tile size based on the initial panel size
-        int tileWidth = 800 / locations[0].length;  // Assume an initial width for simplicity
-        int tileHeight = 600 / locations.length;    // Assume an initial height for simplicity
+        int tileWidth = 47;
+        int tileHeight = 47;
+        System.out.println("Tile Width: " + tileWidth + ", Tile Height: " + tileHeight);
 
         for (int i = 0; i < locations.length; i++) {
             for (int j = 0; j < locations[i].length; j++) {
@@ -53,9 +54,41 @@ public class MapPanel extends JPanel {
     }
 
     private void handleTileClick(int row, int col) {
-        // Pass the clicked tile to the GameView to handle tower placement
-        gameView.placeTowerOnTile(row, col);
+        try {
+            // Perform checks before placing the tower
+            Tile tile = locations[row][col];
+            Tower selectedTower = gameView.getSelectedTower(); // Ensure this method exists and returns the currently selected tower
+
+            if (selectedTower == null) {
+                throw new IllegalStateException("No tower is currently selected.");
+            }
+
+            String tileName = tile.getName();
+            String towerName = selectedTower.getName();
+
+            if (tileName == null) {
+                throw new IllegalArgumentException("Tile name is null.");
+            }
+
+            if (tileName.equals("enemy")) {
+                throw new IllegalArgumentException("You can't place a tower on the enemy path.");
+            } else if (tileName.equals("border")) {
+                throw new IllegalArgumentException("You can't place a tower on the border.");
+            } else if (tileName.equals("water")) {
+                if (!towerName.equals("Boat Tower")) {
+                    throw new IllegalArgumentException("You can only place Boat Towers on the water.");
+                }
+            } else if (towerName.equals("Boat Tower") && !tileName.equals("water")) {
+                throw new IllegalArgumentException("Boats can only be placed on the water.");
+            }
+
+            // Place the tower if all checks pass
+            placeTower(row, col, selectedTower);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {

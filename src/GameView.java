@@ -20,11 +20,20 @@ public class GameView extends JPanel {
 
     private Timer coolDownTimer;
     private Timer gameLoopTimer;
+
     private int coolDownSeconds = 5;
     private int points = 100000000;  // Variable to track points/money
 
+
+    private Tile entranceTile;
+    private Tile exitTile;
+    private List<Tile> enemyPath;  // This will store the path of enemy tiles
+    private Tile[][] locations;    // Reference to the map of tiles
+    private Image enemyTileImage;
+
+
     // List to store enemies
-    private List<EnemyModel> enemies;
+    private List<EnemyModel> enemies = new ArrayList<>();
 
     // Tower costs
     private final int DEFAULT_TOWER_COST = 500;
@@ -42,16 +51,26 @@ public class GameView extends JPanel {
     private JButton flameTowerButton;
     private JButton bugm3lt3rButton;
 
-    private String selectedTower = null;  // To store the currently selected tower
-    private int selectedTowerCost = 0;
+    public String selectedTower = null;  // To store the currently selected tower
+    public int selectedTowerCost = 0;
 
     private String mapType;  // The type of map
+
+    private String selectedTowerName = null;
+
+
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) {
         this.questions = questions;
         this.mapModel = new MapModel(mapType);
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
+        this.locations = new MapModel(mapType).getLocations();  // Initialize the map (locations)
+        this.enemyPath = new ArrayList<>();
         this.mapType = mapType;
+        this.enemies = new ArrayList<>();
+        System.out.println("Adding enemy...");
+        enemies.add(new Roach(mapModel, 0, 14));  // Example: adding an enemy
+        System.out.println("Enemy added. Size: " + enemies.size());
 
         // Set up the JFrame
         JFrame frame = new JFrame("Game View");
@@ -59,23 +78,42 @@ public class GameView extends JPanel {
         WelcomeScreenView.setScreenSize(frame);
         setLayout(null);
 
-        // Create and set up the map panel
-        mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);  // Pass reference to GameView for tile clicks
+        mapPanel = new MapPanel(locations, backgroundImagePath, this);
         mapPanel.setBounds(300, 0, 800, 750);
         add(mapPanel);
 
         // Initialize and set up UI components
         initializeUI();
 
-        // Initialize the enemy list and start the game loop
-        enemies = new ArrayList<>();
-        spawnEnemies();  // Initialize the enemy spawning
-        startGameLoop();  // Start the game update loop
-
         frame.add(this);
-        frame.setSize(1400, 900);  // Adjusted size to fit components
+        frame.setSize(1400, 900);
         frame.setVisible(true);
+
+        entranceTile = findEntranceTile(); // Find entrance tile
+        exitTile = findExitTile(); // Find exit tile
+
+        // If entrance and exit exist, find the enemy path
+//        if (entranceTile != null && exitTile != null) {
+//            findEnemyPath();
+//        }
+
+
+
+        int x = 5; // Example value, replace with the actual x-coordinate
+        int y = 3; // Example value, replace with the actual y-coordinate
+        boolean isEntrance = false; // Set this based on whether this is the entrance
+        boolean isExit = false; // Set this based on whether this is the exit
+
+        Tile enemyTile = new EnemyTile(x, y, isEntrance, isExit);
+
+
+
+        // Initialize the UI and start enemy movement
+        initializeUI();
+        findEnemyPath();
+        startEnemyMovement();
     }
+
 
     private void initializeUI() {
         // Get a random question to display
@@ -139,6 +177,90 @@ public class GameView extends JPanel {
         updateTowerButtons();
     }
 
+    private Tile findEntranceTile() {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j].isEntrance()) {
+                    return locations[i][j];
+                }
+            }
+        }
+        return null;
+    }
+
+    private Tile findExitTile() {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j].isExit()) {
+                    return locations[i][j];
+                }
+            }
+        }
+        return null;
+    }
+    private void findEnemyPath() {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j].getType().equals("enemy")) {  // Check if the current tile is an enemy tile
+                    enemyPath.add(locations[i][j]);  // Add this tile to the enemy path
+                }
+            }
+        }
+    }
+
+
+    private void moveRoachToTile(Roach roach, Tile tile) {
+        int row = getTileRow(tile);
+        int col = getTileCol(tile);
+
+        roach.moveTo(row, col);  // Move the roach to the tile's row and column
+        // failed attempt at trying to redraw the roach after it moves
+//        int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
+//        int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
+//        int screenX = roach.getCurrentCol() * tileWidth;
+//        int screenY = roach.getCurrentRow() * tileHeight;
+//        roach.draw(g, screenX, screenY, tileWidth, tileHeight);
+        mapPanel.repaint();      // Repaint the panel to show the updated position of the roach
+    }
+    private int getTileRow(Tile tile) {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j] == tile) {
+                    return i;
+                }
+            }
+        }
+        return -1;  // In case the tile isn't found, return an invalid value
+    }
+
+    private int getTileCol(Tile tile) {
+        for (int i = 0; i < locations.length; i++) {
+            for (int j = 0; j < locations[i].length; j++) {
+                if (locations[i][j] == tile) {
+                    return j;
+                }
+            }
+        }
+        return -1;  // In case the tile isn't found, return an invalid value
+    }
+
+    private void startEnemyMovement() {
+        if (enemies == null) {
+            throw new IllegalStateException("Enemies list is not initialized");
+        }
+        new Thread(() -> {
+            for (Tile tile : enemyPath) {
+                moveRoachToTile((Roach) enemies.get(0), tile);  // Move the enemy (roach) to each tile in the path
+                try {
+                    Thread.sleep(500);  // Pause for 0.5 seconds between moves
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
     // Method to handle placing a tower on a tile
     // Method to handle placing a tower on a tile
     public void placeTowerOnTile(int row, int col) {
@@ -146,22 +268,22 @@ public class GameView extends JPanel {
             // Adjust the row/column based on the selected tower type
             switch (selectedTower) {
                 case "Default Tower":
-                    row -= 1;  // Place DefaultTower at row-1
+                    row -= 0;  // Place DefaultTower at row-1
                     break;
                 case "Boat Tower":
-                    row -= 2;  // Place BoatTower at row-2
+                    row -= 0;
                     break;
                 case "Heavy Tower":
-                    row -= 1;
+                    row -= 0;
                     break;
                 case "Lightning Tower":
-                    row -= 2;
+                    row -= 0;
                     break;
                 case "Flame Tower":
-                    row -= 2;
+                    row -= 0;
                     break;
                 case "BUGM3LT3R":
-                    row -= 1;
+                    row -= 0;
                     break;
                 default:
                     // No adjustment for unknown tower types
@@ -182,19 +304,43 @@ public class GameView extends JPanel {
         }
     }
 
+    // Method to get the selected tower as a Tower object
+    public Tower getSelectedTower() {
+        if (selectedTower != null) {
+            switch (selectedTower) {
+                case "Default Tower":
+                    return new Tower("Default Tower", "Images/TowerSprites/CannonTower.png");
+                case "Boat Tower":
+                    return new Tower("Boat Tower", "Images/TowerSprites/BoatTower.png");
+                case "Heavy Tower":
+                    return new Tower("Heavy Tower", "Images/TowerSprites/Mortar.png");
+                case "Lightning Tower":
+                    return new Tower("Lightning Tower", "Images/TowerSprites/LightningTower.png");
+                case "Flame Tower":
+                    return new Tower("Flame Tower", "Images/TowerSprites/FlameTower.png");
+                case "BUGM3LT3R":
+                    return new Tower("BUGM3LT3R", "Images/TowerSprites/BUGM3LT3R.png");
+                default:
+                    return null;
+            }
+        }
+        return null;
+    }
+
+
     // Method to get the image path of a tower based on its name
     private String getTowerImagePath(String towerName) {
         switch (towerName) {
             case "Default Tower":
-                return "Images/TowerSprites/Default projectile.png";
+                return "Images/TowerSprites/CannonTower.png";
             case "Boat Tower":
-                return "Images/TowerSprites/Boat tower.png";
+                return "Images/TowerSprites/BoatTower.png";
             case "Heavy Tower":
-                return "Images/TowerSprites/Cannon tower.png";
+                return "Images/TowerSprites/Mortar.png";
             case "Lightning Tower":
-                return "Images/TowerSprites/Lightning tower.png";
+                return "Images/TowerSprites/LightningTower.png";
             case "Flame Tower":
-                return "Images/TowerSprites/Flame tower.png";
+                return "Images/TowerSprites/FlameTower.png";
             case "BUGM3LT3R":
                 return "Images/TowerSprites/BUGM3LT3R.png";
             default:
@@ -208,7 +354,7 @@ public class GameView extends JPanel {
         int buttonHeight = 50;
 
         // Default Tower
-        defaultTowerButton = createTowerButton("Default Tower", DEFAULT_TOWER_COST, 1120, baseY);
+        defaultTowerButton = createTowerButton("Canon Tower", DEFAULT_TOWER_COST, 1120, baseY);
         add(defaultTowerButton);
 
         // Boat Tower (Disabled on Easy map)
@@ -219,7 +365,7 @@ public class GameView extends JPanel {
         add(boatTowerButton);
 
         // Heavy Tower
-        heavyTowerButton = createTowerButton("Heavy Tower", HEAVY_TOWER_COST, 1120, baseY + 2 * buttonHeight);
+        heavyTowerButton = createTowerButton("Mortar Tower", HEAVY_TOWER_COST, 1120, baseY + 2 * buttonHeight);
         add(heavyTowerButton);
 
         // Lightning Tower
@@ -244,6 +390,8 @@ public class GameView extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (points >= cost) {
                     selectedTower = name;  // Set the selected tower
+                    System.out.println("Selected Tower: " + selectedTower); // Debug statement to check the selected tower
+
                     selectedTowerCost = cost;  // Set the tower cost
                     System.out.println(name + " selected");
                 } else {
@@ -288,7 +436,8 @@ public class GameView extends JPanel {
         // Example: Add Roach at a specific tile (row, col)
         int startRow = 0;  // Starting row based on map coordinates
         int startCol = 14; // Starting column based on map coordinates
-        enemies.add(new Roach(startRow, startCol));  // Pass the tile coordinates to the enemy
+        enemies.add(new Roach(mapModel, startRow, startCol));
+        // Pass the tile coordinates to the enemy
     }
 
 
@@ -323,6 +472,8 @@ public class GameView extends JPanel {
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
+
+
         // Determine tile size based on the panel dimensions
         int tileWidth = mapPanel.getWidth() / mapModel.getLocations()[0].length;
         int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
@@ -337,10 +488,14 @@ public class GameView extends JPanel {
                 roach.draw(g, screenX, screenY, tileWidth, tileHeight);  // Pass tile sizes to draw the roach properly
             }
         }
+        if (enemies != null) {
+            for (EnemyModel enemy : enemies) {
+                // Draw each enemy
+            }
+        } else {
+            System.out.println("Enemies list is null in paintComponent");
+        }
     }
-
-
-
 
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim();
@@ -393,6 +548,8 @@ public class GameView extends JPanel {
             answerField.setEnabled(false);
         }
     }
+
+
 
 
 }

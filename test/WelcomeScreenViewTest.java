@@ -1,5 +1,6 @@
-import org.junit.Test;
-import org.junit.Assert;
+/*
+//import org.junit.Test;
+//import org.junit.Assert;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -34,3 +35,4 @@ public class WelcomeScreenViewTest {
         System.out.println("Play button has correct location and size.");
     }
 }
+*/

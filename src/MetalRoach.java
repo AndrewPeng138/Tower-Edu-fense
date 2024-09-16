@@ -1,7 +1,11 @@
+
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
+
+/*
+>>>>>>> brooktie
 public class MetalRoach extends EnemyModel{
     private Image metalroachImage;
     MetalRoach(int startRow, int startCol){
@@ -27,8 +31,10 @@ public class MetalRoach extends EnemyModel{
      * @param tileWidth
      * @param tileHeight
      */
-    @Override
+   /* @Override
     public void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight) {
         g.drawImage(metalroachImage, screenX, screenY, tileWidth, tileHeight, null);
     }
 }
+
+*/

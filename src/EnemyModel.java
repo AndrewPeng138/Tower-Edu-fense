@@ -1,22 +1,49 @@
 import java.awt.*;
 
 public abstract class EnemyModel {
-    private int currentRow;
-    private int currentCol;
-    private int health;
-    private int damage;
+    protected int xPosition;
+    protected int yPosition;
+    protected MapModel mapModel;
+    protected int health;
+    protected int damage;
+    protected int currentRow;
+    protected int currentCol;
 
-    public int getCurrentRow() {
-        return currentRow;
+    // Constructor
+    public EnemyModel(MapModel mapModel, int startX, int startY) {
+        this.mapModel = mapModel;
+        this.xPosition = startX;
+        this.yPosition = startY;
+        this.health = 0;
+        this.damage = 0;
     }
 
-    public int getCurrentCol() {
-        return currentCol;
+    // Abstract method to get the image of the enemy
+    public abstract Image getImage();
+
+    // Method to move the enemy
+    public void move(int newX, int newY) {
+        if (newX >= 0 && newX < mapModel.getMapWidth() && newY >= 0 && newY < mapModel.getMapHeight()) {
+            Tile targetTile = mapModel.getTile(newY, newX);
+            if (canMoveToTile(targetTile)) {
+                xPosition = newX;
+                yPosition = newY;
+            }
+        }
     }
 
-    public void setCurrentRow(int value){this.currentRow = value;}
+    // Method to check if the enemy can move to a specific tile
+    private boolean canMoveToTile(Tile tile) {
+        return tile instanceof EnemyTile;
+    }
 
-    public void setCurrentCol(int value){this.currentCol = value;}
+    public int getXPosition() {
+        return xPosition;
+    }
+
+    public int getYPosition() {
+        return yPosition;
+    }
 
     public void setHealth(int health) {
         this.health = health;
@@ -34,61 +61,30 @@ public abstract class EnemyModel {
         return damage;
     }
 
-    public abstract boolean isMetal();
-
-    /**
-     * Move the enemy to a new tile if it's an enemy tile
-     * @param mapModel Map the enemy is moving on
-     */
-    public void moveToNextEnemyTile(MapModel mapModel) {
-        if (mapModel == null) {
-            throw new IllegalArgumentException("MapModel cannot be null");
-        }
-
-        // Get current position
-        int row = getCurrentRow();
-        int col = getCurrentCol();
-
-        // Check the tiles in order: down, left, right
-        if (isEnemyTile(mapModel, row + 1, col)) {
-            moveTo(row + 1, col); // Move down
-        } else if (isEnemyTile(mapModel, row, col - 1)) {
-            moveTo(row, col - 1); // Move left
-        } else if (isEnemyTile(mapModel, row, col + 1)) {
-            moveTo(row, col + 1); // Move right
-        }
+    public boolean isMetal() {
+        return false; // Default implementation
     }
 
-    /**
-     * Utility method to check if a tile is an enemy tile
-     * @param mapModel Map that tile is on
-     * @param row row of tile
-     * @param col column of tile
-     * @return true if tile is an enemy tile, false if other tile type
-     */
-    private boolean isEnemyTile(MapModel mapModel, int row, int col) {
-        // Check if the position is within bounds
-        String tileType = mapModel.getTileType(row, col);
-        return "enemy".equals(tileType);  // Return true if the tile is an "enemy" tile
-    }
-
-    /**
-     * Method moving enemy to a new tile
-     * @param newRow row number of new tile
-     * @param newCol column number of new tile
-     */
     public void moveTo(int newRow, int newCol) {
         this.currentRow = newRow;
         this.currentCol = newCol;
     }
 
-    /**
-     * Abstract method drawing the enemy on the board
-     * @param g
-     * @param screenX
-     * @param screenY
-     * @param tileWidth
-     * @param tileHeight
-     */
+    public void moveToNextEnemyTile(MapModel mapModel) {
+        // Check left, right, and down tiles
+        String leftTile = mapModel.getTileType(currentRow, currentCol - 1);
+        String rightTile = mapModel.getTileType(currentRow, currentCol + 1);
+        String downTile = mapModel.getTileType(currentRow + 1, currentCol);
+
+        // Move to an "enemy" tile if available
+        if (downTile.equals("enemy")) {
+            moveTo(currentRow + 1, currentCol);
+        } else if (leftTile.equals("enemy")) {
+            moveTo(currentRow, currentCol - 1);
+        } else if (rightTile.equals("enemy")) {
+            moveTo(currentRow, currentCol + 1);
+        }
+    }
     public abstract void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight);
+
 }
