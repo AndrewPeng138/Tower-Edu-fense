@@ -464,7 +464,10 @@ public class GameView extends JPanel {
         // BUGM3LT3R Tower
         bugm3lt3rButton = createTowerButton("BUGM3LT3R", BUGM3LT3R_TOWER_COST, 1120, baseY + 5 * buttonHeight);
         add(bugm3lt3rButton);
+
     }
+
+
 
     // Method to create a tower button with an action listener
     private JButton createTowerButton(String name, int cost, int x, int y) {
