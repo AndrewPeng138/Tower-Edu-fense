@@ -42,16 +42,16 @@ public abstract class EnemyModel {
      * Move the enemy to the next tile in the predefined path.
      * @param mapModel Map the enemy is moving on
      */
-    public void moveToNextEnemyTile(MapModel mapModel) {
+    public void moveToNextEnemyTile(MapModel mapModel, List<Tile> enemyPath) {
         if (mapModel == null) {
             throw new IllegalArgumentException("MapModel cannot be null");
         }
 
-        List<int[]> enemyPath = mapModel.getEnemyPath();  // Get the path from the map
         if (pathIndex < enemyPath.size()) {
             // Get the next position in the path
-            int[] nextPosition = enemyPath.get(pathIndex);
-            moveTo(nextPosition[0], nextPosition[1]);  // Move to the next tile
+            int row = enemyPath.get(pathIndex).getRow();
+            int col = enemyPath.get(pathIndex).getRow();
+            moveTo(row, col);  // Move to the next tile
             pathIndex++;  // Increment the path index
         }
     }
