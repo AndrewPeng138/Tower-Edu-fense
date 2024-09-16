@@ -59,8 +59,10 @@ public class GameView extends JPanel {
     public String selectedTower = null;  // To store the currently selected tower
     public int selectedTowerCost = 0;
     private String selectedTowerName = null;
+    private static final int MAX_LINE_LENGTH = 23;
     private String mapType;  // The selected map type (Easy, Medium, etc.)
     private String category; // The category of questions (Math, Geography, Chemistry)
+
 
     // ***** AUDIO PLAYERS *****
     // Background music
@@ -172,15 +174,24 @@ public class GameView extends JPanel {
         questionTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Question"
         add(questionTextLabel);
 
-        questionLabel = new JLabel(currentQuestion);
-        questionLabel.setBounds(10, 100, 600, 50);
-        questionLabel.setForeground(Color.WHITE);
-        questionLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the actual question
-        add(questionLabel);
+        // Wrap the question text
+        String wrappedQuestion = wrapText(currentQuestion, MAX_LINE_LENGTH);
+
+        // Update or create the question label
+        if (questionLabel != null) {
+            questionLabel.setText("<html><pre>" + wrappedQuestion + "</pre></html>");
+        } else {
+            questionLabel = new JLabel("<html><pre>" + wrappedQuestion + "</pre></html>");
+            questionLabel.setBounds(10, 100, 600, 100);  // Adjust the height as needed
+            questionLabel.setForeground(Color.WHITE);
+            questionLabel.setFont(new Font("Arial", Font.PLAIN, 15));  // Font for the actual question
+            add(questionLabel);
+        }
+
 
         // Text field for user input
         answerField = new JTextField();
-        answerField.setBounds(10, 160, 300, 30);
+        answerField.setBounds(10, 180, 300, 30);
         add(answerField);
 
         // Set key listener for "Enter" key to submit the answer
@@ -222,6 +233,19 @@ public class GameView extends JPanel {
         createTowerButtons();
         updateTowerButtons();
     }
+
+    private String wrapText(String text, int maxLineLength) {
+        StringBuilder wrappedText = new StringBuilder();
+        int start = 0;
+
+        while (start < text.length()) {
+            int end = Math.min(text.length(), start + maxLineLength);
+            wrappedText.append(text, start, end);
+            wrappedText.append("\n");
+            start = end;
+        }
+
+        return wrappedText.toString();}
 
     private Tile findEntranceTile() {
         for (int i = 0; i < locations.length; i++) {
