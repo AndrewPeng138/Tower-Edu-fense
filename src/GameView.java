@@ -55,6 +55,7 @@ public class GameView extends JPanel {
     private JButton flameTowerButton;
     private JButton bugm3lt3rButton;
 
+
     public String selectedTower = null;  // To store the currently selected tower
     public int selectedTowerCost = 0;
     private String selectedTowerName = null;
@@ -93,7 +94,6 @@ public class GameView extends JPanel {
         enemies.add(new Roach( 0, 14));  // Example: adding an enemy
         System.out.println("Enemy added. Size: " + enemies.size());
         BGMUSIC_Player.play();
-        this.questions = questions;
         this.mapType = mapType;
         this.backgroundImage = new ImageIcon(backgroundImagePath).getImage();
         // Load the total number of questions in the current category
@@ -147,7 +147,6 @@ public class GameView extends JPanel {
 
 
         // Initialize the UI and start enemy movement
-        initializeUI(questionCount);
         findEnemyPath();
         startEnemyMovement();
     }
