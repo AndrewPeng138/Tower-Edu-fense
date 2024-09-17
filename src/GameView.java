@@ -523,28 +523,43 @@ public class GameView extends JPanel {
         updateTowerButtons();  // Update button states
     }
 
-
+    private Timer enemySpawnTimer;
+    private int currentWave = 1;
     // Method to spawn enemies at the start of the game
     private void spawnEnemies() {
-
+        if(currentWave > 20){
+            System.out.println("All waves completed!");
+            return;
+        }
         // Get the entrance position from the MapModel
         int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
         int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
+        Wave incomingWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
+        ArrayList<EnemyModel> waveList = incomingWave.getWave();
 
-        // Loops through 20 waves
-        for (int i = 1; i < 21; i++) {
-            Wave theWave = new Wave(i, mapModel, entranceRow, entranceCol);
-            ArrayList<EnemyModel> waveList = theWave.getWave();
-            //System.out.println("We are on wave " + i);
-            //System.out.println("waveList.size() == " + waveList.size());
+        enemySpawnTimer = new Timer();
+        enemySpawnTimer.scheduleAtFixedRate(new TimerTask() {
+            private int enemyIndex = 0;
+            @Override
+            public void run() {
+                if(enemyIndex < waveList.size()){
+                    EnemyModel enemy = waveList.get(enemyIndex);
+                    enemy.setCurrentRow(entranceRow);
+                    enemy.setCurrentCol(entranceCol);
+                    enemies.add(enemy);
+                    enemyIndex++;
+                }
+                else{
+                    enemySpawnTimer.cancel();
+                    currentWave++;
 
-            for (EnemyModel enemy : waveList) {
-                // Set the starting position of the enemy to the entrance
-                enemy.setCurrentRow(entranceRow);
-                enemy.setCurrentCol(entranceCol);
-                enemies.add(enemy);
+                    spawnEnemies();
+                }
+
             }
-        }
+        },0, 100);
+
+
 
     }
 
@@ -553,6 +568,7 @@ public class GameView extends JPanel {
     // Start the game loop timer for continuous updates
     public void startGameLoop() {
         gameLoopTimer = new Timer();
+        spawnEnemies();
         gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
