@@ -3,16 +3,11 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.lang.Thread;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
-import java.io.FileWriter;
-import java.io.*;
-
-
 
 public class GameView extends JPanel {
     private Image backgroundImage;
@@ -29,40 +24,51 @@ public class GameView extends JPanel {
     private JLabel countdownLabel;  // Countdown/cool-down timer display
     private JLabel moneyLabel;  // Label to display the user's points/money
     private String currentQuestion;
+
     private Timer coolDownTimer;
     private Timer gameLoopTimer;
+
     private int coolDownSeconds = 5;
     private int points = 10000;  // Variable to track points/money
     private int sessionId = 1;  // Assuming each player has a session ID. In a real scenario, this would be dynamic.
     private int correctAnswers = 0;  // Track correct answers
     private int incorrectAnswers = 0;  // Track incorrect answers
+
+
     private Tile entranceTile;
     private Tile exitTile;
     private List<Tile> enemyPath;  // This will store the path of enemy tiles
     private Tile[][] locations;    // Reference to the map of tiles
     private Image enemyTileImage;
-    private List<EnemyModel> enemies = new ArrayList<>(); // List to store enemies
-    private final int DEFAULT_TOWER_COST = 500; // Tower costs
+
+
+    // List to store enemies
+    private List<EnemyModel> enemies = new ArrayList<>();
+
+    // Tower costs
+    private final int DEFAULT_TOWER_COST = 500;
     private final int BOAT_TOWER_COST = 1500;
     private final int HEAVY_TOWER_COST = 3000;
     private final int LIGHTNING_TOWER_COST = 4500;
     private final int FLAME_TOWER_COST = 2000;
     private final int BUGM3LT3R_TOWER_COST = 10000;
-    private JButton defaultTowerButton; // Towers
+
+    // Towers
+    private JButton defaultTowerButton;
     private JButton boatTowerButton;
     private JButton heavyTowerButton;
     private JButton lightningTowerButton;
     private JButton flameTowerButton;
     private JButton bugm3lt3rButton;
+
+
     public String selectedTower = null;  // To store the currently selected tower
     public int selectedTowerCost = 0;
     private String selectedTowerName = null;
     private static final int MAX_LINE_LENGTH = 23;
     private String mapType;  // The selected map type (Easy, Medium, etc.)
     private String category; // The category of questions (Math, Geography, Chemistry)
-    // Stores cannons for Zachary projectiel implementation
     private List<Cannon> cannons = new ArrayList<>();
-    private Timer  timer;
 
 
     // ***** AUDIO PLAYERS *****
@@ -83,7 +89,8 @@ public class GameView extends JPanel {
     // Sound effect when a question is answered correctly [UNIMPLEMENTED]
     WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
     private Cannon cannon;
-    private JButton button;
+    private Timer timer;
+
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.questions = questions;
@@ -123,7 +130,6 @@ public class GameView extends JPanel {
         System.out.println("Total questions in category '" + category + "': " + questionCount);
 
 
-        // Add the map panel after initializing the frame
         mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);
         mapPanel.setBounds(300, 0, 800, 750);
         add(mapPanel);
@@ -357,35 +363,13 @@ public class GameView extends JPanel {
     }
 
     public void moveAllEnemies(){
-        for (EnemyModel enemy : enemies){
+        mapPanel.resetEnemyMap();
+        List<EnemyModel> beingMoved = enemies;
+        for (EnemyModel enemy : beingMoved){
             enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath);
             mapPanel.repaint();
         }
     }
-
-
-    private int getTileRow(Tile tile) {
-        for (int i = 0; i < locations.length; i++) {
-            for (int j = 0; j < locations[i].length; j++) {
-                if (locations[i][j] == tile) {
-                    return i;
-                }
-            }
-        }
-        return -1;  // In case the tile isn't found, return an invalid value
-    }
-
-    private int getTileCol(Tile tile) {
-        for (int i = 0; i < locations.length; i++) {
-            for (int j = 0; j < locations[i].length; j++) {
-                if (locations[i][j] == tile) {
-                    return j;
-                }
-            }
-        }
-        return -1;  // In case the tile isn't found, return an invalid value
-    }
-
 
 
     // Method to handle placing a tower on a tile
@@ -515,8 +499,6 @@ public class GameView extends JPanel {
         add(bugm3lt3rButton);
     }
 
-
-
     // Method to create a tower button with an action listener
     private JButton createTowerButton(String name, int cost, String imagePath, int x, int y) {
         JButton button = new JButton(name + " - $" + cost);
@@ -551,7 +533,6 @@ public class GameView extends JPanel {
         return button;
     }
 
-
     // Update tower buttons, enabling/disabling them based on current points
     private void updateTowerButtons() {
         defaultTowerButton.setEnabled(points >= DEFAULT_TOWER_COST);
@@ -560,7 +541,6 @@ public class GameView extends JPanel {
         lightningTowerButton.setEnabled(points >= LIGHTNING_TOWER_COST);
         flameTowerButton.setEnabled(points >= FLAME_TOWER_COST);
         bugm3lt3rButton.setEnabled(points >= BUGM3LT3R_TOWER_COST);
-
     }
 
 
@@ -586,43 +566,50 @@ public class GameView extends JPanel {
         }
     }
 
-    // Method to load points from a file
-    /**
-    private void loadPoints() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("pdfs/points.txt"))) {
-            String line = reader.readLine();
-            if (line != null) {
-                points = Integer.parseInt(line);
-                updateMoneyLabel();
-                updateTowerButtons();
-            }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-        }
-    }
-    **/
+    private Timer enemySpawnTimer;
+    private int currentWave = 1;
+    private  ArrayList<EnemyModel> waveList = new ArrayList<EnemyModel>();
+    private Wave incomingWave;
 
+    private void setFirstWave(){
+        int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
+        int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
+        incomingWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
+        waveList = incomingWave.getWave();
+    }
     // Method to spawn enemies at the start of the game
     private void spawnEnemies() {
-
-        // Get the entrance position from the MapModel
-        int startRow = mapModel.getEntranceRow();
-        int startCol = mapModel.getEntranceCol();
-
-        // Loops through 20 waves
-        for (int i = 1; i < 21; i++) {
-            Wave theWave = new Wave(i, mapModel);
-            ArrayList<EnemyModel> waveList = theWave.getWave();
-            //System.out.println("We are on wave " + i);
-            //System.out.println("waveList.size() == " + waveList.size());
-
-            for (EnemyModel enemy : waveList) {
-                // Set the starting position of the enemy to the entrance
-                enemy.setCurrentRow(startRow);
-                enemy.setCurrentCol(startCol);
-                enemies.add(enemy);
-            }
+        int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
+        int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
+        if(currentWave > 5){
+            System.out.println("All waves completed!");
+            return;
         }
+
+        enemySpawnTimer = new Timer();
+        enemySpawnTimer.scheduleAtFixedRate(new TimerTask() {
+            private int enemyIndex = 0;
+            @Override
+            public void run() {
+                if(enemyIndex < waveList.size()){
+                    EnemyModel enemy = waveList.get(enemyIndex);
+                    enemy.setCurrentRow(entranceRow);
+                    enemy.setCurrentCol(entranceCol);
+                    enemies.add(enemy);
+                    enemyIndex++;
+                }
+                else{
+                    enemySpawnTimer.cancel();
+                    System.out.println("wave " + currentWave + " finished");
+                    currentWave++;
+                    if(currentWave<6){
+                        Wave nextWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
+                        waveList = nextWave.getWave();
+                    }
+                    spawnEnemies();
+                }
+            }
+        },100, 100);
 
     }
 
@@ -633,6 +620,7 @@ public class GameView extends JPanel {
             System.out.println("Creating new Timer");
             gameLoopTimer = new Timer();
         }
+        setFirstWave();
         // Call the method to spawn enemies once the game starts
         spawnEnemies();
 
@@ -655,15 +643,10 @@ public class GameView extends JPanel {
             cannon.fire(enemies.get(0));
             cannon.updateProjectiles();  // Update each cannon's projectiles
         }
-
-        // Move each enemy based on the tile map logic
-        moveAllEnemies();
-
-
         // Pass the cannons (with their projectiles) to the MapPanel for drawing
         mapPanel.setCannons(cannons);
-
-
+        // Move each enemy based on the tile map logic
+        moveAllEnemies();
         // Force the screen to refresh and redraw the projectiles
         revalidate();
         repaint();
