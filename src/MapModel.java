@@ -498,13 +498,14 @@ public class MapModel {
             // Big island
             for(int x = 2; x<4; x++){
                 for(int y = 11; y< 14; y++){
-                    theFactory.createTile("land", x, y, false, false);
+                    locations[x][y] = theFactory.createTile("land", x, y, false, false);
+
                 }
             }
             // Top left little island
             for(int x = 3; x<5; x++){
                 for(int y = 4; y< 6; y++){
-                    theFactory.createTile("land", x, y, false, false);
+                    locations[x][y] = theFactory.createTile("land", x, y, false, false);
                 }
             }
             // Tiniest island
@@ -512,7 +513,7 @@ public class MapModel {
             // Bottom left little island;
             for(int x = 12; x<14; x++){
                 for(int y = 3; y< 5; y++){
-                    theFactory.createTile("land", x, y, false, false);
+                    locations[x][y] = theFactory.createTile("land", x, y, false, false);
                 }
             }
             // Bottom right tiny island

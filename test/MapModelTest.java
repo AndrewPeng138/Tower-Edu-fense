@@ -1,7 +1,7 @@
-/*
 
-//import org.junit.Test;
-//import org.junit.Assert;
+
+import org.junit.Test;
+import org.junit.Assert;
 
 
 public class MapModelTest {
@@ -25,4 +25,4 @@ public class MapModelTest {
         System.out.println("EXTREME MAP...");
         extremeMap.printLocations();
     }
-}*/
+}
