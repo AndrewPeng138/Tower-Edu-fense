@@ -24,7 +24,7 @@ public class WelcomeScreenView {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon backgroundImage = new ImageIcon("Images/MapScreen.png");
+                ImageIcon backgroundImage = new ImageIcon("Images/HomeScreen.png");
                 g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
@@ -51,6 +51,7 @@ public class WelcomeScreenView {
 
         frame.add(panel);
         frame.setVisible(true);
+
     }
 
     /**
