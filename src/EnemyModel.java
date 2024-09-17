@@ -8,6 +8,7 @@ public abstract class EnemyModel {
     private int health;
     private int damage;
     private int pathIndex = 0;  // Tracks the enemy's position along the path
+    private boolean reachedExit = false;
 
     public int getCurrentRow() {
         return currentRow;
@@ -57,7 +58,9 @@ public abstract class EnemyModel {
 //            moveTo(location.x, location.y);
             mapPanel.placeEnemy(row, col, this);
             pathIndex++;  // Increment the path index
-            mapPanel.repaint();
+        }
+        else{
+            reachedExit = true;
         }
     }
 
@@ -79,9 +82,13 @@ public abstract class EnemyModel {
     public abstract void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight);
 
     public void decreaseHealth(int damage) {
-        health = -1;
+        health -= damage;
     }
 
     public abstract Image getEnemyImage();
+
+    public boolean hasReachedExit(){
+        return reachedExit;
+    }
 
 }

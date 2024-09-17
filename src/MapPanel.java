@@ -101,6 +101,10 @@ public class MapPanel extends JPanel {
         }
     }
 
+    public void resetEnemyMap(){
+        placedEnemies = new EnemyModel[locations.length][locations[0].length];
+    }
+
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -150,7 +154,6 @@ public class MapPanel extends JPanel {
     }
     public void placeEnemy(int row, int col, EnemyModel enemy){
         placedEnemies[row][col] = enemy;
-        repaint();
     }
 
 }

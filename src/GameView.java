@@ -133,12 +133,13 @@ public class GameView extends JPanel {
 
         // Initialize the UI and start enemy movement
         findEnemyPath();
-        Roach testRoach = new Roach(0,0);
+        Roach testRoach = new Roach(400,400);
+        Mosquito testM = new Mosquito(400,400);
+        PrayingMantis mantis = new PrayingMantis(300, 300);
         enemies.add(testRoach);
-        //startGameLoop();
-        updateGame();
-        updateGame();
-        updateGame();
+        enemies.add(testM);
+        enemies.add(mantis);
+        startGameLoop();
     }
 
     private void initializeUI(int questionCount) {
@@ -317,10 +318,12 @@ public class GameView extends JPanel {
     }
 
     public void moveAllEnemies(){
+        mapPanel.resetEnemyMap();
         for (EnemyModel enemy : enemies){
             enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath);
             mapPanel.repaint();
         }
+
     }
 
 
@@ -547,32 +550,24 @@ public class GameView extends JPanel {
 
     // Start the game loop timer for continuous updates
     public void startGameLoop() {
-//        gameLoopTimer = new Timer();
-//        gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                findEnemyPath();
-//                updateGame();  // Update game state
-//                mapPanel.repaint();  // Redraw the panel with updated enemy positions
-//            }
-//        }, 0, 100);  // Run every 100ms (10 times per second)
-        while(true){
-            try {
-                Thread.sleep(500);
-                findEnemyPath();
-                updateGame();
-                mapPanel.repaint();
+        gameLoopTimer = new Timer();
+        gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                updateGame();  // Update game state
             }
-            catch(Exception e){
-                System.out.println(e);
-            }
-        }
+        }, 0, 250);  // Run every 100ms (10 times per second)
     }
 
     public void updateGame() {
         if (mapModel == null) {
             System.err.println("MapModel is not initialized");
             return;
+        }
+        for(EnemyModel enemy: enemies){
+            if(enemy.getHealth() <= 0){
+                enemies.remove(enemy);
+            }
         }
         // Move each enemy based on the tile map logic
         moveAllEnemies();
