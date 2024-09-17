@@ -52,10 +52,12 @@ public abstract class EnemyModel {
             // Get the next position in the path
             int row = currentTile.getRow();
             int col = currentTile.getCol();
-            JButton button = mapPanel.getButton(row, col);
-            Point location = button.getLocation();
-            moveTo(location.x, location.y);
+//            JButton button = mapPanel.getButton(row, col);
+//            Point location = button.getLocation();
+//            moveTo(location.x, location.y);
+            mapPanel.placeEnemy(row, col, this);
             pathIndex++;  // Increment the path index
+            mapPanel.repaint();
         }
     }
 
@@ -79,5 +81,7 @@ public abstract class EnemyModel {
     public void decreaseHealth(int damage) {
         health = -1;
     }
+
+    public abstract Image getEnemyImage();
 
 }

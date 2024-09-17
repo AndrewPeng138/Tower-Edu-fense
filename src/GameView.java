@@ -135,8 +135,10 @@ public class GameView extends JPanel {
         findEnemyPath();
         Roach testRoach = new Roach(0,0);
         enemies.add(testRoach);
-        startGameLoop();
-        //updateGame();
+        //startGameLoop();
+        updateGame();
+        updateGame();
+        updateGame();
     }
 
     private void initializeUI(int questionCount) {

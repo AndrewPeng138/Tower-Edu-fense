@@ -45,4 +45,9 @@ public class Beetle extends EnemyModel{
     public void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight) {
         g.drawImage(beetleImage, screenX, screenY, tileWidth, tileHeight, null);
     }
+
+    @Override
+    public Image getEnemyImage() {
+        return beetleImage;
+    }
 }

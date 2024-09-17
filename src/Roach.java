@@ -62,7 +62,14 @@ public class Roach extends EnemyModel {
         g.drawImage(roachImage, screenX, screenY, tileWidth, tileHeight, null);
     }
 
+    @Override
+    public Image getEnemyImage() {
+        return roachImage;
+    }
+
     public Image getImage() {
         return roachImage;
     }
+
+
 }

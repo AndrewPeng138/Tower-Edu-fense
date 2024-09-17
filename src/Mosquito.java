@@ -47,4 +47,9 @@ public class Mosquito extends EnemyModel{
         g.drawImage(mosquitoImage, screenX, screenY, tileWidth, tileHeight, null);
     }
 
+    @Override
+    public Image getEnemyImage() {
+        return mosquitoImage;
+    }
+
 }

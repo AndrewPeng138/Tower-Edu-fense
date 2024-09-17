@@ -7,14 +7,17 @@ public class MapPanel extends JPanel {
     public Tile[][] locations;
     public Image backgroundImage;
     public Tower[][] placedTowers; // Store the placed towers
+    public EnemyModel[][] placedEnemies;
     private GameView gameView;
     private JButton[][] tileButtons;
+
 
 
     public MapPanel(Tile[][] locations, String backgroundImagePath, GameView gameView) {
         this.locations = locations;
         this.gameView = gameView;
         placedTowers = new Tower[locations.length][locations[0].length]; // Initialize the placedTowers array
+        placedEnemies = new EnemyModel[locations.length][locations[0].length];
 
         // Load the background map image
         backgroundImage = new ImageIcon(backgroundImagePath).getImage();
@@ -128,8 +131,14 @@ public class MapPanel extends JPanel {
                     Image towerImage = tower.getTowerImage(); // Get the tower's image
                     g.drawImage(towerImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this); // Draw the tower
                 }
+                EnemyModel enemy = placedEnemies[i][j];
+                if(enemy != null){
+                    Image enemyImage = enemy.getEnemyImage();
+                    g.drawImage(enemyImage, j*tileWidth, i*tileHeight, tileWidth, tileHeight, this);
+                }
             }
         }
+
     }
 
     public void placeTower(int row, int col, Tower tower) {
@@ -138,6 +147,10 @@ public class MapPanel extends JPanel {
     }
     public JButton getButton(int x, int y){
         return tileButtons[x][y];
+    }
+    public void placeEnemy(int row, int col, EnemyModel enemy){
+        placedEnemies[row][col] = enemy;
+        repaint();
     }
 
 }
