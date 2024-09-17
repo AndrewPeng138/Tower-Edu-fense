@@ -9,6 +9,18 @@ public abstract class EnemyModel {
     private int damage;
     private int pathIndex = 0;  // Tracks the enemy's position along the path
 
+    private int currentX = 0;  // Pixel X position
+    private int currentY = 0;  // Pixel Y position
+
+    // Assuming these values are already in your EnemyModel
+    public int getPixelX() {
+        return currentX;  // Return pixel X position
+    }
+
+    public int getPixelY() {
+        return currentY;  // Return pixel Y position
+    }
+
     public int getCurrentRow() {
         return currentRow;
     }

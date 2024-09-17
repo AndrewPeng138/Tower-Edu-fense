@@ -1,78 +1,88 @@
+
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * A projectile that moves in a straight line in a specified direction.
- */
 public class Projectile {
-    // Projectile type (e.g., "cannon")
-    private String type = "cannon";
-    // Image for the projectile
+    private String type;
     private Image imageIcon;
-    // Damage of the projectile, inherited from the tower
     private int damage;
-    // Starting x location
-    private int startX;
-    // Starting y location
-    private int startY;
-    // Current x location
     private int currentX;
-    // Current y location
     private int currentY;
-    // Speed of the projectile
-    private int speed = 5;
-    // Direction of movement (could be "left", "right", "up", or "down")
-    private String direction;
+    private int speed = 100;  // Adjust speed as needed
+    private EnemyModel theTarget;
+    private int hitThreshold = 15;  // Defines how close the projectile needs to be to hit the target
+    private boolean active = true; // Tracks if the projectile is still active
 
-    /**
-     * Constructs a Projectile that moves in a straight line.
-     * @param type e.g. "cannon"
-     * @param imagePath the image path passed in for the game icon
-     * @param damage damage dealt by the projectile
-     * @param startX x coordinate spawn location
-     * @param startY y coordinate spawn location
-     * @param direction the direction in which the projectile will move ("left", "right", "up", "down")
-     */
-    public Projectile(String type, String imagePath, int damage, int startX, int startY, String direction) {
+    public Projectile(String type, String imagePath, int damage, int startX, int startY, EnemyModel theTarget) {
         this.type = type;
         this.imageIcon = new ImageIcon(imagePath).getImage();  // Load image from the file path
         this.damage = damage;
-        this.startX = startX;
-        this.startY = startY;
         this.currentX = startX;
         this.currentY = startY;
-        this.direction = direction;
+        this.theTarget = theTarget;
+
     }
 
-    /**
-     * Moves the projectile in a straight line in the specified direction.
-     */
     public void move() {
-        switch (direction) {
-            case "left":
-                currentX -= speed;
-                break;
-            case "right":
-                currentX += speed;
-                break;
-            case "up":
-                currentY -= speed;
-                break;
-            case "down":
-                currentY += speed;
-                break;
+        if (!active || theTarget == null) return; // No target, don't move
+
+        // Calculate the direction toward the target
+        int targetX = theTarget.getCurrentCol();
+        int targetY = theTarget.getCurrentRow();
+
+        // Simple linear movement
+        int dx = targetX - currentX;
+        int dy = targetY - currentY;
+
+        // Normalize movement
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance > 0) {
+            currentX += (dx / distance) * speed;
+            currentY += (dy / distance) * speed;
         }
+
     }
 
-    /**
-     * Draws the projectile on the screen.
-     * @param g the Graphics object for rendering the projectile.
-     */
     public void draw(Graphics g) {
-        g.drawImage(imageIcon, currentX, currentY, null);
+        if (!active) return; // Don't draw inactive projectiles
+        if (imageIcon != null) {
+            // Draw the image with a fixed size (width: 20, height: 20)
+            g.drawImage(imageIcon, currentX, currentY, 20, 20, null);
+        } else {
+            // Fallback: draw a red rectangle if the image isn't loaded
+            g.setColor(Color.RED);
+            g.fillRect(currentX, currentY, 10, 10);  // Simple red square as a placeholder
+        }
+
+        // Check if the projectile has hit the target
+        if (hasHitTarget()) {
+            System.out.println("Hit detected in hasHitTarget()");
+            hitTarget();  // Call the method to handle hitting the target
+        }
+
     }
 
-    // Getters and setters
+    // Collision detection method
+    public boolean hasHitTarget() {
+        int targetX = theTarget.getPixelX();
+        int targetY = theTarget.getPixelY();
+
+        // Check if the projectile is within a certain threshold distance from the target
+        int dx = targetX - currentX;
+        int dy = targetY - currentY;
+        return Math.sqrt(dx * dx + dy * dy) <= hitThreshold;
+    }
+
+    // Handle what happens when the projectile hits the target
+    private void hitTarget() {
+        System.out.println("Bug hit! Dealing " + damage + " damage.");
+        System.out.println("Target health before: " + theTarget.getHealth());
+        theTarget.setHealth(theTarget.getHealth() - damage);  // Reduce enemy's health
+        System.out.println("Target health after: " + theTarget.getHealth());
+        // The projectile can be removed after hitting, but that logic will be handled by the cannon class
+        active = false;  // Mark the projectile as inactive
+    }
+
     public int getCurrentX() {
         return currentX;
     }
@@ -80,36 +90,7 @@ public class Projectile {
     public int getCurrentY() {
         return currentY;
     }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Image getImageIcon() {
-        return imageIcon;
-    }
-
-    public void setImageIcon(Image imageIcon) {
-        this.imageIcon = imageIcon;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-
-    public String getDirection() {
-        return direction;
-    }
-
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public boolean isActive() {
+        return active;
     }
 }
