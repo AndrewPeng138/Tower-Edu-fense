@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.*;
 
 
+
 public class GameView extends JPanel {
     private Image backgroundImage;
     private Questions questions;
@@ -59,6 +60,10 @@ public class GameView extends JPanel {
     private static final int MAX_LINE_LENGTH = 23;
     private String mapType;  // The selected map type (Easy, Medium, etc.)
     private String category; // The category of questions (Math, Geography, Chemistry)
+    // Stores cannons for Zachary projectiel implementation
+    private List<Cannon> cannons = new ArrayList<>();
+    private Timer  timer;
+
 
     // ***** AUDIO PLAYERS *****
     // Background music
@@ -78,7 +83,6 @@ public class GameView extends JPanel {
     // Sound effect when a question is answered correctly [UNIMPLEMENTED]
     WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
     private Cannon cannon;
-    private Timer timer;
     private JButton button;
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -118,7 +122,6 @@ public class GameView extends JPanel {
         int questionCount = questions.getQuestionCountForCategory(category);
         System.out.println("Total questions in category '" + category + "': " + questionCount);
 
-        cannon = new Cannon("right");
 
         // Add the map panel after initializing the frame
         mapPanel = new MapPanel(mapModel.getLocations(), backgroundImagePath, this);
@@ -140,7 +143,7 @@ public class GameView extends JPanel {
         findEnemyPath();
         Roach testRoach = new Roach(10,10);
         enemies.add(testRoach);
-        updateGame();
+        startGameLoop();
     }
 
 
@@ -225,7 +228,7 @@ public class GameView extends JPanel {
         createTowerButtons();
         updateTowerButtons();
         displayQuestion(currentQuestion);
-        loadPoints();
+        //loadPoints();
 
     }
 
@@ -396,6 +399,35 @@ public class GameView extends JPanel {
             // Create a Tower object based on the selected tower
             Tower tower = new Tower(selectedTower, getTowerImagePath(selectedTower));
             mapPanel.placeTower(row, col, tower);  // Place the tower on the map
+            JButton towerButton = mapPanel.getButton(row, col); // Get the JButton for the tower
+            Point towerLocation = towerButton.getLocation();  // Get the exact position of the button in the MapPanel
+            // Extremely important tower creation
+            switch (selectedTower) {
+                case "Cannon Tower":
+                    Cannon cannonTower = new Cannon(towerLocation.x, towerLocation.y);
+                    cannons.add(cannonTower);
+                    System.out.println("Cannon Tower Created at position " + cannonTower.getxLoc() + ","+ cannonTower.getyLoc());
+                    System.out.println("Cannons.size() is " + cannons.size());
+                case "Boat Tower":
+                    row -= 0;
+                    break;
+                case "Mortar Tower":
+                    row -= 0;
+                    break;
+                case "Lightning Tower":
+                    row -= 0;
+                    break;
+                case "Flame Tower":
+                    row -= 0;
+                    break;
+                case "BUGM3LT3R":
+                    row -= 0;
+                    break;
+                default:
+                    // No adjustment for unknown tower types
+                    break;
+            }
+
             // Play tower buy sound effect
             buyTower_Player.play();
 
@@ -555,6 +587,7 @@ public class GameView extends JPanel {
     }
 
     // Method to load points from a file
+    /**
     private void loadPoints() {
         try (BufferedReader reader = new BufferedReader(new FileReader("pdfs/points.txt"))) {
             String line = reader.readLine();
@@ -567,7 +600,7 @@ public class GameView extends JPanel {
             e.printStackTrace();
         }
     }
-
+    **/
 
     // Method to spawn enemies at the start of the game
     private void spawnEnemies() {
@@ -595,15 +628,20 @@ public class GameView extends JPanel {
 
     // Start the game loop timer for continuous updates
     public void startGameLoop() {
-        gameLoopTimer = new Timer();
+        System.out.println("Game loop starting...");
+        if (gameLoopTimer == null) {
+            System.out.println("Creating new Timer");
+            gameLoopTimer = new Timer();
+        }
+        // Call the method to spawn enemies once the game starts
+        spawnEnemies();
+
         gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                findEnemyPath();
-                updateGame();  // Update game state
-                mapPanel.repaint();  // Redraw the panel with updated enemy positions
+                updateGame();
             }
-        }, 0, 100);  // Run every 100ms (10 times per second)
+        }, 0, 100); // run every 100ms, i.e. 10 times per second
     }
 
     public void updateGame() {
@@ -611,9 +649,20 @@ public class GameView extends JPanel {
             System.err.println("MapModel is not initialized");
             return;
         }
+        // Update all cannons
+        for (Cannon cannon : cannons) {
+            // Fire at test roach for now
+            cannon.fire(enemies.get(0));
+            cannon.updateProjectiles();  // Update each cannon's projectiles
+        }
 
         // Move each enemy based on the tile map logic
         moveAllEnemies();
+
+
+        // Force the screen to refresh and redraw the projectiles
+        revalidate();
+        repaint();
     }
 
     @Override
@@ -636,6 +685,11 @@ public class GameView extends JPanel {
         }
         else {
             System.out.println("Enemies list is null in paintComponent");
+        }
+        // Draw projectiles from all cannons
+        for (Cannon cannon : cannons) {
+            // Check if drawing projectiles is happening
+            cannon.drawProjectiles(g);  // Drawing projectiles
         }
     }
 

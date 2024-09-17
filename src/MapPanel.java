@@ -153,6 +153,8 @@ public class MapPanel extends JPanel {
                     Image towerImage = tower.getTowerImage(); // Get the tower's image
                     g.drawImage(towerImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this); // Draw the tower
                 }
+
+
             }
         }
     }
@@ -168,6 +170,7 @@ public class MapPanel extends JPanel {
         placedTowers[row][col] = tower;  // Place the tower in the specified tile
         repaint();  // Redraw the map to include the new tower
     }
+
 
     /**
      * Gets the JButton associated with a specific tile.
