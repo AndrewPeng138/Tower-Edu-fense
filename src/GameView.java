@@ -1,4 +1,3 @@
-
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
@@ -169,41 +168,36 @@ public class GameView extends JPanel {
         incorrectAnswersLabel.setFont(new Font("Arial", Font.BOLD, 20));  // Bold and larger font
         add(incorrectAnswersLabel);
 
-        // Get a random question to display
-        currentQuestion = questions.getAnyQuestion();
-
-        // Display the question
+        // Display the question label header
         JLabel questionTextLabel = new JLabel("Question:");
         questionTextLabel.setBounds(10, 170, 600, 50);  // Adjusted position for more spacing
         questionTextLabel.setForeground(Color.WHITE);
         questionTextLabel.setFont(new Font("Arial", Font.BOLD, 24));  // Bold and larger font for "Question"
         add(questionTextLabel);
 
-
-        questionLabel = new JLabel(currentQuestion);
-        questionLabel.setBounds(10, 230, 600, 50);  // Adjusted position below "Question" label
+        // Initialize the question label for displaying the current question
+        questionLabel = new JLabel();
         questionLabel.setForeground(Color.WHITE);
-        questionLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the actual question
+        questionLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Font for the actual question
+        questionLabel.setBounds(10, 230, 600, 100);  // Initial bounds, dynamically resized later
         add(questionLabel);
 
-        // Text field for user input
+        // Initialize the answer field before displaying the question
         answerField = new JTextField();
-        answerField.setBounds(10, 290, 300, 30);  // Adjusted position below the question
         add(answerField);
 
-        // Wrap the question text
-        String wrappedQuestion = wrapText(currentQuestion, MAX_LINE_LENGTH);
+        // Initialize feedbackLabel, countdownLabel to avoid null pointer issues
+        feedbackLabel = new JLabel("");
+        feedbackLabel.setForeground(Color.WHITE);
+        add(feedbackLabel);
 
-        // Update or create the question label
-        if (questionLabel != null) {
-            questionLabel.setText("<html><pre>" + wrappedQuestion + "</pre></html>");
-        } else {
-            questionLabel = new JLabel("<html><pre>" + wrappedQuestion + "</pre></html>");
-            questionLabel.setBounds(10, 100, 600, 100);  // Adjust the height as needed
-            questionLabel.setForeground(Color.WHITE);
-            questionLabel.setFont(new Font("Arial", Font.PLAIN, 15));  // Font for the actual question
-            add(questionLabel);
-        }
+        countdownLabel = new JLabel("");
+        countdownLabel.setForeground(Color.RED);
+        add(countdownLabel);
+
+        // Get the first random question and apply the efficient wrapping
+        currentQuestion = questions.getAnyQuestion();
+        displayQuestion(currentQuestion);  // Ensure this is called after all components are initialized
 
         // Set key listener for "Enter" key to submit the answer
         answerField.addKeyListener(new KeyAdapter() {
@@ -215,19 +209,8 @@ public class GameView extends JPanel {
             }
         });
 
-        // Feedback label
-        feedbackLabel = new JLabel("");
-        feedbackLabel.setBounds(10, 340, 600, 40);  // Increased height and adjusted position
-        feedbackLabel.setForeground(Color.WHITE);
-        add(feedbackLabel);
-
-        // Countdown label (for cool down)
-        countdownLabel = new JLabel("");
-        countdownLabel.setBounds(10, 380, 600, 40);  // Increased height and adjusted position
-        countdownLabel.setForeground(Color.RED);
-        add(countdownLabel);
-
-        moneyLabel = new JLabel("10000");  // Initial money is 0
+        // Money label
+        moneyLabel = new JLabel("10000");  // Initial money is 10000
         moneyLabel.setBounds(1220, 52, 200, 40);
         moneyLabel.setForeground(Color.WHITE);
         moneyLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the amount of money
@@ -236,19 +219,76 @@ public class GameView extends JPanel {
         // Create tower buttons
         createTowerButtons();
         updateTowerButtons();
+        displayQuestion(currentQuestion);
     }
 
-    private String wrapText(String text, int maxLineLength) {
-        StringBuilder wrappedText = new StringBuilder();
-        int start = 0;
+    // Efficient text wrapping for questions
+    private String wrapTextEfficiently(String text, int maxWidth) {
+        FontMetrics fontMetrics = questionLabel.getFontMetrics(questionLabel.getFont());
 
-        while (start < text.length()) {
-            int end = Math.min(text.length(), start + maxLineLength);
-            wrappedText.append(text, start, end);
-            wrappedText.append("\n");
-            start = end;
+        String[] words = text.split(" ");
+        StringBuilder wrappedText = new StringBuilder();
+        int lineWidth = 0;
+
+        for (String word : words) {
+            int wordWidth = fontMetrics.stringWidth(word + " ");
+
+            // If adding the word exceeds the label width, insert a line break
+            if (lineWidth + wordWidth > maxWidth) {
+                wrappedText.append("<br>");
+                lineWidth = 0;
+            }
+
+            wrappedText.append(word).append(" ");
+            lineWidth += wordWidth;
         }
-        return wrappedText.toString();}
+
+        return wrappedText.toString();
+    }
+
+    // Display the question and adjust the layout
+    private void displayQuestion(String questionText) {
+        // Get maximum available width to avoid overlap with the map
+        int maxWidth = 290;  // This leaves enough space before the map starts at x = 300
+        int maxHeight = 400; // Limit the height to avoid pushing elements too far down
+
+        // Wrap the question and apply it to the questionLabel
+        String wrappedQuestion = wrapTextEfficiently(questionText, maxWidth);
+        questionLabel.setText("<html>" + wrappedQuestion + "</html>");
+
+        // Adjust the height based on the number of lines in the wrapped question
+        Dimension questionLabelSize = questionLabel.getPreferredSize();
+        questionLabelSize.height = Math.min(questionLabelSize.height, maxHeight); // Restrict the height
+        questionLabel.setBounds(10, 230, questionLabelSize.width, questionLabelSize.height);
+
+        // Dynamically adjust the position of the answer field below the question
+        answerField.setBounds(10, questionLabel.getY() + questionLabelSize.height + 10, 300, 30);
+
+        // Set bounds for feedback label with maximum width and height to avoid overlap
+        feedbackLabel.setBounds(10, answerField.getY() + 40, maxWidth, 40);  // Ensure width is under 300 to avoid map overlap
+
+        // Dynamically adjust the position of countdown label based on the feedback label
+        countdownLabel.setBounds(10, feedbackLabel.getY() + 40, 300, 40);
+    }
+
+
+
+
+    // Move to the next question
+    private void moveToNextQuestion() {
+        currentQuestion = questions.getAnyQuestion();
+
+        if (currentQuestion != null) {
+            displayQuestion(currentQuestion);  // Display the new question and adjust layout
+
+            answerField.setText("");  // Clear the input field for the next question
+            answerField.setEnabled(true);  // Ensure the answer field is enabled for the next question
+            answerField.requestFocus();  // Set focus to the answerField so user can type immediately
+        } else {
+            questionLabel.setText("No more questions available.");
+            answerField.setEnabled(false);
+        }
+    }
 
     private Tile findEntranceTile() {
         for (int i = 0; i < locations.length; i++) {
@@ -437,7 +477,6 @@ public class GameView extends JPanel {
 
 
 
-
     // Method to create a tower button with an action listener
     private JButton createTowerButton(String name, int cost, String imagePath, int x, int y) {
         JButton button = new JButton(name + " - $" + cost);
@@ -588,7 +627,6 @@ public class GameView extends JPanel {
             updatePoints(100);  // Award points for correct answer
             correctAnswers++;  // Increment correct answer count
             // Log the player's correct answer
-            int sessionId = 1; // You can dynamically fetch sessionId as needed
             questions.logPlayerAnswer(sessionId, questionId, true);
 
             // Move to the next question immediately after correct answer
@@ -599,25 +637,21 @@ public class GameView extends JPanel {
             incorrectAnswers++;  // Increment incorrect answer count
 
             // Log the player's incorrect answer
-            int sessionId = 1; // You can dynamically fetch sessionId as needed
             questions.logPlayerAnswer(sessionId, questionId, false);
 
             // Start the cool-down timer and wait for 5 seconds before moving to the next question
-            startCoolDown();  // Start the cool-down and prevent switching question during the cool-down
+            startCoolDown();
         }
 
         // Update the answer result labels
-        updateAnswerResultLabel();  // This will update correct/incorrect answers
+        updateAnswerResultLabel();
     }
-
 
     private void updateAnswerResultLabel() {
         // Update the correct and incorrect answers labels
         correctAnswersLabel.setText("Correct answers: " + correctAnswers);
         incorrectAnswersLabel.setText("Incorrect answers: " + incorrectAnswers);
     }
-
-
 
     private void startCoolDown() {
         coolDownSeconds = 5;
@@ -643,21 +677,4 @@ public class GameView extends JPanel {
             }
         }, 0, 1000);  // Execute every 1 second
     }
-
-    private void moveToNextQuestion() {
-        currentQuestion = questions.getAnyQuestion();
-
-        if (currentQuestion != null) {
-            questionLabel.setText(currentQuestion);
-            answerField.setText("");  // Clear the input field for the next question
-            answerField.setEnabled(true);  // Ensure the answer field is enabled for the next question
-            answerField.requestFocus();  // Set focus to the answerField so user can type immediately
-        } else {
-            questionLabel.setText("No more questions available.");
-            answerField.setEnabled(false);
-        }
-    }
-
-
-
 }
