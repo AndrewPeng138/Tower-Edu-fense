@@ -315,7 +315,8 @@ public class GameView extends JPanel {
 
     public void moveAllEnemies(){
         mapPanel.resetEnemyMap();
-        for (EnemyModel enemy : enemies){
+        List<EnemyModel> beingMoved = enemies;
+        for (EnemyModel enemy : beingMoved){
             enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath);
             mapPanel.repaint();
         }
@@ -519,17 +520,23 @@ public class GameView extends JPanel {
 
     private Timer enemySpawnTimer;
     private int currentWave = 1;
+    private  ArrayList<EnemyModel> waveList = new ArrayList<EnemyModel>();
+    private Wave incomingWave;
+
+    private void setFirstWave(){
+        int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
+        int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
+        incomingWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
+        waveList = incomingWave.getWave();
+    }
     // Method to spawn enemies at the start of the game
     private void spawnEnemies() {
-        if(currentWave > 20){
+        int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
+        int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
+        if(currentWave > 5){
             System.out.println("All waves completed!");
             return;
         }
-        // Get the entrance position from the MapModel
-        int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
-        int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
-        Wave incomingWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
-        ArrayList<EnemyModel> waveList = incomingWave.getWave();
 
         enemySpawnTimer = new Timer();
         enemySpawnTimer.scheduleAtFixedRate(new TimerTask() {
@@ -547,24 +554,23 @@ public class GameView extends JPanel {
                     enemySpawnTimer.cancel();
                     System.out.println("wave " + currentWave + " finished");
                     currentWave++;
-
+                    if(currentWave<6){
+                        Wave nextWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
+                        waveList = nextWave.getWave();
+                    }
                     spawnEnemies();
                 }
-
             }
-        },0, 90);
-
-
+        },100, 100);
 
     }
-
-
 
     // Start the game loop timer for continuous updates
     public void startGameLoop() {
         if (gameLoopTimer == null) {
             gameLoopTimer = new Timer();
         }
+        setFirstWave();
         spawnEnemies();
         gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -691,7 +697,4 @@ public class GameView extends JPanel {
             answerField.setEnabled(false);
         }
     }
-
-
-
 }
