@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 public class WaveTest {
     // Creates wave 1, 3 roaches
-    Wave wave1 = new Wave(1, new MapModel("normal"));
+    Wave wave1 = new Wave(1, new MapModel("normal"), 0,0);
     // Creates a wave that contains two different types of enemies
-    Wave wave6 = new Wave(6, new MapModel("extreme"));
+    Wave wave6 = new Wave(6, new MapModel("extreme"),0,0);
     // Gets the actual ArrayList the wave object holds
     ArrayList<EnemyModel> wave1List = wave1.getWave();
     ArrayList<EnemyModel> wave6List = wave6.getWave();

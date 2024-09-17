@@ -133,9 +133,11 @@ public class GameView extends JPanel {
 
         // Initialize the UI and start enemy movement
         findEnemyPath();
-        Roach testRoach = new Roach(400,400);
-        Mosquito testM = new Mosquito(400,400);
-        PrayingMantis mantis = new PrayingMantis(300, 300);
+        int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
+        int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
+        Roach testRoach = new Roach(entranceRow,entranceCol);
+        Mosquito testM = new Mosquito(entranceRow,entranceCol);
+        PrayingMantis mantis = new PrayingMantis(entranceRow,entranceCol);
         enemies.add(testRoach);
         enemies.add(testM);
         enemies.add(mantis);
@@ -526,20 +528,20 @@ public class GameView extends JPanel {
     private void spawnEnemies() {
 
         // Get the entrance position from the MapModel
-        int startRow = mapModel.getEntranceRow();
-        int startCol = mapModel.getEntranceCol();
+        int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
+        int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
 
         // Loops through 20 waves
         for (int i = 1; i < 21; i++) {
-            Wave theWave = new Wave(i, mapModel);
+            Wave theWave = new Wave(i, mapModel, entranceRow, entranceCol);
             ArrayList<EnemyModel> waveList = theWave.getWave();
             //System.out.println("We are on wave " + i);
             //System.out.println("waveList.size() == " + waveList.size());
 
             for (EnemyModel enemy : waveList) {
                 // Set the starting position of the enemy to the entrance
-                enemy.setCurrentRow(startRow);
-                enemy.setCurrentCol(startCol);
+                enemy.setCurrentRow(entranceRow);
+                enemy.setCurrentCol(entranceCol);
                 enemies.add(enemy);
             }
         }
