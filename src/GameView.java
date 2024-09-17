@@ -574,7 +574,7 @@ public class GameView extends JPanel {
             public void run() {
                 updateGame();  // Update game state
             }
-        }, 0, 250);  // Run every 100ms (10 times per second)
+        }, 0, 250);  // Run every 250ms (4 times per second)
     }
 
     public void updateGame() {
