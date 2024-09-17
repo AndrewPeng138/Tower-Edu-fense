@@ -133,14 +133,8 @@ public class GameView extends JPanel {
 
         // Initialize the UI and start enemy movement
         findEnemyPath();
-        int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
-        int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
-        Roach testRoach = new Roach(entranceRow,entranceCol);
-        Mosquito testM = new Mosquito(entranceRow,entranceCol);
-        PrayingMantis mantis = new PrayingMantis(entranceRow,entranceCol);
-        enemies.add(testRoach);
-        enemies.add(testM);
-        enemies.add(mantis);
+        //int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
+        //int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
         startGameLoop();
     }
 
@@ -551,13 +545,14 @@ public class GameView extends JPanel {
                 }
                 else{
                     enemySpawnTimer.cancel();
+                    System.out.println("wave " + currentWave + " finished");
                     currentWave++;
 
                     spawnEnemies();
                 }
 
             }
-        },0, 100);
+        },0, 90);
 
 
 
@@ -567,25 +562,22 @@ public class GameView extends JPanel {
 
     // Start the game loop timer for continuous updates
     public void startGameLoop() {
-        gameLoopTimer = new Timer();
+        if (gameLoopTimer == null) {
+            gameLoopTimer = new Timer();
+        }
         spawnEnemies();
         gameLoopTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 updateGame();  // Update game state
             }
-        }, 0, 250);  // Run every 250ms (4 times per second)
+        }, 0, 100);  // Run every 100ms (10 times per second)
     }
 
     public void updateGame() {
         if (mapModel == null) {
             System.err.println("MapModel is not initialized");
             return;
-        }
-        for(EnemyModel enemy: enemies){
-            if(enemy.getHealth() <= 0){
-                enemies.remove(enemy);
-            }
         }
         // Move each enemy based on the tile map logic
         moveAllEnemies();
