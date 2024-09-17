@@ -660,6 +660,10 @@ public class GameView extends JPanel {
         moveAllEnemies();
 
 
+        // Pass the cannons (with their projectiles) to the MapPanel for drawing
+        mapPanel.setCannons(cannons);
+
+
         // Force the screen to refresh and redraw the projectiles
         revalidate();
         repaint();
@@ -685,11 +689,6 @@ public class GameView extends JPanel {
         }
         else {
             System.out.println("Enemies list is null in paintComponent");
-        }
-        // Draw projectiles from all cannons
-        for (Cannon cannon : cannons) {
-            // Check if drawing projectiles is happening
-            cannon.drawProjectiles(g);  // Drawing projectiles
         }
     }
 
