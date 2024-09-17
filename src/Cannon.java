@@ -9,7 +9,7 @@ public class Cannon {
     private int xLoc;
     private int yLoc;
     private long lastFiredTime;  // Keep track of the last time the cannon fired
-    private long fireCooldown = 1000;  // 1000 ms (1 second) cooldown between shots
+    private long fireCooldown = 500;  // 1000 ms (1 second) cooldown between shots
     private boolean hasFiredOnce = false;  // Flag to check if the cannon has fired once
 
 

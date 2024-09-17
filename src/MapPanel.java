@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;  // Correct import for List
 
 /**
  * Represents a panel displaying a map with tiles and placed towers.
@@ -11,9 +12,10 @@ import java.awt.event.ActionListener;
 public class MapPanel extends JPanel {
     public Tile[][] locations;
     public Image backgroundImage;
-    public Tower[][] placedTowers; // Store the placed towers
+    public Tower[][] placedTowers; // Store the placed tower icons
     private GameView gameView;
     private JButton[][] tileButtons;
+    private List<Cannon> cannons;  // Add a field for cannons in MapPanel
 
     /**
      * Constructs a MapPanel with specified tile locations, background image path, and game view.
@@ -154,7 +156,13 @@ public class MapPanel extends JPanel {
                     g.drawImage(towerImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this); // Draw the tower
                 }
 
+            }
+        }
 
+        // Draw projectiles from all cannons
+        if (cannons != null) {
+            for (Cannon cannon : cannons) {
+                cannon.drawProjectiles(g);  // Drawing projectiles for each cannon
             }
         }
     }
@@ -172,6 +180,7 @@ public class MapPanel extends JPanel {
     }
 
 
+
     /**
      * Gets the JButton associated with a specific tile.
      *
@@ -183,4 +192,10 @@ public class MapPanel extends JPanel {
         return tileButtons[x][y];
     }
 
+
+    // Add a method to set cannons from GameView
+    public void setCannons(List<Cannon> cannons) {
+        this.cannons = cannons;
+        repaint();  // Ensure that the panel repaints whenever the cannons are updated
+    }
 }
