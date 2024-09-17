@@ -3,10 +3,15 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
+import java.io.FileWriter;
+import java.io.*;
+
 
 public class GameView extends JPanel {
     private Image backgroundImage;
@@ -220,6 +225,8 @@ public class GameView extends JPanel {
         createTowerButtons();
         updateTowerButtons();
         displayQuestion(currentQuestion);
+        loadPoints();
+
     }
 
     // Efficient text wrapping for questions
@@ -384,6 +391,7 @@ public class GameView extends JPanel {
         {
             points -= selectedTowerCost;  // Deduct the cost
             updateMoneyLabel();  // Update the money label
+            savePoints();
 
             // Create a Tower object based on the selected tower
             Tower tower = new Tower(selectedTower, getTowerImagePath(selectedTower));
@@ -527,17 +535,37 @@ public class GameView extends JPanel {
     // Method to update the money label
     private void updateMoneyLabel() {
         moneyLabel.setText(String.valueOf(points)); //Update label with current points
+        savePoints();
     }
-
-
-    // Update tower buttons, enabling/disabling them based on current points
-
-
     // Method to update the user's points and refresh the money label
     private void updatePoints(int amount) {
         points += amount;  // Add the specified amount to the current points
-        updateMoneyLabel();  // Update the label with the new points
         updateTowerButtons();  // Update button states
+        savePoints();  // Save points after updating
+        updateMoneyLabel();
+    }
+
+    // Method to save points to a file
+    private void savePoints() {
+        try (FileWriter writer = new FileWriter("pdfs/points.txt")) {
+            writer.write(String.valueOf(points));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to load points from a file
+    private void loadPoints() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("pdfs/points.txt"))) {
+            String line = reader.readLine();
+            if (line != null) {
+                points = Integer.parseInt(line);
+                updateMoneyLabel();
+                updateTowerButtons();
+            }
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
 
