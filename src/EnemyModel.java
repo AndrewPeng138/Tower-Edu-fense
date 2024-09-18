@@ -57,7 +57,7 @@ public abstract class EnemyModel
      * Move the enemy to the next tile in the predefined path.
      * @param mapModel Map the enemy is moving on
      */
-    public void moveToNextEnemyTile(MapModel mapModel, MapPanel mapPanel, List<Tile> enemyPath) {
+    public int moveToNextEnemyTile(MapModel mapModel, MapPanel mapPanel, List<Tile> enemyPath, int userHealth) {
         if (mapModel == null) {
             throw new IllegalArgumentException("MapModel cannot be null");
         }
@@ -72,6 +72,12 @@ public abstract class EnemyModel
         else{
             reachedExit = true;
         }
+        if(reachedExit){
+            userHealth -= this.getDamage();
+            this.setDamage(0);
+        }
+        return userHealth;
+
     }
 
     /**

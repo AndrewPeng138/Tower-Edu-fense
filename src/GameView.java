@@ -93,6 +93,8 @@ public class GameView extends JPanel {
     private Cannon cannon;
     private Timer timer;
 
+    private int userHealth= 100;
+
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.questions = questions;
@@ -383,7 +385,8 @@ public class GameView extends JPanel {
         mapPanel.resetEnemyMap();
         List<EnemyModel> beingMoved = enemies;
         for (EnemyModel enemy : beingMoved){
-            enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath);
+            userHealth = enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath, userHealth);
+            System.out.println(userHealth);
             mapPanel.repaint();
         }
     }
@@ -604,6 +607,7 @@ public class GameView extends JPanel {
 
         if (currentWave > 20) {
             System.out.println("All waves completed!");
+            checkForVictory();
             return;
         }
 
@@ -640,7 +644,7 @@ public class GameView extends JPanel {
                     }
                 }
             }
-        }, 2000, 2000);  // 2-second delay between enemy spawns within a wave
+        }, 500, 500);  // 2-second delay between enemy spawns within a wave
     }
 
 
@@ -661,7 +665,7 @@ public class GameView extends JPanel {
             public void run() {
                 updateGame();
             }
-        }, 0, 100); // run every 100ms, i.e. 10 times per second
+        }, 0, 500); // run every 100ms, i.e. 10 times per second
     }
 
     public void updateGame() {
@@ -699,6 +703,7 @@ public class GameView extends JPanel {
         // Force the screen to refresh and redraw the projectiles
         revalidate();
         repaint();
+        checkForLoss();
     }
 
 
@@ -795,4 +800,65 @@ public class GameView extends JPanel {
             }
         }, 0, 1000);  // Execute every 1 second
     }
+
+    public void checkForVictory() {
+        if(enemies.isEmpty()){
+            showVictoryPopup();
+        }
+    }
+
+    private void showVictoryPopup() {
+        // Create a custom JPanel for the popup
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel message = new JLabel("You win!");
+        panel.add(message, BorderLayout.CENTER);
+
+        // Add the button that redirects to the map screen
+        JButton backButton = new JButton("Return to Map");
+        backButton.addActionListener(e -> {
+            // Close the current game window and go to the map screen
+            new WelcomeScreenView();
+            JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            currentFrame.dispose();  // Close the current game window
+        });
+
+        panel.add(backButton, BorderLayout.SOUTH);
+
+        // Show the popup
+        JOptionPane.showMessageDialog(null, panel, "Victory", JOptionPane.PLAIN_MESSAGE);
+    }
+
+
+    public void checkForLoss() {
+        if(userHealth <= 0){
+            enemySpawnTimer.cancel();
+            gameLoopTimer.cancel();
+            showLossPopup();
+        }
+    }
+
+    private void showLossPopup() {
+        // Create a custom JPanel for the popup
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel message = new JLabel("You lost!");
+        panel.add(message, BorderLayout.CENTER);
+
+        // Add the button to go back to the map screen
+        JButton backButton = new JButton("Return to World Map");
+        backButton.addActionListener(e -> {
+            // Close the current game window and go to the map screen
+            new WelcomeScreenView();
+            JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            currentFrame.dispose();  // Close the current game window
+        });
+
+        panel.add(backButton, BorderLayout.SOUTH);
+
+        // Show the popup
+        JOptionPane.showMessageDialog(null, panel, "Game Over", JOptionPane.PLAIN_MESSAGE);
+    }
+
+
+
+
 }
