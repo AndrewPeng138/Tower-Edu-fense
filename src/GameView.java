@@ -101,6 +101,7 @@ public class GameView extends JPanel {
         this.locations = new MapModel(mapType).getLocations();  // Initialize the map (locations)
         this.enemyPath = new ArrayList<>();
         this.mapType = mapType;
+        BGMUSIC_Player.setVolume(0.8f);
         BGMUSIC_Player.play();
 
         // Set up the JFrame first
@@ -218,7 +219,15 @@ public class GameView extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    checkAnswer();
+                    try {
+                        checkAnswer();
+                    } catch (UnsupportedAudioFileException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (LineUnavailableException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         });
@@ -584,7 +593,8 @@ public class GameView extends JPanel {
     private void spawnEnemies() {
         int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
         int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
-        if(currentWave > 5){
+
+        if (currentWave > 20) {
             System.out.println("All waves completed!");
             return;
         }
@@ -592,29 +602,40 @@ public class GameView extends JPanel {
         enemySpawnTimer = new Timer();
         enemySpawnTimer.scheduleAtFixedRate(new TimerTask() {
             private int enemyIndex = 0;
+
             @Override
             public void run() {
-                if(enemyIndex < waveList.size()){
+                if (enemyIndex < waveList.size()) {
                     EnemyModel enemy = waveList.get(enemyIndex);
                     enemy.setCurrentRow(entranceRow);
                     enemy.setCurrentCol(entranceCol);
                     enemies.add(enemy);
                     enemyIndex++;
-                }
-                else{
+                } else {
+                    // Once the wave is finished, cancel the enemy spawn timer
                     enemySpawnTimer.cancel();
-                    System.out.println("wave " + currentWave + " finished");
+                    System.out.println("Wave " + currentWave + " finished");
                     currentWave++;
-                    if(currentWave<6){
-                        Wave nextWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
-                        waveList = nextWave.getWave();
+
+                    // Trigger a 10-second delay before the next wave starts
+                    if (currentWave <= 20) {
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                // Show wave notification and start the next wave after the 10-second delay
+                                System.out.println("Next wave starting!");
+                                Wave nextWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
+                                waveList = nextWave.getWave();
+                                spawnEnemies();  // Start the next wave
+                            }
+                        }, 10000);  // 10-second delay before the next wave starts
                     }
-                    spawnEnemies();
                 }
             }
-        },100, 100);
-
+        }, 2000, 2000);  // 2-second delay between enemy spawns within a wave
     }
+
+
 
     // Start the game loop timer for continuous updates
     public void startGameLoop() {
@@ -683,10 +704,10 @@ public class GameView extends JPanel {
 
         if (enemies != null) {
             for (EnemyModel enemy : enemies) {
-                    // Convert map coordinates to screen coordinates
-                    int screenX = enemy.getCurrentCol() * tileWidth;
-                    int screenY = enemy.getCurrentRow() * tileHeight;
-                    enemy.draw(g, screenX, screenY, tileWidth, tileHeight);
+                // Convert map coordinates to screen coordinates
+                int screenX = enemy.getCurrentCol() * tileWidth;
+                int screenY = enemy.getCurrentRow() * tileHeight;
+                enemy.draw(g, screenX, screenY, tileWidth, tileHeight);
             }
         }
         else {
@@ -694,7 +715,7 @@ public class GameView extends JPanel {
         }
     }
 
-    private void checkAnswer() {
+    private void checkAnswer() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         String userAnswer = answerField.getText().trim();
         String correctAnswer = questions.getAnswer(currentQuestion);
 
@@ -707,6 +728,10 @@ public class GameView extends JPanel {
         boolean isCorrect = userAnswer.equalsIgnoreCase(correctAnswer);
         if (isCorrect) {
             feedbackLabel.setText("Correct!");
+            // Sound effect when a question is answered correctly [UNIMPLEMENTED]
+            WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
+            questionCorrect_Player.setVolume(0.78f);
+            questionCorrect_Player.play();;
             updatePoints(100);  // Award points for correct answer
             correctAnswers++;  // Increment correct answer count
             // Log the player's correct answer
