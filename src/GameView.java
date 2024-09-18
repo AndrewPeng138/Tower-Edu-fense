@@ -584,7 +584,8 @@ public class GameView extends JPanel {
     private void spawnEnemies() {
         int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
         int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
-        if(currentWave > 5){
+
+        if (currentWave > 20) {
             System.out.println("All waves completed!");
             return;
         }
@@ -592,29 +593,40 @@ public class GameView extends JPanel {
         enemySpawnTimer = new Timer();
         enemySpawnTimer.scheduleAtFixedRate(new TimerTask() {
             private int enemyIndex = 0;
+
             @Override
             public void run() {
-                if(enemyIndex < waveList.size()){
+                if (enemyIndex < waveList.size()) {
                     EnemyModel enemy = waveList.get(enemyIndex);
                     enemy.setCurrentRow(entranceRow);
                     enemy.setCurrentCol(entranceCol);
                     enemies.add(enemy);
                     enemyIndex++;
-                }
-                else{
+                } else {
+                    // Once the wave is finished, cancel the enemy spawn timer
                     enemySpawnTimer.cancel();
-                    System.out.println("wave " + currentWave + " finished");
+                    System.out.println("Wave " + currentWave + " finished");
                     currentWave++;
-                    if(currentWave<6){
-                        Wave nextWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
-                        waveList = nextWave.getWave();
+
+                    // Trigger a 10-second delay before the next wave starts
+                    if (currentWave <= 20) {
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                // Show wave notification and start the next wave after the 10-second delay
+                                System.out.println("Next wave starting!");
+                                Wave nextWave = new Wave(currentWave, mapModel, entranceRow, entranceCol);
+                                waveList = nextWave.getWave();
+                                spawnEnemies();  // Start the next wave
+                            }
+                        }, 10000);  // 10-second delay before the next wave starts
                     }
-                    spawnEnemies();
                 }
             }
-        },100, 100);
-
+        }, 2000, 2000);  // 2-second delay between enemy spawns within a wave
     }
+
+
 
     // Start the game loop timer for continuous updates
     public void startGameLoop() {
