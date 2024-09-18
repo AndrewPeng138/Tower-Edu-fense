@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;  // Correct import for List
 
 /**
@@ -17,6 +18,7 @@ public class MapPanel extends JPanel {
     private GameView gameView;
     private JButton[][] tileButtons;
     private List<Cannon> cannons;  // Add a field for cannons in MapPanel
+    private List<Mortar> mortars;
 
     /**
      * Constructs a MapPanel with specified tile locations, background image path, and game view.
@@ -162,21 +164,30 @@ public class MapPanel extends JPanel {
                     g.drawImage(towerImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this); // Draw the tower
                 }
                 EnemyModel enemy = placedEnemies[i][j];
-                if(enemy != null){
+                if (enemy != null) {
                     Image enemyImage = enemy.getEnemyImage();
-                    g.drawImage(enemyImage, j*tileWidth, i*tileHeight, tileWidth, tileHeight, this);
+                    g.drawImage(enemyImage, j * tileWidth, i * tileHeight, tileWidth, tileHeight, this);
                 }
-
             }
         }
 
-        // Draw projectiles from all cannons
+        // Draw projectiles from all cannons (use a copy to avoid ConcurrentModificationException)
         if (cannons != null) {
-            for (Cannon cannon : cannons) {
+            List<Cannon> cannonsCopy = new ArrayList<>(cannons);  // Create a copy of the cannons list
+            for (Cannon cannon : cannonsCopy) {
                 cannon.drawProjectiles(g);  // Drawing projectiles for each cannon
             }
         }
+
+        // Draw projectiles from all mortars (use a copy to avoid ConcurrentModificationException)
+        if (mortars != null) {
+            List<Mortar> mortarsCopy = new ArrayList<>(mortars);  // Create a copy of the mortars list
+            for (Mortar mortar : mortarsCopy) {
+                mortar.drawProjectiles(g);  // Drawing projectiles for each mortar
+            }
+        }
     }
+
 
     /**
      * Places a tower on a specific tile and repaints the map panel.
@@ -212,5 +223,10 @@ public class MapPanel extends JPanel {
     public void setCannons(List<Cannon> cannons) {
         this.cannons = cannons;
         repaint();  // Ensure that the panel repaints whenever the cannons are updated
+    }
+    // Method to set mortars from GameView
+    public void setMortars(List<Mortar> mortars) {
+        this.mortars = mortars;
+        repaint();  // Ensure that the panel repaints whenever the mortars are updated
     }
 }
