@@ -211,19 +211,17 @@ public class Wave {
             }
         }
         if (this.waveCounter == 19) {
-            // 25 mosquitos
             // 15 beetles
             // 15 roaches
             // 15 metal roaches
-            // 3500 combined total health
-            for (int i = 0; i < 25; i++) {
-                waveList.add(new Mosquito(entranceRow, entranceCol));
-            }
+            // 4000 combined total health
+            // 1 praying mantis
             for (int i = 0; i < 15; i++) {
                 waveList.add(new Beetle(entranceRow, entranceCol));
                 waveList.add(new Roach(entranceRow, entranceCol));
                 waveList.add(new MetalRoach(entranceRow, entranceCol));
             }
+            waveList.add(new PrayingMantis(entranceRow, entranceCol));
         }
         if (this.waveCounter == 20) {
             // 25 mosquitos

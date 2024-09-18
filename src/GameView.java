@@ -617,7 +617,7 @@ public class GameView extends JPanel {
         int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
         int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
 
-        if (currentWave > 20) {
+        if (currentWave > 19) {
             System.out.println("All waves completed!");
             checkForVictory();
             return;
@@ -857,9 +857,7 @@ public class GameView extends JPanel {
 
 
     public void checkForVictory() {
-        if(enemies.isEmpty()){
             showVictoryPopup();
-        }
     }
 
     private void showVictoryPopup() {

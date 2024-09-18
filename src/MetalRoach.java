@@ -4,14 +4,24 @@ import javax.swing.ImageIcon;
 
 public class MetalRoach extends EnemyModel{
     private Image metalroachImage;
+    private int currentRow;
+    private int currentCol;
     MetalRoach(int startRow, int startCol){
-        setCurrentRow(startRow);
-        setCurrentCol(startCol);
+        currentRow = startRow;
+        currentCol = startCol;
         this.setHealth(50);
         this.setDamage(10);
         // Add functionality for immunity
         this.metalroachImage = new ImageIcon("Images/BugSprites/metalroachPA.png").getImage();
     }
+    public int getCurrentRow() {
+        return currentRow;
+    }
+
+    public int getCurrentCol() {
+        return currentCol;
+    }
+
 
     @Override
     public boolean isMetal() {

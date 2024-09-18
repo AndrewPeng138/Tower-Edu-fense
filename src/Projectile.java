@@ -7,7 +7,7 @@ public class Projectile {
     private int damage;
     private int currentX;
     private int currentY;
-    private int speed = 50;  // Adjust speed as needed
+    private int speed = 100;  // Adjust speed as needed
     private EnemyModel theTarget;
     private int hitThreshold = 15;  // Defines how close the projectile needs to be to hit the target
     private boolean active = true;  // Tracks if the projectile is still active
