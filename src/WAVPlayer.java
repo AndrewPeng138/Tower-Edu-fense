@@ -69,4 +69,7 @@ public class WAVPlayer {
     public void close() {
         // No need to explicitly close the clip, each one closes itself after playing.
     }
+    public float getVolume(){
+        return volumeControl.getValue();
+    }
 }
