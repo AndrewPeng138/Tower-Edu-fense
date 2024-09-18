@@ -386,7 +386,7 @@ public class GameView extends JPanel {
         List<EnemyModel> beingMoved = enemies;
         for (EnemyModel enemy : beingMoved){
             userHealth = enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath, userHealth);
-            System.out.println(userHealth);
+            //System.out.println(userHealth);
             mapPanel.repaint();
         }
     }
