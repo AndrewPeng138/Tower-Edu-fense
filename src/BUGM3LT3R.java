@@ -2,42 +2,61 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BUGM3LT3R implements TowerModelI {
+public class BUGM3LT3R extends TowerProperties implements TowerModelI {
     // List to keep track of all active projectiles
     private List<Projectile> projectiles;
     private EnemyModel theTarget;
     private int xLoc;
     private int yLoc;
-    private long lastFiredTime;  // Keep track of the last time the cannon fired
-    private long fireCooldown = 500;  // 1000 ms (1 second) cooldown between shots
-    private boolean hasFiredOnce = false;  // Flag to check if the cannon has fired once
-
+    private long lastFiredTime;  // Keep track of the last time the mortar fired
+    private long fireCooldown = 100;  // Mortar has a slower cooldown (1 second)
+    private boolean hasFiredOnce = false;  // Flag to check if the mortar has fired once
 
     public BUGM3LT3R(int xLoc, int yLoc) {
         this.projectiles = new ArrayList<>();
         this.xLoc = xLoc;
         this.yLoc = yLoc;
         this.lastFiredTime = System.currentTimeMillis();  // Initialize the last fired time to now
+        this.setDamage(300);
     }
 
-    /**
-     * Fires a projectile.
-     * @param target the target we're firing at
-     */
-    public void fire(EnemyModel target) {
+
+    public void fire(List<EnemyModel> enemies, GameView gameView) {
         long currentTime = System.currentTimeMillis();
+
         // Check if enough time has passed since the last shot
         if (!hasFiredOnce || currentTime - lastFiredTime >= fireCooldown) {
-            // Ensure the target is not null
-            if (target != null) {
-                Projectile newProjectile = new Projectile("default", "Images/TowerSprites/DefaultProjectile.png", 50, this.xLoc, this.yLoc, target);
-                projectiles.add(newProjectile);
+            EnemyModel closestEnemy = null;
+            double closestDistance = Double.MAX_VALUE;
+
+            // Find the closest enemy to the tower
+            for (EnemyModel enemy : enemies) {
+                if (enemy.getHealth() > 0) {  // Only target active enemies
+                    double distance = Math.sqrt(Math.pow(enemy.getCurrentCol() - xLoc, 2) + Math.pow(enemy.getCurrentRow() - yLoc, 2));
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestEnemy = enemy;
+                    }
+                }
             }
-            // Update the last fired time
-            lastFiredTime = currentTime;
-            hasFiredOnce = true;
+
+            // If a valid target was found, fire at it
+            if (closestEnemy != null) {
+                // Create a projectile and pass in the GameView for interaction
+                Projectile newProjectile = new Projectile(
+                        "Mortar Projectile", "Images/TowerSprites/DefaultProjectile.png",
+                        this.getDamage(), this.xLoc, this.yLoc, closestEnemy, gameView
+                );
+                projectiles.add(newProjectile);
+                lastFiredTime = currentTime;
+                hasFiredOnce = true;
+            }
         }
+
+        // Update all active projectiles after firing
+        updateProjectiles();
     }
+
 
 
     /**
@@ -48,18 +67,17 @@ public class BUGM3LT3R implements TowerModelI {
         List<Projectile> projectilesCopy = new ArrayList<>(projectiles);
 
         // Move projectiles and remove inactive ones
-        projectilesCopy.removeIf(projectile -> !projectile.isActive());
-
         for (Projectile projectile : projectilesCopy) {
             projectile.move();  // Move each projectile
         }
 
-        // Remove off-screen projectiles only if necessary
-        projectilesCopy.removeIf(this::isOffScreen);
+        // Remove inactive projectiles
+        projectiles.removeIf(projectile -> !projectile.isActive());
 
-        // Replace the original list with the updated copy after modifications
-        projectiles = projectilesCopy;
+        // Remove off-screen projectiles only if necessary
+        projectiles.removeIf(this::isOffScreen);
     }
+
 
 
     /**
@@ -76,7 +94,6 @@ public class BUGM3LT3R implements TowerModelI {
         }
     }
 
-
     /**
      * Checks if a projectile is off the screen.
      */
@@ -85,14 +102,14 @@ public class BUGM3LT3R implements TowerModelI {
                 projectile.getCurrentY() < 0 || projectile.getCurrentY() > 600;   // Adjust screen height
     }
 
+    public int getxLoc() {
+        return xLoc;
+    }
+
     public int getyLoc() {
         return yLoc;
     }
 
-    public int getxLoc() {
-        return xLoc;
-    }
-    // Method to return the list of projectiles
     public List<Projectile> getProjectiles() {
         return projectiles;
     }

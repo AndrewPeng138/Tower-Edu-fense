@@ -22,6 +22,7 @@ public class MapPanel extends JPanel {
     private List<Lightning> lightnings;
     private List<Flame> flames;
     private List<BUGM3LT3R> bUGM3LT3Rs;
+    private List<Boat> boats;
 
     /**
      * Constructs a MapPanel with specified tile locations, background image path, and game view.
@@ -208,6 +209,12 @@ public class MapPanel extends JPanel {
                 bUGM3LT3R.drawProjectiles(g);  // Drawing projectiles for each cannon
             }
         }
+        if (boats != null) {
+            List<Boat> boatsCopy = new ArrayList<>(boats);  // Create a copy of the cannons list
+            for (Boat boat : boatsCopy) {
+                boat.drawProjectiles(g);  // Drawing projectiles for each cannon
+            }
+        }
     }
 
 
@@ -263,6 +270,11 @@ public class MapPanel extends JPanel {
 
     public void setBUGM3LT3Rs(List<BUGM3LT3R> bUGM3LT3Rs) {
         this.bUGM3LT3Rs = bUGM3LT3Rs;
+        repaint();  // Ensure that the panel repaints whenever the BUGM3LT3Rs are updated
+    }
+
+    public void setBoats(List<Boat> boats) {
+        this.boats = boats;
         repaint();  // Ensure that the panel repaints whenever the BUGM3LT3Rs are updated
     }
 }

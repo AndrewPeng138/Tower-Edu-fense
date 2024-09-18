@@ -73,6 +73,7 @@ public class GameView extends JPanel {
     private List<Lightning> lightnings = new ArrayList<>();
     private List<Flame> flames = new ArrayList<>();
     private List<BUGM3LT3R> bUGM3LT3Rs = new ArrayList<>();
+    private List<Boat> boats = new ArrayList<>();
 
 
 
@@ -412,6 +413,10 @@ public class GameView extends JPanel {
                     System.out.println("Cannon Tower Created at position " + cannonTower.getxLoc() + ","+ cannonTower.getyLoc());
                     System.out.println("Cannons.size() is " + cannons.size());
                 case "Boat Tower":
+                    Boat boatTower = new Boat(towerLocation.x, towerLocation.y);
+                    boats.add(boatTower);
+                    System.out.println("Boat Tower Created at position " + boatTower.getxLoc() + ","+ boatTower.getyLoc());
+                    System.out.println("Boat.size() is " + boats.size());
                     break;
                 case "Mortar Tower":
                     Mortar mortarTower = new Mortar(towerLocation.x, towerLocation.y);
@@ -705,7 +710,7 @@ public class GameView extends JPanel {
         // Update all lighting towers
         for (Lightning lightning : lightnings) {
             if (!enemies.isEmpty()) {
-                lightning.fire(enemies.get(0));  // Lightning fires at first enemy
+                lightning.fire(enemies, this);  // Lightning fires at first enemy
             }
             lightning.updateProjectiles();  // Update each lightning's projectiles
         }
@@ -713,7 +718,7 @@ public class GameView extends JPanel {
         // Update all flame towers
         for (Flame flame : flames) {
             if (!enemies.isEmpty()) {
-                flame.fire(enemies.get(0));  // Flame fires at first enemy
+                flame.fire(enemies, this);  // Flame fires at first enemy
             }
             flame.updateProjectiles();  // Update each flames's projectiles
         }
@@ -721,9 +726,17 @@ public class GameView extends JPanel {
         // Update all BUGM3LT3R towers
         for (BUGM3LT3R bUGM3LT3R : bUGM3LT3Rs) {
             if (!enemies.isEmpty()) {
-                bUGM3LT3R.fire(enemies.get(0));  // BUGM3LT3R fires at first enemy
+                bUGM3LT3R.fire(enemies, this);  // BUGM3LT3R fires at first enemy
             }
             bUGM3LT3R.updateProjectiles();  // Update each BUGM3LT3R's projectiles
+        }
+
+        // Update all Boat towers
+        for (Boat boat : boats) {
+            if (!enemies.isEmpty()) {
+                boat.fire(enemies, this);  // BUGM3LT3R fires at first enemy
+            }
+            boat.updateProjectiles();  // Update each BUGM3LT3R's projectiles
         }
 
         // Pass the cannons and mortars (with their projectiles) to the MapPanel for drawing
@@ -732,6 +745,7 @@ public class GameView extends JPanel {
         mapPanel.setLightnings(lightnings);
         mapPanel.setFlames(flames);
         mapPanel.setBUGM3LT3Rs(bUGM3LT3Rs);
+        mapPanel.setBoats(boats);
 
         // Move each enemy based on the tile map logic
         moveAllEnemies();

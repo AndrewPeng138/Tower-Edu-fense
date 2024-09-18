@@ -17,7 +17,7 @@ public class Mortar extends TowerProperties implements TowerModelI {
         this.xLoc = xLoc;
         this.yLoc = yLoc;
         this.lastFiredTime = System.currentTimeMillis();  // Initialize the last fired time to now
-        this.setDamage(20);
+        this.setDamage(40);
     }
 
 
