@@ -70,6 +70,7 @@ public class GameView extends JPanel {
     private String category; // The category of questions (Math, Geography, Chemistry)
     private List<Cannon> cannons = new ArrayList<>();
     private List<Mortar> mortars = new ArrayList<>();
+    private List<Lightning> lightnings = new ArrayList<>();
 
 
 
@@ -414,6 +415,10 @@ public class GameView extends JPanel {
                     System.out.println("Mortars.size() is " + mortars.size());
                     break;
                 case "Lightning Tower":
+                    Lightning lightningTower = new Lightning(towerLocation.x, towerLocation.y);
+                    lightnings.add(lightningTower);  // Add to a new list of lighting
+                    System.out.println("Mortar Tower Created at position " + lightningTower.getxLoc() + "," + lightningTower.getyLoc());
+                    System.out.println("Mortars.size() is " + lightnings.size());
                     row -= 0;
                     break;
                 case "Flame Tower":
@@ -683,9 +688,18 @@ public class GameView extends JPanel {
             mortar.updateProjectiles();  // Update each mortar's projectiles
         }
 
+        // Update all lighting towers
+        for (Lightning lightning : lightnings) {
+            if (!enemies.isEmpty()) {
+                lightning.fire(enemies.get(0));  // Mortar fires at first enemy
+            }
+            lightning.updateProjectiles();  // Update each mortar's projectiles
+        }
+
         // Pass the cannons and mortars (with their projectiles) to the MapPanel for drawing
         mapPanel.setCannons(cannons);
         mapPanel.setMortars(mortars);
+        mapPanel.setLightnings(lightnings);
 
         // Move each enemy based on the tile map logic
         moveAllEnemies();
