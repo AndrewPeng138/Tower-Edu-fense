@@ -33,7 +33,7 @@ public class DifficultyView extends JPanel {
      */
     public DifficultyView(Questions questions) {
         this.questions = questions;  // Store the questions passed to DifficultyView
-        backgroundImage = new ImageIcon("Images/MapScreen.png").getImage();  // Load the background image
+        backgroundImage = new ImageIcon("Images/LevelScreen.png").getImage();  // Load the background image
 
         frame = new JFrame("Select Difficulty");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
