@@ -151,12 +151,8 @@ public class GameView extends JPanel {
         exitTile = findExitTile(); // Find exit tile
 
         // Firing sound exception handling
-        try {
-            fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
-            fire_Player.setVolume(0.77f);  // Set volume to your preference
-        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-            e.printStackTrace();  // Handle sound initialization error once
-        }
+        fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
+        fire_Player.setVolume(0.6f);  // Set volume to your preference
 
         // Initialize the UI and start enemy movement
         findEnemyPath();
