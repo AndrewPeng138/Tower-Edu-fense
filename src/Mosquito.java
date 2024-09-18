@@ -6,15 +6,25 @@ import javax.swing.ImageIcon;
  * A lower health enemy that appears more often
  */
 public class Mosquito extends EnemyModel{
+    private int currentRow;
+    private int currentCol;
     private Image mosquitoImage;
     Mosquito(int startRow, int startCol){
-        setCurrentRow(startRow);
-        setCurrentCol(startCol);
+        currentRow = startRow;
+        currentCol = startCol;
         this.setHealth(20);
         this.setDamage(10);
         this.mosquitoImage = new ImageIcon("Images/BugSprites/mosquitoPA.png").getImage();
 
     }
+    public int getCurrentRow() {
+        return currentRow;
+    }
+
+    public int getCurrentCol() {
+        return currentCol;
+    }
+
 
     @Override
     public boolean isMetal() {

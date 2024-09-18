@@ -5,15 +5,23 @@ import java.awt.*;
  * Boss enemy that appears on the final wave
  */
 public class PrayingMantis extends EnemyModel{
+    private int currentRow;
+    private int currentCol;
     private Image mantisImage;
     PrayingMantis(int startRow, int startCol){
-        setCurrentRow(startRow);
-        setCurrentCol(startCol);
+        currentRow = startRow;
+        currentCol = startCol;
         this.setHealth(1000);
         this.setDamage(10);
         this.mantisImage = new ImageIcon("Images/BugSprites/mantisPA.png").getImage();
     }
+    public int getCurrentRow() {
+        return currentRow;
+    }
 
+    public int getCurrentCol() {
+        return currentCol;
+    }
     @Override
     public boolean isMetal() {
         return false;

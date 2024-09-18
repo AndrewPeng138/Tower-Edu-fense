@@ -656,7 +656,7 @@ public class GameView extends JPanel {
                     }
                 }
             }
-        }, 500, 500);  // 2-second delay between enemy spawns within a wave
+        }, 100, 100);  // 2-second delay between enemy spawns within a wave
     }
 
 
@@ -677,7 +677,7 @@ public class GameView extends JPanel {
             public void run() {
                 updateGame();
             }
-        }, 0, 500); // run every 100ms, i.e. 10 times per second
+        }, 500, 100); // run every 100ms, i.e. 10 times per second
     }
 
     public void updateGame() {
@@ -691,7 +691,6 @@ public class GameView extends JPanel {
             // Fire at the first enemy in the list for now
             if (!enemies.isEmpty()) {
                 cannon.fire(enemies, this);
-                fire_Player.play(); // Firing sound
             }
             cannon.updateProjectiles();  // Update each cannon's projectiles
         }
@@ -701,8 +700,6 @@ public class GameView extends JPanel {
             if (!enemies.isEmpty()) {
 
                 mortar.fire(enemies, this);  // Mortar fires at first enemy
-
-                fire_Player.play(); // Firing sound
             }
             mortar.updateProjectiles();  // Update each mortar's projectiles
         }

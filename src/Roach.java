@@ -46,7 +46,6 @@ public class Roach extends EnemyModel {
     public void moveTo(int newRow, int newCol) {
         currentRow  = newRow;
         currentCol = newCol;
-        System.out.println("moving roach");
     }
 
     // Utility method to check if a tile is an enemy tile
