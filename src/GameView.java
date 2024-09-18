@@ -872,7 +872,7 @@ public class GameView extends JPanel {
         JButton backButton = new JButton("Return to Map");
         backButton.addActionListener(e -> {
             // Close the current game window and go to the map screen
-            new WelcomeScreenView();
+            new WorldMapView();
             JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
             currentFrame.dispose();  // Close the current game window
         });
@@ -902,7 +902,7 @@ public class GameView extends JPanel {
         JButton backButton = new JButton("Return to World Map");
         backButton.addActionListener(e -> {
             // Close the current game window and go to the map screen
-            new WelcomeScreenView();
+            new WorldMapView();
             JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
             currentFrame.dispose();  // Close the current game window
         });
