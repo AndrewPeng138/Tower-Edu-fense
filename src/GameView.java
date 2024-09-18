@@ -72,6 +72,7 @@ public class GameView extends JPanel {
     private List<Mortar> mortars = new ArrayList<>();
     private List<Lightning> lightnings = new ArrayList<>();
     private List<Flame> flames = new ArrayList<>();
+    private List<BUGM3LT3R> bUGM3LT3Rs = new ArrayList<>();
 
 
 
@@ -92,7 +93,7 @@ public class GameView extends JPanel {
     // Sound effect when the player beats all 20 waves [UNIMPLEMENTED]
     WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
     // Sound effect when a question is answered correctly [UNIMPLEMENTED]
-    private Cannon cannon;
+
     private Timer timer;
 
     private int userHealth= 100;
@@ -411,7 +412,6 @@ public class GameView extends JPanel {
                     System.out.println("Cannon Tower Created at position " + cannonTower.getxLoc() + ","+ cannonTower.getyLoc());
                     System.out.println("Cannons.size() is " + cannons.size());
                 case "Boat Tower":
-                    row -= 0;
                     break;
                 case "Mortar Tower":
                     Mortar mortarTower = new Mortar(towerLocation.x, towerLocation.y);
@@ -422,19 +422,20 @@ public class GameView extends JPanel {
                 case "Lightning Tower":
                     Lightning lightningTower = new Lightning(towerLocation.x, towerLocation.y);
                     lightnings.add(lightningTower);  // Add to a new list of lighting
-                    System.out.println("Mortar Tower Created at position " + lightningTower.getxLoc() + "," + lightningTower.getyLoc());
-                    System.out.println("Mortars.size() is " + lightnings.size());
-                    row -= 0;
+                    System.out.println("Lightning Tower Created at position " + lightningTower.getxLoc() + "," + lightningTower.getyLoc());
+                    System.out.println("Lightning.size() is " + lightnings.size());
                     break;
                 case "Flame Tower":
                     Flame flameTower = new Flame(towerLocation.x, towerLocation.y);
                     flames.add(flameTower);  // Add to a new list of lighting
-                    System.out.println("Mortar Tower Created at position " + flameTower.getxLoc() + "," + flameTower.getyLoc());
-                    System.out.println("Mortars.size() is " + lightnings.size());
-                    row -= 0;
+                    System.out.println("Flame Tower Created at position " + flameTower.getxLoc() + "," + flameTower.getyLoc());
+                    System.out.println("Flames.size() is " + lightnings.size());
                     break;
                 case "BUGM3LT3R":
-                    row -= 0;
+                    BUGM3LT3R bUGM3LT3RTower = new BUGM3LT3R(towerLocation.x, towerLocation.y);
+                    bUGM3LT3Rs.add(bUGM3LT3RTower);  // Add to a new list of lighting
+                    System.out.println("BUGM3LT3R Tower Created at position " + bUGM3LT3RTower.getxLoc() + "," + bUGM3LT3RTower.getyLoc());
+                    System.out.println("BUGM3LT3Rs.size() is " + lightnings.size());
                     break;
                 default:
                     // No adjustment for unknown tower types
@@ -715,11 +716,20 @@ public class GameView extends JPanel {
             flame.updateProjectiles();  // Update each flames's projectiles
         }
 
+        // Update all BUGM3LT3R towers
+        for (BUGM3LT3R bUGM3LT3R : bUGM3LT3Rs) {
+            if (!enemies.isEmpty()) {
+                bUGM3LT3R.fire(enemies.get(0));  // BUGM3LT3R fires at first enemy
+            }
+            bUGM3LT3R.updateProjectiles();  // Update each BUGM3LT3R's projectiles
+        }
+
         // Pass the cannons and mortars (with their projectiles) to the MapPanel for drawing
         mapPanel.setCannons(cannons);
         mapPanel.setMortars(mortars);
         mapPanel.setLightnings(lightnings);
         mapPanel.setFlames(flames);
+        mapPanel.setBUGM3LT3Rs(bUGM3LT3Rs);
 
         // Move each enemy based on the tile map logic
         moveAllEnemies();
