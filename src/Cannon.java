@@ -9,7 +9,7 @@ public class Cannon extends TowerProperties implements TowerModelI {
     private int xLoc;
     private int yLoc;
     private long lastFiredTime;  // Keep track of the last time the cannon fired
-    private long fireCooldown = 100;  // 1000 ms (1 second) cooldown between shots
+    private long fireCooldown = 500;  // 1000 ms (1 second) cooldown between shots
     private boolean hasFiredOnce = false;  // Flag to check if the cannon has fired once
 
 
@@ -18,7 +18,7 @@ public class Cannon extends TowerProperties implements TowerModelI {
         this.xLoc = xLoc;
         this.yLoc = yLoc;
         this.lastFiredTime = System.currentTimeMillis();  // Initialize the last fired time to now
-        this.setDamage(50);
+        this.setDamage(10);
     }
 
 
@@ -65,22 +65,23 @@ public class Cannon extends TowerProperties implements TowerModelI {
      * Updates the state of all projectiles (i.e., moves them).
      */
     public void updateProjectiles() {
-        // Create a copy of the projectiles list
-        List<Projectile> projectilesCopy = new ArrayList<>(projectiles);
+        // Iterate over the projectiles list directly, as modifying the list while iterating will be handled carefully.
+        List<Projectile> activeProjectiles = new ArrayList<>();
 
-        // Move projectiles and remove inactive ones
-        projectilesCopy.removeIf(projectile -> !projectile.isActive());
+        for (Projectile projectile : projectiles) {
+            // Move the projectile
+            projectile.move();
 
-        for (Projectile projectile : projectilesCopy) {
-            projectile.move();  // Move each projectile
+            // If the projectile is still active and on screen, add it to the active list
+            if (projectile.isActive() && !isOffScreen(projectile)) {
+                activeProjectiles.add(projectile);
+            }
         }
 
-        // Remove off-screen projectiles only if necessary
-        projectilesCopy.removeIf(this::isOffScreen);
-
-        // Replace the original list with the updated copy after modifications
-        projectiles = projectilesCopy;
+        // Replace the original projectiles list with the filtered list of active projectiles
+        projectiles = activeProjectiles;
     }
+
 
 
     /**

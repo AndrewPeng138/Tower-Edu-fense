@@ -7,12 +7,21 @@ import javax.swing.ImageIcon;
  */
 public class Beetle extends EnemyModel{
     private Image beetleImage;
+    private int currentRow;
+    private int currentCol;
     Beetle(int startRow, int startCol){
-        setCurrentRow(startRow);
-        setCurrentCol(startCol);
+        currentRow = startRow;
+        currentCol = startCol;
         this.setHealth(100);
         this.setDamage(10);
         this.beetleImage = new ImageIcon("Images/BugSprites/beetlePA.png").getImage();
+    }
+    public int getCurrentRow() {
+        return currentRow;
+    }
+
+    public int getCurrentCol() {
+        return currentCol;
     }
 
     @Override
@@ -30,6 +39,7 @@ public class Beetle extends EnemyModel{
     public void moveTo(int newRow, int newCol) {
         currentRow  = newRow;
         currentCol = newCol;
+        System.out.println("moving beetle");
     }
 
     /**

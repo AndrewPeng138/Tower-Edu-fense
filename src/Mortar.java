@@ -9,7 +9,7 @@ public class Mortar extends TowerProperties implements TowerModelI {
     private int xLoc;
     private int yLoc;
     private long lastFiredTime;  // Keep track of the last time the mortar fired
-    private long fireCooldown = 500;  // Mortar has a slower cooldown (1 second)
+    private long fireCooldown = 1000;  // Mortar has a slower cooldown (1 second)
     private boolean hasFiredOnce = false;  // Flag to check if the mortar has fired once
 
     public Mortar(int xLoc, int yLoc) {
@@ -17,7 +17,7 @@ public class Mortar extends TowerProperties implements TowerModelI {
         this.xLoc = xLoc;
         this.yLoc = yLoc;
         this.lastFiredTime = System.currentTimeMillis();  // Initialize the last fired time to now
-        this.setDamage(75);
+        this.setDamage(20);
     }
 
 
@@ -67,18 +67,18 @@ public class Mortar extends TowerProperties implements TowerModelI {
         List<Projectile> projectilesCopy = new ArrayList<>(projectiles);
 
         // Move projectiles and remove inactive ones
-        projectilesCopy.removeIf(projectile -> !projectile.isActive());
-
         for (Projectile projectile : projectilesCopy) {
             projectile.move();  // Move each projectile
         }
 
-        // Remove off-screen projectiles only if necessary
-        projectilesCopy.removeIf(this::isOffScreen);
+        // Remove inactive projectiles
+        projectiles.removeIf(projectile -> !projectile.isActive());
 
-        // Replace the original list with the updated copy after modifications
-        projectiles = projectilesCopy;
+        // Remove off-screen projectiles only if necessary
+        projectiles.removeIf(this::isOffScreen);
     }
+
+
 
     /**
      * Draws all active projectiles.
