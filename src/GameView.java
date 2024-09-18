@@ -103,6 +103,7 @@ public class GameView extends JPanel {
         this.locations = new MapModel(mapType).getLocations();  // Initialize the map (locations)
         this.enemyPath = new ArrayList<>();
         this.mapType = mapType;
+        BGMUSIC_Player.setVolume(0.8f);
         BGMUSIC_Player.play();
 
         // Set up the JFrame first
@@ -220,7 +221,15 @@ public class GameView extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    checkAnswer();
+                    try {
+                        checkAnswer();
+                    } catch (UnsupportedAudioFileException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (LineUnavailableException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         });
@@ -711,7 +720,7 @@ public class GameView extends JPanel {
         }
     }
 
-    private void checkAnswer() {
+    private void checkAnswer() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         String userAnswer = answerField.getText().trim();
         String correctAnswer = questions.getAnswer(currentQuestion);
 
@@ -724,6 +733,10 @@ public class GameView extends JPanel {
         boolean isCorrect = userAnswer.equalsIgnoreCase(correctAnswer);
         if (isCorrect) {
             feedbackLabel.setText("Correct!");
+            // Sound effect when a question is answered correctly [UNIMPLEMENTED]
+            WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
+            questionCorrect_Player.setVolume(0.78f);
+            questionCorrect_Player.play();;
             updatePoints(100);  // Award points for correct answer
             correctAnswers++;  // Increment correct answer count
             // Log the player's correct answer
