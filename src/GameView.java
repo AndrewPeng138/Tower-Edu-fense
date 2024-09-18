@@ -691,7 +691,6 @@ public class GameView extends JPanel {
             // Fire at the first enemy in the list for now
             if (!enemies.isEmpty()) {
                 cannon.fire(enemies, this);
-                fire_Player.play(); // Firing sound
             }
             cannon.updateProjectiles();  // Update each cannon's projectiles
         }
@@ -701,8 +700,6 @@ public class GameView extends JPanel {
             if (!enemies.isEmpty()) {
 
                 mortar.fire(enemies, this);  // Mortar fires at first enemy
-
-                fire_Player.play(); // Firing sound
             }
             mortar.updateProjectiles();  // Update each mortar's projectiles
         }
