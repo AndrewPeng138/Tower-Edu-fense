@@ -70,6 +70,9 @@ public class GameView extends JPanel {
     private String category; // The category of questions (Math, Geography, Chemistry)
     private List<Cannon> cannons = new ArrayList<>();
     private List<Mortar> mortars = new ArrayList<>();
+    private List<Lightning> lightnings = new ArrayList<>();
+    private List<Flame> flames = new ArrayList<>();
+    private List<BUGM3LT3R> bUGM3LT3Rs = new ArrayList<>();
 
 
 
@@ -83,15 +86,17 @@ public class GameView extends JPanel {
     // Sound effect when tower is bought [IMPLEMENTED IN placeTowerOnTile]
     WAVPlayer buyTower_Player = new WAVPlayer("Audio/buyTower_SE.wav");
     // Sound effect when a tower fires, several alternate sounds could be used [UNIMPLEMENTED]
-    WAVPlayer fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
+    private WAVPlayer fire_Player;
+    // Rest of your GameView constructor
     // Sound effect when the player runs out of health [UNIMPLEMENTED]
     WAVPlayer gameOver_Player = new WAVPlayer("Audio/gameOver_SE.wav");
     // Sound effect when the player beats all 20 waves [UNIMPLEMENTED]
     WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
     // Sound effect when a question is answered correctly [UNIMPLEMENTED]
-    WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
-    private Cannon cannon;
+
     private Timer timer;
+
+    private int userHealth= 100;
 
 
     public GameView(String backgroundImagePath, Questions questions, String mapType) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -147,6 +152,10 @@ public class GameView extends JPanel {
 
         entranceTile = findEntranceTile(); // Find entrance tile
         exitTile = findExitTile(); // Find exit tile
+
+        // Firing sound exception handling
+        fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
+        fire_Player.setVolume(0.6f);  // Set volume to your preference
 
         // Initialize the UI and start enemy movement
         findEnemyPath();
@@ -375,7 +384,8 @@ public class GameView extends JPanel {
         mapPanel.resetEnemyMap();
         List<EnemyModel> beingMoved = enemies;
         for (EnemyModel enemy : beingMoved){
-            enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath);
+            userHealth = enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath, userHealth);
+            System.out.println(userHealth);
             mapPanel.repaint();
         }
     }
@@ -402,7 +412,6 @@ public class GameView extends JPanel {
                     System.out.println("Cannon Tower Created at position " + cannonTower.getxLoc() + ","+ cannonTower.getyLoc());
                     System.out.println("Cannons.size() is " + cannons.size());
                 case "Boat Tower":
-                    row -= 0;
                     break;
                 case "Mortar Tower":
                     Mortar mortarTower = new Mortar(towerLocation.x, towerLocation.y);
@@ -411,13 +420,22 @@ public class GameView extends JPanel {
                     System.out.println("Mortars.size() is " + mortars.size());
                     break;
                 case "Lightning Tower":
-                    row -= 0;
+                    Lightning lightningTower = new Lightning(towerLocation.x, towerLocation.y);
+                    lightnings.add(lightningTower);  // Add to a new list of lighting
+                    System.out.println("Lightning Tower Created at position " + lightningTower.getxLoc() + "," + lightningTower.getyLoc());
+                    System.out.println("Lightning.size() is " + lightnings.size());
                     break;
                 case "Flame Tower":
-                    row -= 0;
+                    Flame flameTower = new Flame(towerLocation.x, towerLocation.y);
+                    flames.add(flameTower);  // Add to a new list of lighting
+                    System.out.println("Flame Tower Created at position " + flameTower.getxLoc() + "," + flameTower.getyLoc());
+                    System.out.println("Flames.size() is " + lightnings.size());
                     break;
                 case "BUGM3LT3R":
-                    row -= 0;
+                    BUGM3LT3R bUGM3LT3RTower = new BUGM3LT3R(towerLocation.x, towerLocation.y);
+                    bUGM3LT3Rs.add(bUGM3LT3RTower);  // Add to a new list of lighting
+                    System.out.println("BUGM3LT3R Tower Created at position " + bUGM3LT3RTower.getxLoc() + "," + bUGM3LT3RTower.getyLoc());
+                    System.out.println("BUGM3LT3Rs.size() is " + lightnings.size());
                     break;
                 default:
                     // No adjustment for unknown tower types
@@ -596,6 +614,7 @@ public class GameView extends JPanel {
 
         if (currentWave > 20) {
             System.out.println("All waves completed!");
+            checkForVictory();
             return;
         }
 
@@ -632,7 +651,7 @@ public class GameView extends JPanel {
                     }
                 }
             }
-        }, 2000, 2000);  // 2-second delay between enemy spawns within a wave
+        }, 500, 500);  // 2-second delay between enemy spawns within a wave
     }
 
 
@@ -653,7 +672,7 @@ public class GameView extends JPanel {
             public void run() {
                 updateGame();
             }
-        }, 0, 100); // run every 100ms, i.e. 10 times per second
+        }, 0, 500); // run every 100ms, i.e. 10 times per second
     }
 
     public void updateGame() {
@@ -667,6 +686,7 @@ public class GameView extends JPanel {
             // Fire at the first enemy in the list for now
             if (!enemies.isEmpty()) {
                 cannon.fire(enemies, this);
+                fire_Player.play(); // Firing sound
             }
             cannon.updateProjectiles();  // Update each cannon's projectiles
         }
@@ -674,14 +694,44 @@ public class GameView extends JPanel {
         // Update all mortars
         for (Mortar mortar : mortars) {
             if (!enemies.isEmpty()) {
+
                 mortar.fire(enemies, this);  // Mortar fires at first enemy
+
+                fire_Player.play(); // Firing sound
             }
             mortar.updateProjectiles();  // Update each mortar's projectiles
+        }
+
+        // Update all lighting towers
+        for (Lightning lightning : lightnings) {
+            if (!enemies.isEmpty()) {
+                lightning.fire(enemies.get(0));  // Lightning fires at first enemy
+            }
+            lightning.updateProjectiles();  // Update each lightning's projectiles
+        }
+
+        // Update all flame towers
+        for (Flame flame : flames) {
+            if (!enemies.isEmpty()) {
+                flame.fire(enemies.get(0));  // Flame fires at first enemy
+            }
+            flame.updateProjectiles();  // Update each flames's projectiles
+        }
+
+        // Update all BUGM3LT3R towers
+        for (BUGM3LT3R bUGM3LT3R : bUGM3LT3Rs) {
+            if (!enemies.isEmpty()) {
+                bUGM3LT3R.fire(enemies.get(0));  // BUGM3LT3R fires at first enemy
+            }
+            bUGM3LT3R.updateProjectiles();  // Update each BUGM3LT3R's projectiles
         }
 
         // Pass the cannons and mortars (with their projectiles) to the MapPanel for drawing
         mapPanel.setCannons(cannons);
         mapPanel.setMortars(mortars);
+        mapPanel.setLightnings(lightnings);
+        mapPanel.setFlames(flames);
+        mapPanel.setBUGM3LT3Rs(bUGM3LT3Rs);
 
         // Move each enemy based on the tile map logic
         moveAllEnemies();
@@ -689,6 +739,7 @@ public class GameView extends JPanel {
         // Force the screen to refresh and redraw the projectiles
         revalidate();
         repaint();
+        checkForLoss();
     }
 
 
@@ -703,7 +754,7 @@ public class GameView extends JPanel {
         int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
 
         if (enemies != null) {
-            for (EnemyModel enemy : enemies) {
+             for (EnemyModel enemy : enemies) {
                 // Convert map coordinates to screen coordinates
                 int screenX = enemy.getCurrentCol() * tileWidth;
                 int screenY = enemy.getCurrentRow() * tileHeight;
@@ -787,9 +838,72 @@ public class GameView extends JPanel {
         }, 0, 1000);  // Execute every 1 second
     }
 
+
     public void removeEnemy(EnemyModel enemy) {
         enemies.remove(enemy);  // Remove the enemy from the list
         mapPanel.repaint();     // Repaint to reflect the change visually
     }
+
+
+    public void checkForVictory() {
+        if(enemies.isEmpty()){
+            showVictoryPopup();
+        }
+    }
+
+    private void showVictoryPopup() {
+        // Create a custom JPanel for the popup
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel message = new JLabel("You win!");
+        panel.add(message, BorderLayout.CENTER);
+
+        // Add the button that redirects to the map screen
+        JButton backButton = new JButton("Return to Map");
+        backButton.addActionListener(e -> {
+            // Close the current game window and go to the map screen
+            new WelcomeScreenView();
+            JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            currentFrame.dispose();  // Close the current game window
+        });
+
+        panel.add(backButton, BorderLayout.SOUTH);
+
+        // Show the popup
+        JOptionPane.showMessageDialog(null, panel, "Victory", JOptionPane.PLAIN_MESSAGE);
+    }
+
+
+    public void checkForLoss() {
+        if(userHealth <= 0){
+            enemySpawnTimer.cancel();
+            gameLoopTimer.cancel();
+            showLossPopup();
+        }
+    }
+
+    private void showLossPopup() {
+        // Create a custom JPanel for the popup
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel message = new JLabel("You lost!");
+        panel.add(message, BorderLayout.CENTER);
+
+        // Add the button to go back to the map screen
+        JButton backButton = new JButton("Return to World Map");
+        backButton.addActionListener(e -> {
+            // Close the current game window and go to the map screen
+            new WelcomeScreenView();
+            JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            currentFrame.dispose();  // Close the current game window
+        });
+
+        panel.add(backButton, BorderLayout.SOUTH);
+
+        // Show the popup
+        JOptionPane.showMessageDialog(null, panel, "Game Over", JOptionPane.PLAIN_MESSAGE);
+    }
+
+
+
+
 
 }

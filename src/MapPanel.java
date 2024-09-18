@@ -19,6 +19,9 @@ public class MapPanel extends JPanel {
     private JButton[][] tileButtons;
     private List<Cannon> cannons;  // Add a field for cannons in MapPanel
     private List<Mortar> mortars;
+    private List<Lightning> lightnings;
+    private List<Flame> flames;
+    private List<BUGM3LT3R> bUGM3LT3Rs;
 
     /**
      * Constructs a MapPanel with specified tile locations, background image path, and game view.
@@ -186,6 +189,25 @@ public class MapPanel extends JPanel {
                 mortar.drawProjectiles(g);  // Drawing projectiles for each mortar
             }
         }
+
+        if (lightnings != null) {
+            List<Lightning> lightningsCopy = new ArrayList<>(lightnings);  // Create a copy of the cannons list
+            for (Lightning lightning : lightningsCopy) {
+                lightning.drawProjectiles(g);  // Drawing projectiles for each cannon
+            }
+        }
+        if (flames != null) {
+            List<Flame> flamesCopy = new ArrayList<>(flames);  // Create a copy of the cannons list
+            for (Flame flame : flamesCopy) {
+                flame.drawProjectiles(g);  // Drawing projectiles for each cannon
+            }
+        }
+        if (bUGM3LT3Rs != null) {
+            List<BUGM3LT3R> bUGM3LT3RsCopy = new ArrayList<>(bUGM3LT3Rs);  // Create a copy of the cannons list
+            for (BUGM3LT3R bUGM3LT3R : bUGM3LT3RsCopy) {
+                bUGM3LT3R.drawProjectiles(g);  // Drawing projectiles for each cannon
+            }
+        }
     }
 
 
@@ -228,5 +250,19 @@ public class MapPanel extends JPanel {
     public void setMortars(List<Mortar> mortars) {
         this.mortars = mortars;
         repaint();  // Ensure that the panel repaints whenever the mortars are updated
+    }
+    public void setLightnings(List<Lightning> lightnings) {
+        this.lightnings = lightnings;
+        repaint();  // Ensure that the panel repaints whenever the lightnings are updated
+    }
+
+    public void setFlames(List<Flame> flames) {
+        this.flames = flames;
+        repaint();  // Ensure that the panel repaints whenever the flames are updated
+    }
+
+    public void setBUGM3LT3Rs(List<BUGM3LT3R> bUGM3LT3Rs) {
+        this.bUGM3LT3Rs = bUGM3LT3Rs;
+        repaint();  // Ensure that the panel repaints whenever the BUGM3LT3Rs are updated
     }
 }
