@@ -69,6 +69,8 @@ public class GameView extends JPanel {
     private String mapType;  // The selected map type (Easy, Medium, etc.)
     private String category; // The category of questions (Math, Geography, Chemistry)
     private List<Cannon> cannons = new ArrayList<>();
+    private List<Mortar> mortars = new ArrayList<>();
+
 
 
     // ***** AUDIO PLAYERS *****
@@ -147,8 +149,6 @@ public class GameView extends JPanel {
 
         // Initialize the UI and start enemy movement
         findEnemyPath();
-        Roach testRoach = new Roach(10,10);
-        enemies.add(testRoach);
         startGameLoop();
     }
 
@@ -396,7 +396,10 @@ public class GameView extends JPanel {
                     row -= 0;
                     break;
                 case "Mortar Tower":
-                    row -= 0;
+                    Mortar mortarTower = new Mortar(towerLocation.x, towerLocation.y);
+                    mortars.add(mortarTower);  // Add to a new list of mortars
+                    System.out.println("Mortar Tower Created at position " + mortarTower.getxLoc() + "," + mortarTower.getyLoc());
+                    System.out.println("Mortars.size() is " + mortars.size());
                     break;
                 case "Lightning Tower":
                     row -= 0;
@@ -649,20 +652,36 @@ public class GameView extends JPanel {
             System.err.println("MapModel is not initialized");
             return;
         }
+
         // Update all cannons
         for (Cannon cannon : cannons) {
-            // Fire at test roach for now
-            cannon.fire(enemies.get(0));
+            // Fire at the first enemy in the list for now
+            if (!enemies.isEmpty()) {
+                cannon.fire(enemies.get(0));
+            }
             cannon.updateProjectiles();  // Update each cannon's projectiles
         }
-        // Pass the cannons (with their projectiles) to the MapPanel for drawing
+
+        // Update all mortars
+        for (Mortar mortar : mortars) {
+            if (!enemies.isEmpty()) {
+                mortar.fire(enemies.get(0));  // Mortar fires at first enemy
+            }
+            mortar.updateProjectiles();  // Update each mortar's projectiles
+        }
+
+        // Pass the cannons and mortars (with their projectiles) to the MapPanel for drawing
         mapPanel.setCannons(cannons);
+        mapPanel.setMortars(mortars);
+
         // Move each enemy based on the tile map logic
         moveAllEnemies();
+
         // Force the screen to refresh and redraw the projectiles
         revalidate();
         repaint();
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {

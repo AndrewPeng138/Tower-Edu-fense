@@ -130,4 +130,22 @@ public class DifficultyView extends JPanel {
 
         g.drawImage(scaledBackgroundImage, 0, 0, this);  // Draw the scaled background image
     }
+
+    /**
+     * Gets the JFrame containing this DifficultyView.
+     *
+     * @return The JFrame used by the DifficultyView.
+     */
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    /**
+     * Gets the array of buttons used in this DifficultyView.
+     *
+     * @return An array of JButton objects representing difficulty levels and the back button.
+     */
+    public JButton[] getButtons() {
+        return buttons;
+    }
 }

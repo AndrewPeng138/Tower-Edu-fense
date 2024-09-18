@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cannon {
+public class Cannon implements TowerModelI {
     // List to keep track of all active projectiles
     private List<Projectile> projectiles;
     private EnemyModel theTarget;
@@ -44,17 +44,21 @@ public class Cannon {
      * Updates the state of all projectiles (i.e., moves them).
      */
     public void updateProjectiles() {
-        // Move projectiles and remove inactive ones
-        projectiles.removeIf(projectile -> !projectile.isActive());
+        // Create a copy of the projectiles list
+        List<Projectile> projectilesCopy = new ArrayList<>(projectiles);
 
-        for (Projectile projectile : projectiles) {
+        // Move projectiles and remove inactive ones
+        projectilesCopy.removeIf(projectile -> !projectile.isActive());
+
+        for (Projectile projectile : projectilesCopy) {
             projectile.move();  // Move each projectile
         }
 
         // Remove off-screen projectiles only if necessary
-        projectiles.removeIf(this::isOffScreen);
+        projectilesCopy.removeIf(this::isOffScreen);
 
-        // Print out the size of the projectiles list
+        // Replace the original list with the updated copy after modifications
+        projectiles = projectilesCopy;
     }
 
 
@@ -63,7 +67,11 @@ public class Cannon {
      * @param g Graphics object for drawing
      */
     public void drawProjectiles(Graphics g) {
-        for (Projectile projectile : projectiles) {
+        // Create a copy of the projectiles list
+        List<Projectile> projectilesCopy = new ArrayList<>(projectiles);
+
+        // Iterate over the copy to draw the projectiles
+        for (Projectile projectile : projectilesCopy) {
             projectile.draw(g);  // This should trigger the draw method for each projectile
         }
     }
@@ -88,4 +96,6 @@ public class Cannon {
     public List<Projectile> getProjectiles() {
         return projectiles;
     }
+
+
 }

@@ -25,15 +25,22 @@ public class WAVPlayer {
     // Method to play the WAV file
     public void play() {
         if (audioClip != null) {
-            System.out.println("Playing audio...");
+            // Stop and reset the clip if it's already running
+            if (audioClip.isRunning()) {
+                audioClip.stop();
+            }
+
+            // Set the clip's position to the start and then play it
+            audioClip.setFramePosition(0);
             audioClip.start();
         }
     }
 
+
     // Method to stop the WAV file
     public void stop() {
         if (audioClip != null && audioClip.isRunning()) {
-            System.out.println("Stopping audio...");
+
             audioClip.stop();
         }
     }

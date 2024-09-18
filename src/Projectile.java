@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,11 +19,11 @@ public class Projectile {
         this.currentX = startX;
         this.currentY = startY;
         this.theTarget = theTarget;
-
     }
 
     public void move() {
-        if (!active || theTarget == null) return; // No target, don't move
+        // No target, target is dead, or projectile is inactive, don't move
+        if (!active || theTarget == null || !theTarget.isAlive()) return;
 
         // Calculate the direction toward the target
         int targetX = theTarget.getCurrentCol();
@@ -40,7 +39,6 @@ public class Projectile {
             currentX += (dx / distance) * speed;
             currentY += (dy / distance) * speed;
         }
-
     }
 
     public void draw(Graphics g) {
@@ -59,7 +57,6 @@ public class Projectile {
             System.out.println("Hit detected in hasHitTarget()");
             hitTarget();  // Call the method to handle hitting the target
         }
-
     }
 
     // Collision detection method
@@ -75,12 +72,23 @@ public class Projectile {
 
     // Handle what happens when the projectile hits the target
     private void hitTarget() {
+        // If the target is dead, deactivate the projectile without dealing damage
+        if (!theTarget.isAlive()) {
+            System.out.println("Target already dead. Deactivating projectile.");
+            active = false;
+            return;
+        }
+
         System.out.println("Bug hit! Dealing " + damage + " damage.");
         System.out.println("Target health before: " + theTarget.getHealth());
         theTarget.setHealth(theTarget.getHealth() - damage);  // Reduce enemy's health
         System.out.println("Target health after: " + theTarget.getHealth());
-        // The projectile can be removed after hitting, but that logic will be handled by the cannon class
-        active = false;  // Mark the projectile as inactive
+
+        // If the enemy is dead after this hit, deactivate the projectile
+        if (!theTarget.isAlive()) {
+            System.out.println("The target has been eliminated!");
+            active = false;  // Stop the projectile after hitting a dead enemy
+        }
     }
 
     public int getCurrentX() {
@@ -90,6 +98,7 @@ public class Projectile {
     public int getCurrentY() {
         return currentY;
     }
+
     public boolean isActive() {
         return active;
     }
