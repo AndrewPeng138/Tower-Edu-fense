@@ -84,13 +84,13 @@ public class GameView extends JPanel {
     // Sound effect when tower is bought [IMPLEMENTED IN placeTowerOnTile]
     WAVPlayer buyTower_Player = new WAVPlayer("Audio/buyTower_SE.wav");
     // Sound effect when a tower fires, several alternate sounds could be used [UNIMPLEMENTED]
-    WAVPlayer fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
+    private WAVPlayer fire_Player;
+    // Rest of your GameView constructor
     // Sound effect when the player runs out of health [UNIMPLEMENTED]
     WAVPlayer gameOver_Player = new WAVPlayer("Audio/gameOver_SE.wav");
     // Sound effect when the player beats all 20 waves [UNIMPLEMENTED]
     WAVPlayer levelWin_Player = new WAVPlayer("Audio/levelWin_SE.wav");
     // Sound effect when a question is answered correctly [UNIMPLEMENTED]
-    WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
     private Cannon cannon;
     private Timer timer;
 
@@ -150,6 +150,10 @@ public class GameView extends JPanel {
 
         entranceTile = findEntranceTile(); // Find entrance tile
         exitTile = findExitTile(); // Find exit tile
+
+        // Firing sound exception handling
+        fire_Player = new WAVPlayer("Audio/fire1_SE.wav");
+        fire_Player.setVolume(0.6f);  // Set volume to your preference
 
         // Initialize the UI and start enemy movement
         findEnemyPath();
@@ -675,6 +679,7 @@ public class GameView extends JPanel {
         for (Cannon cannon : cannons) {
             // Fire at the first enemy in the list for now
             if (!enemies.isEmpty()) {
+                fire_Player.play(); // Firing sound
                 cannon.fire(enemies.get(0));
             }
             cannon.updateProjectiles();  // Update each cannon's projectiles
@@ -683,6 +688,7 @@ public class GameView extends JPanel {
         // Update all mortars
         for (Mortar mortar : mortars) {
             if (!enemies.isEmpty()) {
+                fire_Player.play(); // Firing sound
                 mortar.fire(enemies.get(0));  // Mortar fires at first enemy
             }
             mortar.updateProjectiles();  // Update each mortar's projectiles
@@ -722,7 +728,7 @@ public class GameView extends JPanel {
         int tileHeight = mapPanel.getHeight() / mapModel.getLocations().length;
 
         if (enemies != null) {
-            for (EnemyModel enemy : enemies) {
+             for (EnemyModel enemy : enemies) {
                 // Convert map coordinates to screen coordinates
                 int screenX = enemy.getCurrentCol() * tileWidth;
                 int screenY = enemy.getCurrentRow() * tileHeight;
