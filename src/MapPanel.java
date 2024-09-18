@@ -19,8 +19,8 @@ public class MapPanel extends JPanel {
     private JButton[][] tileButtons;
     private List<Cannon> cannons;  // Add a field for cannons in MapPanel
     private List<Mortar> mortars;
-
     private List<Lightning> lightnings;
+    private List<Flame> flames;
 
     /**
      * Constructs a MapPanel with specified tile locations, background image path, and game view.
@@ -195,6 +195,12 @@ public class MapPanel extends JPanel {
                 lightning.drawProjectiles(g);  // Drawing projectiles for each cannon
             }
         }
+        if (flames != null) {
+            List<Flame> flamesCopy = new ArrayList<>(flames);  // Create a copy of the cannons list
+            for (Flame flame : flamesCopy) {
+                flame.drawProjectiles(g);  // Drawing projectiles for each cannon
+            }
+        }
     }
 
 
@@ -240,6 +246,11 @@ public class MapPanel extends JPanel {
     }
     public void setLightnings(List<Lightning> lightnings) {
         this.lightnings = lightnings;
+        repaint();  // Ensure that the panel repaints whenever the mortars are updated
+    }
+
+    public void setFlames(List<Flame> flames) {
+        this.flames = flames;
         repaint();  // Ensure that the panel repaints whenever the mortars are updated
     }
 }

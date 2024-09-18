@@ -71,6 +71,7 @@ public class GameView extends JPanel {
     private List<Cannon> cannons = new ArrayList<>();
     private List<Mortar> mortars = new ArrayList<>();
     private List<Lightning> lightnings = new ArrayList<>();
+    private List<Flame> flames = new ArrayList<>();
 
 
 
@@ -426,6 +427,10 @@ public class GameView extends JPanel {
                     row -= 0;
                     break;
                 case "Flame Tower":
+                    Flame flameTower = new Flame(towerLocation.x, towerLocation.y);
+                    flames.add(flameTower);  // Add to a new list of lighting
+                    System.out.println("Mortar Tower Created at position " + flameTower.getxLoc() + "," + flameTower.getyLoc());
+                    System.out.println("Mortars.size() is " + lightnings.size());
                     row -= 0;
                     break;
                 case "BUGM3LT3R":
@@ -697,15 +702,24 @@ public class GameView extends JPanel {
         // Update all lighting towers
         for (Lightning lightning : lightnings) {
             if (!enemies.isEmpty()) {
-                lightning.fire(enemies.get(0));  // Mortar fires at first enemy
+                lightning.fire(enemies.get(0));  // Lightning fires at first enemy
             }
-            lightning.updateProjectiles();  // Update each mortar's projectiles
+            lightning.updateProjectiles();  // Update each lightning's projectiles
+        }
+
+        // Update all flame towers
+        for (Flame flame : flames) {
+            if (!enemies.isEmpty()) {
+                flame.fire(enemies.get(0));  // Flame fires at first enemy
+            }
+            flame.updateProjectiles();  // Update each flames's projectiles
         }
 
         // Pass the cannons and mortars (with their projectiles) to the MapPanel for drawing
         mapPanel.setCannons(cannons);
         mapPanel.setMortars(mortars);
         mapPanel.setLightnings(lightnings);
+        mapPanel.setFlames(flames);
 
         // Move each enemy based on the tile map logic
         moveAllEnemies();
