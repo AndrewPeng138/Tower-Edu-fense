@@ -7,14 +7,17 @@ public class Projectile {
     private int damage;
     private int currentX;
     private int currentY;
-    private int speed = 10;  // Adjust speed as needed
+    private int speed = 50;  // Adjust speed as needed
     private EnemyModel theTarget;
     private int hitThreshold = 15;  // Defines how close the projectile needs to be to hit the target
-    private boolean active = true; // Tracks if the projectile is still active
+    private boolean active = true;  // Tracks if the projectile is still active
     private GameView gameView;
 
+    // Coordinates of the entrance tile
+    private int entranceX;
+    private int entranceY;
 
-    public Projectile(String type, String imagePath, int damage, int startX, int startY, EnemyModel theTarget, GameView gameView) {
+    public Projectile(String type, String imagePath, int damage, int startX, int startY, EnemyModel theTarget, GameView gameView, int entranceX, int entranceY) {
         this.type = type;
         this.imageIcon = new ImageIcon(imagePath).getImage();  // Load image from the file path
         this.damage = damage;
@@ -22,18 +25,23 @@ public class Projectile {
         this.currentY = startY;
         this.theTarget = theTarget;
         this.gameView = gameView;  // Store the reference to GameView
+        this.entranceX = entranceX;  // Store entrance tile coordinates
+        this.entranceY = entranceY;
     }
 
     public void move() {
-        // Deactivate projectile if target is null, dead, or inactive
-        if (!active || theTarget == null || !theTarget.isAlive()) {
-            active = false;  // Ensure projectile deactivates if the target is dead
-            return;
-        }
+        // If the target is null or dead, aim towards the entrance tile
+        int targetX, targetY;
 
-        // Calculate the current direction toward the target
-        int targetX = theTarget.getPixelX();  // Get the target's current pixel position
-        int targetY = theTarget.getPixelY();
+        if (theTarget == null || !theTarget.isAlive()) {
+            // Aim towards entrance if no valid target
+            targetX = entranceX;
+            targetY = entranceY;
+        } else {
+            // Otherwise, aim at the target
+            targetX = theTarget.getPixelX();
+            targetY = theTarget.getPixelY();
+        }
 
         int dx = targetX - currentX;
         int dy = targetY - currentY;
@@ -45,12 +53,11 @@ public class Projectile {
             currentY += (dy / distance) * speed;  // Update Y position
         }
 
-        // Check if the projectile has reached the target
-        if (hasHitTarget()) {
+        // Check if the projectile has reached the target or entrance
+        if (hasHitTarget(targetX, targetY)) {
             hitTarget();
         }
     }
-
 
     public void draw(Graphics g) {
         if (!active) return; // Don't draw inactive projectiles
@@ -66,22 +73,17 @@ public class Projectile {
     }
 
     // Collision detection method
-    public boolean hasHitTarget() {
-        if (theTarget == null) return false;  // Check for null target
-
-        int targetX = theTarget.getPixelX();
-        int targetY = theTarget.getPixelY();
-
+    public boolean hasHitTarget(int targetX, int targetY) {
         // Check if the projectile is close enough to the target to count as a hit
         int dx = targetX - currentX;
         int dy = targetY - currentY;
         return Math.sqrt(dx * dx + dy * dy) <= hitThreshold;
     }
 
-    // Handle what happens when the projectile hits the target
+    // Handle what happens when the projectile hits the target or entrance
     private void hitTarget() {
         if (theTarget == null || !theTarget.isAlive()) {
-            // If the target is null or already dead, deactivate the projectile
+            // If there's no valid target, deactivate the projectile when it hits the entrance
             active = false;
             return;
         }

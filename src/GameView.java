@@ -29,7 +29,7 @@ public class GameView extends JPanel {
     private Timer gameLoopTimer;
 
     private int coolDownSeconds = 5;
-    private int points = 10000;  // Variable to track points/money
+    private int points = 500;  // Variable to track points/money
     private int sessionId = 1;  // Assuming each player has a session ID. In a real scenario, this would be dynamic.
     private int correctAnswers = 0;  // Track correct answers
     private int incorrectAnswers = 0;  // Track incorrect answers
@@ -243,7 +243,7 @@ public class GameView extends JPanel {
         });
 
         // Money label
-        moneyLabel = new JLabel("10000");  // Initial money is 10000
+        moneyLabel = new JLabel("500");  // Initial money is 10000
         moneyLabel.setBounds(1220, 52, 200, 40);
         moneyLabel.setForeground(Color.WHITE);
         moneyLabel.setFont(new Font("Arial", Font.PLAIN, 20));  // Slightly larger font for the amount of money
@@ -518,15 +518,15 @@ public class GameView extends JPanel {
         add(boatTowerButton);
 
         // Heavy Tower (with image)
-        heavyTowerButton = createTowerButton("Mortar Tower", HEAVY_TOWER_COST, "Images/TowerSprites/Mortar.png", 1120, baseY + 2 * buttonHeight);
+        heavyTowerButton = createTowerButton("Mortar Tower", HEAVY_TOWER_COST, "Images/TowerSprites/Mortar.png", 1120, baseY + 3 * buttonHeight);
         add(heavyTowerButton);
 
         // Lightning Tower (with image)
-        lightningTowerButton = createTowerButton("Lightning Tower", LIGHTNING_TOWER_COST, "Images/TowerSprites/LightningTower.png", 1120, baseY + 3 * buttonHeight);
+        lightningTowerButton = createTowerButton("Lightning Tower", LIGHTNING_TOWER_COST, "Images/TowerSprites/LightningTower.png", 1120, baseY + 4 * buttonHeight);
         add(lightningTowerButton);
 
         // Flame Tower (with image)
-        flameTowerButton = createTowerButton("Flame Tower", FLAME_TOWER_COST, "Images/TowerSprites/FlameTower.png", 1120, baseY + 4 * buttonHeight);
+        flameTowerButton = createTowerButton("Flame Tower", FLAME_TOWER_COST, "Images/TowerSprites/FlameTower.png", 1120, baseY + 2 * buttonHeight);
         add(flameTowerButton);
 
         // BUGM3LT3R Tower (with image)
@@ -797,7 +797,7 @@ public class GameView extends JPanel {
             WAVPlayer questionCorrect_Player = new WAVPlayer("Audio/questionCorrect_SE.wav");
             questionCorrect_Player.setVolume(0.78f);
             questionCorrect_Player.play();;
-            updatePoints(100);  // Award points for correct answer
+            updatePoints(500);  // Award points for correct answer
             correctAnswers++;  // Increment correct answer count
             // Log the player's correct answer
             questions.logPlayerAnswer(sessionId, questionId, true);

@@ -11,6 +11,8 @@ public class Cannon extends TowerProperties implements TowerModelI {
     private long lastFiredTime;  // Keep track of the last time the cannon fired
     private long fireCooldown = 500;  // 1000 ms (1 second) cooldown between shots
     private boolean hasFiredOnce = false;  // Flag to check if the cannon has fired once
+    private int entranceX; // Entrance tile X-coordinate
+    private int entranceY; // Entrance tile Y-coordinate
 
 
     public Cannon(int xLoc, int yLoc) {
@@ -18,7 +20,9 @@ public class Cannon extends TowerProperties implements TowerModelI {
         this.xLoc = xLoc;
         this.yLoc = yLoc;
         this.lastFiredTime = System.currentTimeMillis();  // Initialize the last fired time to now
-        this.setDamage(10);
+        this.setDamage(20);
+        this.entranceX = entranceX;
+        this.entranceY = entranceY;
     }
 
 
@@ -46,7 +50,7 @@ public class Cannon extends TowerProperties implements TowerModelI {
                 // Create a projectile and pass in the GameView for interaction
                 Projectile newProjectile = new Projectile(
                         "Mortar Projectile", "Images/TowerSprites/MortarProjectile.png",
-                        this.getDamage(), this.xLoc, this.yLoc, closestEnemy, gameView
+                        this.getDamage(), this.xLoc, this.yLoc, closestEnemy, gameView, entranceX, entranceY
                 );
                 projectiles.add(newProjectile);
                 lastFiredTime = currentTime;

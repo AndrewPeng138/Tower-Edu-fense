@@ -105,6 +105,12 @@ public abstract class EnemyModel {
     }
 
     /**
+     * Checks if the enemy has reached the target tile based on its pixel position.
+     */
+
+
+
+    /**
      * Move the enemy smoothly towards a tile (pixel-based movement).
      * This allows for more accurate projectile targeting.
      *
@@ -112,7 +118,7 @@ public abstract class EnemyModel {
      */
     public void moveTowardsTile(Tile targetTile) {
         // Calculate pixel position based on tile row, col, and size
-        int tileSize = 50;  // Assume each tile is 50x50 pixels
+        int tileSize = 50;  // Assuming each tile is 50x50 pixels
 
         int targetX = targetTile.getCol() * tileSize;
         int targetY = targetTile.getRow() * tileSize;
@@ -127,6 +133,7 @@ public abstract class EnemyModel {
             currentY += (dy / distance) * speed;
         }
     }
+
 
 
     // Decreases the enemy's health
