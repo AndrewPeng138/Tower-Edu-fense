@@ -695,10 +695,10 @@ public class GameView extends JPanel {
 
         if (enemies != null) {
             for (EnemyModel enemy : enemies) {
-                    // Convert map coordinates to screen coordinates
-                    int screenX = enemy.getCurrentCol() * tileWidth;
-                    int screenY = enemy.getCurrentRow() * tileHeight;
-                    enemy.draw(g, screenX, screenY, tileWidth, tileHeight);
+                // Convert map coordinates to screen coordinates
+                int screenX = enemy.getCurrentCol() * tileWidth;
+                int screenY = enemy.getCurrentRow() * tileHeight;
+                enemy.draw(g, screenX, screenY, tileWidth, tileHeight);
             }
         }
         else {
