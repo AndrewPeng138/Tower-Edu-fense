@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Interface representing the model of a tower in the game.
  * Defines the behavior that any tower model should implement.
@@ -10,5 +12,9 @@ public interface TowerModelI {
      *
      * @param enemyWave The wave of enemies that the tower will target.
      */
-    void Fire(Wave enemyWave);
+    public void fire(EnemyModel target);
+
+    public void updateProjectiles();
+
+    public void drawProjectiles(Graphics g);
 }

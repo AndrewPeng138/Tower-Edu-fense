@@ -2,7 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public abstract class EnemyModel {
+public abstract class EnemyModel
+{
     protected int currentRow;
     protected int currentCol;
     private int health;
@@ -98,6 +99,10 @@ public abstract class EnemyModel {
 
     public boolean hasReachedExit(){
         return reachedExit;
+    }
+
+    public boolean isAlive() {
+        return health > 0;
     }
 
 }
