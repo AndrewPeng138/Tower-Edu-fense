@@ -40,7 +40,9 @@ public abstract class TowerProperties {
      * Gets tower damage value
      * @return amount of damage tower deals
      */
-    public int getDamage(){ return this.damage;}
+    public int getDamage() {
+        return this.damage;  // Ensure damage is set correctly in the tower's constructor
+    }
 
     /**
      * Sets tower damage value
@@ -64,5 +66,5 @@ public abstract class TowerProperties {
         this.cost = value;
     }
 
-    public abstract void Fire(Wave enemyWave);
+    //public abstract void Fire(Wave enemyWave);
 }

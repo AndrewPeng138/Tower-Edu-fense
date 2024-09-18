@@ -645,7 +645,7 @@ public class GameView extends JPanel {
         for (Cannon cannon : cannons) {
             // Fire at the first enemy in the list for now
             if (!enemies.isEmpty()) {
-                cannon.fire(enemies.get(0));
+                cannon.fire(enemies, this);
             }
             cannon.updateProjectiles();  // Update each cannon's projectiles
         }
@@ -653,7 +653,7 @@ public class GameView extends JPanel {
         // Update all mortars
         for (Mortar mortar : mortars) {
             if (!enemies.isEmpty()) {
-                mortar.fire(enemies.get(0));  // Mortar fires at first enemy
+                mortar.fire(enemies, this);  // Mortar fires at first enemy
             }
             mortar.updateProjectiles();  // Update each mortar's projectiles
         }
@@ -736,7 +736,8 @@ public class GameView extends JPanel {
         incorrectAnswersLabel.setText("Incorrect answers: " + incorrectAnswers);
     }
 
-    private void startCoolDown() {
+    private void startCoolDown()
+    {
         coolDownSeconds = 5;
         countdownLabel.setText("Wait for " + coolDownSeconds + " seconds...");
 
@@ -760,4 +761,10 @@ public class GameView extends JPanel {
             }
         }, 0, 1000);  // Execute every 1 second
     }
+
+    public void removeEnemy(EnemyModel enemy) {
+        enemies.remove(enemy);  // Remove the enemy from the list
+        mapPanel.repaint();     // Repaint to reflect the change visually
+    }
+
 }

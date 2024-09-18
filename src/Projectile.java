@@ -11,25 +11,27 @@ public class Projectile {
     private EnemyModel theTarget;
     private int hitThreshold = 15;  // Defines how close the projectile needs to be to hit the target
     private boolean active = true; // Tracks if the projectile is still active
+    private GameView gameView;
 
-    public Projectile(String type, String imagePath, int damage, int startX, int startY, EnemyModel theTarget) {
+
+    public Projectile(String type, String imagePath, int damage, int startX, int startY, EnemyModel theTarget, GameView gameView) {
         this.type = type;
         this.imageIcon = new ImageIcon(imagePath).getImage();  // Load image from the file path
         this.damage = damage;
         this.currentX = startX;
         this.currentY = startY;
         this.theTarget = theTarget;
+        this.gameView = gameView;  // Store the reference to GameView
     }
 
     public void move() {
-        // No target, target is dead, or projectile is inactive, don't move
-        if (!active || theTarget == null || !theTarget.isAlive()) return;
+        // Stop moving if the projectile is inactive or the target is dead
+        if (!active || theTarget == null || theTarget.getHealth() <= 0) return;
 
-        // Calculate the direction toward the target
-        int targetX = theTarget.getCurrentCol();
-        int targetY = theTarget.getCurrentRow();
+        // Calculate the current direction toward the target
+        int targetX = theTarget.getPixelX();  // Get the target's current pixel position
+        int targetY = theTarget.getPixelY();
 
-        // Simple linear movement
         int dx = targetX - currentX;
         int dy = targetY - currentY;
 
@@ -39,57 +41,75 @@ public class Projectile {
             currentX += (dx / distance) * speed;
             currentY += (dy / distance) * speed;
         }
+
+        // Check if the projectile has reached the target
+        if (hasHitTarget()) {
+            hitTarget();
+        }
     }
+
 
     public void draw(Graphics g) {
         if (!active) return; // Don't draw inactive projectiles
+
         if (imageIcon != null) {
             // Draw the image with a fixed size (width: 20, height: 20)
-            g.drawImage(imageIcon, currentX, currentY, 20, 20, null);
+            g.drawImage(imageIcon, currentX, currentY, 50, 50, null);
         } else {
             // Fallback: draw a red rectangle if the image isn't loaded
             g.setColor(Color.RED);
-            g.fillRect(currentX, currentY, 10, 10);  // Simple red square as a placeholder
-        }
-
-        // Check if the projectile has hit the target
-        if (hasHitTarget()) {
-            System.out.println("Hit detected in hasHitTarget()");
-            hitTarget();  // Call the method to handle hitting the target
+            g.fillRect(currentX, currentY, 50, 50);  // Simple red square as a placeholder
         }
     }
 
     // Collision detection method
     public boolean hasHitTarget() {
+        if (theTarget == null) return false;  // Check for null target
+
         int targetX = theTarget.getPixelX();
         int targetY = theTarget.getPixelY();
 
-        // Check if the projectile is within a certain threshold distance from the target
+        // Check if the projectile is close enough to the target to count as a hit
         int dx = targetX - currentX;
         int dy = targetY - currentY;
         return Math.sqrt(dx * dx + dy * dy) <= hitThreshold;
     }
 
+
     // Handle what happens when the projectile hits the target
     private void hitTarget() {
-        // If the target is dead, deactivate the projectile without dealing damage
+        // Ensure the target is not null before proceeding
+        if (theTarget == null) {
+            System.out.println("No target. Deactivating projectile.");
+            active = false;
+            return;
+        }
+
+        // Check if the target is already dead before dealing damage
         if (!theTarget.isAlive()) {
             System.out.println("Target already dead. Deactivating projectile.");
             active = false;
             return;
         }
 
+        // Deal damage to the target
         System.out.println("Bug hit! Dealing " + damage + " damage.");
         System.out.println("Target health before: " + theTarget.getHealth());
+
         theTarget.setHealth(theTarget.getHealth() - damage);  // Reduce enemy's health
+
         System.out.println("Target health after: " + theTarget.getHealth());
 
-        // If the enemy is dead after this hit, deactivate the projectile
+        // Check if the enemy is dead after the hit
         if (!theTarget.isAlive()) {
             System.out.println("The target has been eliminated!");
-            active = false;  // Stop the projectile after hitting a dead enemy
+            gameView.removeEnemy(theTarget);  // Remove the enemy from the game
         }
+
+        // Deactivate the projectile once it has hit the target
+        active = false;
     }
+
 
     public int getCurrentX() {
         return currentX;
