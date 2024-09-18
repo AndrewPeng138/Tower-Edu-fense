@@ -21,6 +21,18 @@ public class Beetle extends EnemyModel{
     }
 
     /**
+     * Method moving enemy to a new tile
+     *
+     * @param newRow row number of new tile
+     * @param newCol column number of new tile
+     */
+    @Override
+    public void moveTo(int newRow, int newCol) {
+        currentRow  = newRow;
+        currentCol = newCol;
+    }
+
+    /**
      * Abstract method drawing the enemy on the board
      *
      * @param g
@@ -32,5 +44,10 @@ public class Beetle extends EnemyModel{
     @Override
     public void draw(Graphics g, int screenX, int screenY, int tileWidth, int tileHeight) {
         g.drawImage(beetleImage, screenX, screenY, tileWidth, tileHeight, null);
+    }
+
+    @Override
+    public Image getEnemyImage() {
+        return beetleImage;
     }
 }

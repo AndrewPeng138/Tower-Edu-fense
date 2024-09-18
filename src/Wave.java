@@ -15,10 +15,12 @@ public class Wave {
      * @param mapModel provides the reference point for where the enemies spawn
      */
 
-    public Wave(int waveCounter, MapModel mapModel) {
+    public Wave(int waveCounter, MapModel mapModel, int startRow, int startCol) {
         this.waveCounter = waveCounter;
-        int entranceRow = mapModel.getEntranceRow();
-        int entranceCol = mapModel.getEntranceCol();
+//        int entranceRow = mapModel.getEntranceRow() * mapPanel.getWidth() / mapPanel.locations[0].length;
+//        int entranceCol = mapModel.getEntranceCol() * mapPanel.getHeight() / mapPanel.locations.length;
+        int entranceRow = startRow;
+        int entranceCol = startCol;
 
         // Wave counter determines what enemies are placed into a wave
         if (this.waveCounter == 1) {
