@@ -386,7 +386,7 @@ public class GameView extends JPanel {
         List<EnemyModel> beingMoved = enemies;
         for (EnemyModel enemy : beingMoved){
             userHealth = enemy.moveToNextEnemyTile(mapModel, mapPanel, enemyPath, userHealth);
-            System.out.println(userHealth);
+            //System.out.println(userHealth);
             mapPanel.repaint();
         }
     }
@@ -870,7 +870,7 @@ public class GameView extends JPanel {
         JButton backButton = new JButton("Return to Map");
         backButton.addActionListener(e -> {
             // Close the current game window and go to the map screen
-            new WelcomeScreenView();
+            new WorldMapView();
             JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
             currentFrame.dispose();  // Close the current game window
         });
@@ -900,7 +900,7 @@ public class GameView extends JPanel {
         JButton backButton = new JButton("Return to World Map");
         backButton.addActionListener(e -> {
             // Close the current game window and go to the map screen
-            new WelcomeScreenView();
+            new WorldMapView();
             JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
             currentFrame.dispose();  // Close the current game window
         });
